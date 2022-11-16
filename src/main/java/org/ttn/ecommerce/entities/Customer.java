@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @Table(name="customer")
 @PrimaryKeyJoinColumn(name = "user_id")
@@ -21,5 +19,11 @@ public class Customer  extends  UserEntity{
     @NotNull
     private String contact;
 
+    public String getContact() {
+        return contact;
+    }
 
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
 }

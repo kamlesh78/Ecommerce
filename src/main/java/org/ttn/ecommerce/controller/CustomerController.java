@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('USER')")
-            @GetMapping("login")
+    @GetMapping("login")
     public String display(){
         return "a";
     }

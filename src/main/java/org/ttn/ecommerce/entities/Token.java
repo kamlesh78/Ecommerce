@@ -23,7 +23,7 @@ public class Token {
 
     private LocalDateTime expiredAt;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name="user_id",referencedColumnName = "id")
     private UserEntity userEntity;
 

@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.ttn.ecommerce.entities.Token;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class JWTGenerator {
     public String generateToken(Authentication authentication){
+        Token token1 = new Token();
         String username = authentication.getName();
         Date currentDate= new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
@@ -29,7 +31,8 @@ public class JWTGenerator {
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512,SecurityConstants.JWT_SECRET)
                 .compact();
-        return token;
+      return token;
+
 
     }
 

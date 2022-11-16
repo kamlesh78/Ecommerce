@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Data
 public class RefreshToken {
     @Id
-    @SequenceGenerator(name="user_sequence",sequenceName = "user_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_sequence")
+    @SequenceGenerator(name="refresh_token_sequence",sequenceName = "refresh_token_sequence",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "refresh_token_sequence")
     private Long id;
 
     private String token;

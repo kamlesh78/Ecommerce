@@ -9,8 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name="user_id")
 @Table(name="seller")
@@ -25,8 +23,27 @@ public class Seller extends  UserEntity{
     @NotNull
     private String companyName;
 
+    public String getGst() {
+        return gst;
+    }
 
+    public void setGst(String gst) {
+        this.gst = gst;
+    }
 
+    public String getCompanyContact() {
+        return companyContact;
+    }
 
+    public void setCompanyContact(String companyContact) {
+        this.companyContact = companyContact;
+    }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 }

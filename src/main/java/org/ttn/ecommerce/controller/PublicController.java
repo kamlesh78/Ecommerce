@@ -46,11 +46,12 @@ public class PublicController {
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto ){
 
-        UserEntity customer = userRepository.findByEmail(loginDto.getEmail()).get();
-        if(customer.isActive()){
+        UserEntity user = userRepository.findByEmail(loginDto.getEmail()).get();
+
+        if(user.isActive()){
             return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
         }
-        return userDaoService.loginCustomer(loginDto);
+        return userDaoService.loginCustomer(loginDto,user);
     }
 
     @GetMapping("hello")
