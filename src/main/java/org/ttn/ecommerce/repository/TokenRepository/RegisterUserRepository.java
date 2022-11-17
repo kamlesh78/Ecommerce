@@ -1,8 +1,10 @@
 package org.ttn.ecommerce.repository.TokenRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.entities.token.ActivateUserToken;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ public interface RegisterUserRepository extends JpaRepository<ActivateUserToken,
     @Query(value = "select * from activate_user_token where token = :token and user_id = :id",nativeQuery = true)
     Optional<ActivateUserToken> findByTokenAndUserEntity(@Param("token") String token,@Param("id") Long user_id);
 
-    @Query(value = "UPDATE activate_user_token SET confirm_at = :time where token = :token")
-    public void confirmUserBytoken(@Param("token") String token, @Param("time") LocalDateTime time);
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE activate_user_token SET activated_at = :time where token = :token",nativeQuery = true)
+    void confirmUserBytoken(@Param("token") String token, @Param("time") LocalDateTime time);
 }

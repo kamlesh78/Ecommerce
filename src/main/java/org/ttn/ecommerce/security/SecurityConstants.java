@@ -11,4 +11,7 @@ public class SecurityConstants {
 
     public static final long REFRESH_TOKEN_EXPIRE_HOURS =24;
 
+    public static final long RESET_PASS_EXPIRE_MINUTES = 15;
+
+
 }

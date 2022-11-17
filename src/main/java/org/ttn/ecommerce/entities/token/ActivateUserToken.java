@@ -28,7 +28,7 @@ public class ActivateUserToken {
     @Column(name="expire_At")
     private LocalDateTime expireAt;
 
-    @Column(name="activate_at")
+    @Column(name="activated_at")
     private LocalDateTime activatedAt;
 
     @ManyToOne

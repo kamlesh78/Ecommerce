@@ -91,7 +91,8 @@ public class UserDaoService {
         emailService.setSubject("Your Account || "+ customer.getFirstName() + " finish setting up your new  Account " );
 
         emailService.setToEmail(customer.getEmail());
-        emailService.setMessage("Click on the link to Activate Your Account " + token);
+        emailService.setMessage("Click on the link to Activate Your Account \n"
+                + "127.0.0.1:8080/api/auth/activate_account/"+customer.getEmail() +"/"+token);
         emailService.sendEmail();
 
 
@@ -161,7 +162,8 @@ public class UserDaoService {
         return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
     }
 
-    public void confirmAccount(UserEntity userEntity, String token) {
-        tokenService.confirmAccount(userEntity.getId(),token);
+    public ResponseEntity<String> confirmAccount(UserEntity userEntity, String token) {
+       String out =  tokenService.confirmAccount(userEntity.getId(),token);
+       return new ResponseEntity<>(out,HttpStatus.OK);
     }
 }

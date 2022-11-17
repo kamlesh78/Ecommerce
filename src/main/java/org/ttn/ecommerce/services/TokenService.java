@@ -64,6 +64,7 @@ public class TokenService {
         }
     }
 
+    @Transactional
     public String  confirmAccount(Long id, String token){
         Optional<ActivateUserToken> activateUserToken = registerUserRepository.findByTokenAndUserEntity(token,id);
         if(activateUserToken.isPresent()){
@@ -76,6 +77,7 @@ public class TokenService {
             if(expireAt.isBefore(LocalDateTime.now())){
                 return "Token Expired";
             }
+
             registerUserRepository.confirmUserBytoken(token,LocalDateTime.now());
             userRepository.activateUserById(id);
 
