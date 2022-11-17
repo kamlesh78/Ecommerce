@@ -28,15 +28,19 @@ public class ActivateUserToken {
     @Column(name="expire_At")
     private LocalDateTime expireAt;
 
+    @Column(name="activate_at")
+    private LocalDateTime activatedAt;
+
     @ManyToOne
     @JoinColumn(name="user_id")
-    private Customer customer;
+    private UserEntity userEntity;
 
-    public ActivateUserToken(Long id, String token, LocalDateTime createdAt, LocalDateTime expireAt, Customer customer) {
+    public ActivateUserToken(Long id, String token, LocalDateTime createdAt, LocalDateTime expireAt, LocalDateTime activatedAt, UserEntity userEntity) {
         this.id = id;
         this.token = token;
         this.createdAt = createdAt;
         this.expireAt = expireAt;
-        this.customer = customer;
+        this.activatedAt = activatedAt;
+        this.userEntity = userEntity;
     }
 }

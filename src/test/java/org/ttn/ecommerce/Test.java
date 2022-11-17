@@ -17,7 +17,9 @@ import org.ttn.ecommerce.entities.Role;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.RoleRepository;
+import org.ttn.ecommerce.repository.TokenRepository.RefreshTokenRepository;
 import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.services.TokenService;
 
 import java.util.*;
 
@@ -40,6 +42,12 @@ public class Test {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    TokenService tokenService;
 
     @org.junit.jupiter.api.Test
     void contextLoads() {
@@ -78,5 +86,31 @@ public class Test {
         }
     }
 
+    @org.junit.jupiter.api.Test
+    public void testRefreshRepo(){
+        long l =16;
+       long count = refreshTokenRepository.findByUserEntity(l);
+       if(count >=1){
+           System.out.println("record found : " + count );
+       }
+    }
+
+    @org.junit.jupiter.api.Test
+    @Transactional
+    @Rollback(false)
+    public void testDeleteRefreshRepo(){
+
+        refreshTokenRepository.deleteByUserId(16l);
+        testRefreshRepo();
+    }
+
+
+    @org.junit.jupiter.api.Test
+    @Transactional
+    @Rollback(false)
+    public void testUser(){
+    long id=16;
+       tokenService.confirmAccount(id,"13835945-3041-4007-9ca6-f335c9c41fc3");
+    }
     }
 

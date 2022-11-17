@@ -1,7 +1,8 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entities.token;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ttn.ecommerce.entities.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class ForgetPasswordToken {
 
     private LocalDateTime expireAt;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private UserEntity userEntity;
 

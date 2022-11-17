@@ -4,7 +4,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,15 +18,14 @@ import org.ttn.ecommerce.entities.*;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
-import org.ttn.ecommerce.repository.TokenRepository.AccessTokenService;
-import org.ttn.ecommerce.repository.TokenRepository.RefreshTokenService;
+import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
+import org.ttn.ecommerce.repository.TokenRepository.RefreshTokenRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.security.SecurityConstants;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 
 @Service
 @NoArgsConstructor
@@ -42,11 +40,12 @@ public class UserDaoService {
     private EmailService emailService;
     private SellerRepository customer;
     private TokenService tokenService;
-    private AccessTokenService accessTokenService;
-    private RefreshTokenService refreshTokenService;
+    private AccessTokenRepository accessTokenRepository;
+    private RefreshTokenRepository refreshTokenRepository;
+
 
     @Autowired
-    public UserDaoService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository customer,TokenService tokenService,AccessTokenService accessTokenService,RefreshTokenService refreshTokenService) {
+    public UserDaoService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository customer, TokenService tokenService, AccessTokenRepository accessTokenService, RefreshTokenRepository refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -56,8 +55,8 @@ public class UserDaoService {
         this.emailService = emailService;
         this.customer = customer;
         this.tokenService=tokenService;
-        this.accessTokenService=accessTokenService;
-        this.refreshTokenService=refreshTokenService;
+        this.accessTokenRepository =accessTokenService;
+        this.refreshTokenRepository =refreshTokenService;
     }
 
     public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto){
@@ -132,7 +131,6 @@ public class UserDaoService {
         seller.setRoles(Collections.singletonList(roles));
 
 
-
         return new ResponseEntity<>("Seller Registered Successfully",HttpStatus.OK);
 
     }
@@ -152,14 +150,18 @@ public class UserDaoService {
         accessToken.setToken(token);
         accessToken.setCreatedAt(LocalDateTime.now());
         accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.REGISTER_TOKEN_EXPIRE_MIN));
-        accessTokenService.save(accessToken);
+        accessTokenRepository.save(accessToken);
 
 
         /* Refresh Token */
         RefreshToken refreshToken = tokenService.generateRefreshToken(user);
-        refreshTokenService.save(refreshToken);
+        refreshTokenRepository.save(refreshToken);
 
 
         return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
+    }
+
+    public void confirmAccount(UserEntity userEntity, String token) {
+        tokenService.confirmAccount(userEntity.getId(),token);
     }
 }

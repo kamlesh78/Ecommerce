@@ -16,11 +16,14 @@ import org.ttn.ecommerce.dto.register.SellerRegisterDto;
 import org.ttn.ecommerce.entities.Role;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.repository.RoleRepository;
+import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
+import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.UserDaoService;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/auth")
@@ -32,6 +35,7 @@ public class PublicController {
     private PasswordEncoder passwordEncode;
     private JWTGenerator jwtGenerator;
     private UserDaoService userDaoService;
+
 
     public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator,UserDaoService userDaoService) {
         this.authenticationManager = authenticationManager;
@@ -71,6 +75,21 @@ public class PublicController {
     public ResponseEntity<String> registerSeller(@RequestBody SellerRegisterDto sellerRegisterDto){
 
         return userDaoService.registerSeller(sellerRegisterDto);
+    }
 
+//    @GetMapping("confirm_account/{email}/{token}")
+//    public ResponseEntity<String> confirmAccount(@PathVariable("email") String email,@PathVariable("token") String token){
+//
+//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+//        if(userEntity.isPresent()){
+//            userDaoService.confirmAccount(userEntity.get(),token);
+//        }
+//
+//    }
+
+
+    @GetMapping("forget-password")
+    public ResponseEntity<?> forgetUserPassword(@PathVariable String Email){
+        return
     }
 }
