@@ -35,7 +35,7 @@ public class CustomerController {
         this.jwtGenerator = jwtGenerator;
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("login")
     public String display(){
         return "a";

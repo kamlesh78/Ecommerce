@@ -10,4 +10,5 @@ import java.util.List;
 public interface BlackListTokenRepository extends JpaRepository<BlackListedToken,Long> {
 
     List<BlackListedToken> findByToken(String token);
+    boolean existsByToken(String token);
 }

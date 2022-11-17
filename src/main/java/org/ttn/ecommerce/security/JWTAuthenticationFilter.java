@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,12 +26,21 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
+    @Autowired
+    BlackListTokenRepository blackListTokenRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = getJWTFromRequest(request);
         System.out.println(token);
-        if(StringUtils.hasText(token) && jwtGenerator.validateToken(token)){
+
+        /* Exception handling */
+
+
+        boolean blackList = blackListTokenRepository.existsByToken(token);
+        System.out.println(blackListTokenRepository.existsByToken(token));
+        if(StringUtils.hasText(token) && jwtGenerator.validateToken(token) && !blackList){
 
             String username= jwtGenerator.getUsernameFromJWT(token);
             System.out.println(username);
