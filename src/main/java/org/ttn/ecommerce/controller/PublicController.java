@@ -2,6 +2,7 @@ package org.ttn.ecommerce.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.dto.LoginDto;
@@ -21,10 +23,12 @@ import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
+import org.ttn.ecommerce.services.BlackListTokenService;
 import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.UserDaoService;
 import org.ttn.ecommerce.services.UserPasswordService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -39,10 +43,12 @@ public class PublicController {
     private JWTGenerator jwtGenerator;
     private UserDaoService userDaoService;
     private UserPasswordService userPasswordService;
+    private TokenService tokenService;
+    private BlackListTokenService blackListTokenService;
 
 
     @Autowired
-    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService) {
+    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService,TokenService tokenService,BlackListTokenService blackListTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -50,6 +56,8 @@ public class PublicController {
         this.jwtGenerator = jwtGenerator;
         this.userDaoService = userDaoService;
         this.userPasswordService = userPasswordService;
+        this.tokenService = tokenService;
+        this.blackListTokenService=blackListTokenService;
     }
 
     @PostMapping("login")
@@ -104,4 +112,15 @@ public class PublicController {
         return userPasswordService.resetUserPassword(resetPasswordDto);
     }
 
+    @GetMapping("logout")
+    public ResponseEntity<String> logoutUser(HttpServletRequest request){
+      String token = tokenService.getJWTFromRequest(request);
+      if(token==null){
+          return new ResponseEntity<>("Token not found",HttpStatus.BAD_REQUEST);
+      }
+
+      return  blackListTokenService.blackListToken(token);
+
+
+    }
 }

@@ -18,4 +18,6 @@ public interface UserRepository  extends JpaRepository<UserEntity,Long> {
     @Modifying
     @Query(value = "UPDATE user SET is_active = 1 where id = :userId",nativeQuery = true)
     void activateUserById(@Param("userId") long id);
+
+    Optional<UserEntity> findById(long id);
 }

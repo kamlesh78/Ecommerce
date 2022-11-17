@@ -3,6 +3,7 @@ package org.ttn.ecommerce.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.RefreshToken;
 import org.ttn.ecommerce.entities.UserEntity;
@@ -12,11 +13,13 @@ import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.SecurityConstants;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class TokenService {
 
     @Autowired
@@ -90,5 +93,13 @@ public class TokenService {
     }
 
 
+    public String getJWTFromRequest(HttpServletRequest request){
+        String bearerToken = request.getHeader("Authorization");
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")){
+            return bearerToken.substring(7,bearerToken.length());
+
+        }
+        return null;
+    }
 
 }

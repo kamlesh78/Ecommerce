@@ -1,9 +1,11 @@
 package org.ttn.ecommerce.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ttn.ecommerce.repository.RoleRepository;
@@ -38,6 +40,7 @@ public class CustomerController {
     public String display(){
         return "a";
     }
+
 
 
 }

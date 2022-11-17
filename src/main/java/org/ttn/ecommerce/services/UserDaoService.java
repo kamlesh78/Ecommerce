@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
@@ -28,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
+@Transactional
 @NoArgsConstructor
 public class UserDaoService {
 
