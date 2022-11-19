@@ -16,7 +16,6 @@ import java.util.List;
 public class Customer  extends  UserEntity{
 
     @Column(name = "contact")
-    @NotNull
     private String contact;
 
     public String getContact() {

@@ -29,6 +29,7 @@ import org.ttn.ecommerce.services.UserDaoService;
 import org.ttn.ecommerce.services.UserPasswordService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ public class PublicController {
 
 
     @PostMapping("customer/register")
-    public ResponseEntity<String> registerCustomer(@RequestBody CustomerRegisterDto customerRegisterDto){
+    public ResponseEntity<String> registerCustomer(@Valid @RequestBody CustomerRegisterDto customerRegisterDto){
 
         return userDaoService.registerCustomer(customerRegisterDto);
 
