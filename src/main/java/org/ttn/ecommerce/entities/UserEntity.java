@@ -67,9 +67,8 @@ public class UserEntity {
                 inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles;
 
- //   @OneToOne(mappedBy = "user")
-   // private Token token;
-
+    @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
+    private  Images images;
 
     public UserEntity() {
     }
@@ -184,6 +183,14 @@ public class UserEntity {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public Images getImages() {
+        return images;
+    }
+
+    public void setImages(Images images) {
+        this.images = images;
     }
 
     @Override

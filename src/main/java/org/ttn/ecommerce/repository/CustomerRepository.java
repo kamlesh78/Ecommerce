@@ -4,7 +4,6 @@ package org.ttn.ecommerce.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.UserEntity;
 
 import java.util.Optional;
 

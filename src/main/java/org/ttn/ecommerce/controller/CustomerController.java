@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import org.ttn.ecommerce.repository.ImageRepository;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
+import org.ttn.ecommerce.services.CustomerDaoService;
 import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.util.ImageUtility;
 
@@ -38,10 +40,11 @@ public class CustomerController {
     private JWTGenerator jwtGenerator;
     private ImageRepository imageRepository;
     private TokenService tokenService;
+    private CustomerDaoService customerDaoService;
 
 
     @Autowired
-    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, ImageRepository imageRepository, TokenService tokenService) {
+    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, ImageRepository imageRepository, TokenService tokenService, CustomerDaoService customerDaoService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -49,6 +52,7 @@ public class CustomerController {
         this.jwtGenerator = jwtGenerator;
         this.imageRepository = imageRepository;
         this.tokenService = tokenService;
+        this.customerDaoService = customerDaoService;
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -59,9 +63,8 @@ public class CustomerController {
 
     @PostMapping(value = "upload/image")
     public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image,HttpServletRequest request) throws IOException {
-        String token = tokenService.getJWTFromRequest(request);
-        String email = tokenService.getUsernameFromJWT(token);
 
+        String email = customerDaoService.emailFromToken(request);
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         Optional<Images> userImage = imageRepository.findByUserId(userEntity.get().getId());
         if(userImage.isPresent()){
@@ -82,12 +85,18 @@ public class CustomerController {
 
     }
 
+    @GetMapping("profile")
+    public MappingJacksonValue viewCustomerProfile(HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+
+        customerDaoService.customerProfile(email);
+    }
+
     @GetMapping("profile/image")
     public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
 
         System.out.println("a");
-        String token = tokenService.getJWTFromRequest(request);
-        String email = tokenService.getUsernameFromJWT(token);
+        String email = customerDaoService.emailFromToken(request);
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
 
         Optional<Images> customerImage = imageRepository.findByUserId(userEntity.get().getId());
