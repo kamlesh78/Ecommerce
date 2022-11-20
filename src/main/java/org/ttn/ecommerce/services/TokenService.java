@@ -1,5 +1,7 @@
 package org.ttn.ecommerce.services;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,14 @@ public class TokenService {
 
     @Autowired
     UserRepository userRepository;
+
+    public String getUsernameFromJWT(String token){
+        Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.JWT_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
 
     public String generateRegisterToken(Customer customer){
         String registerToken = UUID.randomUUID().toString();

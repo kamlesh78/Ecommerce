@@ -9,10 +9,11 @@ import javax.validation.ConstraintValidatorContext;
 
 public class PasswordMatcher implements ConstraintValidator<ConfirmPassword,Object> {
 
-
     @Override
     public boolean isValid(Object user, ConstraintValidatorContext constraintValidatorContext) {
         CustomerRegisterDto customerRegisterDto = (CustomerRegisterDto) user;
         return customerRegisterDto.getPassword().equals(customerRegisterDto.getConfirmPassword());
     }
 }
+
+

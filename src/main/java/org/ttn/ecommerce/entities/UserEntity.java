@@ -22,10 +22,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_sequence")
     private Long id;
 
+
+
+//    @Email
+//    @NotEmpty
+//    @NotNull
     @Column(name="Email")
-    @Email
-    @NotEmpty
-    @NotNull
     private String email;
 
 

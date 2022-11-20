@@ -9,6 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class UserEmailValidator implements ConstraintValidator<Email,String> {
 
@@ -18,10 +19,17 @@ public class UserEmailValidator implements ConstraintValidator<Email,String> {
     @Override
     public boolean isValid(String userEmail , ConstraintValidatorContext constraintValidatorContext) {
         System.out.println(userEmail);
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@" +"(?:[a-zA-Z0-9-]+\\.)+[a-z" +"A-Z]{2,7}$";
+        Pattern pat = Pattern.compile(emailRegex);
+
         Optional<UserEntity> userEntity = userRepository.findByEmail(userEmail);
         if(userEntity.isPresent()){
-            return false;
-        }else{
+            if(pat.matcher(userEmail).matches()){
+                return true;
+            }else{
+                return  false;
+            }
+         }else{
             return true;
         }
     }

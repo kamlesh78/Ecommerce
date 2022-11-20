@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UserEmailValidator.class)
 @Target({ElementType.FIELD})
 public @interface Email {
-    String message() default "{Account with this email already exists}";
+    String message() default "{Account with this email already exists || Or Email address is invalid}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

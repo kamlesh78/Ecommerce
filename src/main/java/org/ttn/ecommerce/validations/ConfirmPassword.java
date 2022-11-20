@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 
 import static java.lang.annotation.ElementType.TYPE;
 
-@Target({TYPE, ElementType.ANNOTATION_TYPE})
+@Target({TYPE})
 @Constraint(validatedBy = PasswordMatcher.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConfirmPassword {
