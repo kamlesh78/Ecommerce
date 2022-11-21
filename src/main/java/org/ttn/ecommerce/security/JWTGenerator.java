@@ -3,6 +3,8 @@ package org.ttn.ecommerce.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +16,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class JWTGenerator {
+
+
+
+
     public String generateToken(Authentication authentication){
         Token token1 = new Token();
         String username = authentication.getName();
@@ -46,7 +52,7 @@ public class JWTGenerator {
     }
 
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) throws AccessDeniedException{
         try{
             Claims claims = Jwts.parser()
                     .setSigningKey(SecurityConstants.JWT_SECRET)
@@ -57,7 +63,7 @@ public class JWTGenerator {
 
             return true;
         }catch(Exception ex){
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect" );
+            throw new AccessDeniedException("JWT was expired or incorrect");
         }
     }
 }
