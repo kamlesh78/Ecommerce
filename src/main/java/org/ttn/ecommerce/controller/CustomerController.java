@@ -11,7 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
+import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.Images;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.repository.ImageRepository;
@@ -89,12 +91,25 @@ public class CustomerController {
 
     }
 
-    @GetMapping("profile")
+    @GetMapping("profile/view")
     public MappingJacksonValue viewCustomerProfile(HttpServletRequest request){
         String email = customerDaoService.emailFromToken(request);
        return customerDaoService.customerProfile(email);
     }
 
+    @PatchMapping("profile/update")
+    public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer,HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+        return customerDaoService.updateAddress(email,customer);
+
+    }
+
+    @PatchMapping("update/password")
+    public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto,HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+       return customerDaoService.updatePassword(customerPasswordDto,email);
+
+    }
     @GetMapping("profile/image")
     public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
 
@@ -126,7 +141,6 @@ public class CustomerController {
 
     }
 
-
     @DeleteMapping("delete/address/{id}")
     public String deleteCustomerAddress(@PathVariable("id") Long id,HttpServletRequest request){
         String email = customerDaoService.emailFromToken(request);
@@ -140,7 +154,6 @@ public class CustomerController {
         String email = customerDaoService.emailFromToken(request);
         return customerDaoService.updateCustomerAddressById(email,id,address);
     }
-
 
 
 

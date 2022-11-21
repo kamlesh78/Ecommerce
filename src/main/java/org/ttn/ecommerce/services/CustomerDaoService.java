@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.controller.CustomerController;
+import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.UserEntity;
@@ -39,6 +41,8 @@ public class CustomerDaoService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     public String emailFromToken(HttpServletRequest request){
@@ -112,5 +116,25 @@ public class CustomerDaoService {
         address.setUserEntity(userEntity);
         addressRepository.save(address);
         return "Address Updated";
+    }
+
+    public ResponseEntity<String> updateAddress(String email,Customer customer) {
+        Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
+        if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
+        if(customer.getContact()!=null) customerEntity.setContact(customer.getContact());
+        if(customer.getFirstName()!=null) customerEntity.setFirstName(customer.getFirstName());
+        if(customer.getMiddleName()!=null) customerEntity.setMiddleName(customer.getMiddleName());
+        if(customer.getLastName()!=null) customerEntity.setLastName(customer.getLastName());
+        customerRepository.save(customerEntity);
+        return new ResponseEntity<>("Customer Profile Detail Updated!",HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
+
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
+        customer.setPassword(passwordEncoder.encode(customerPasswordDto.getPassword()));
+        customerRepository.save(customer);
+
+        return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 }
