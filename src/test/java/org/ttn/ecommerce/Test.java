@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.Role;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.RoleRepository;

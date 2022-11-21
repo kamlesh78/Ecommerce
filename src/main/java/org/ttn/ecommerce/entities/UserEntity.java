@@ -55,7 +55,7 @@ public class UserEntity {
 
 
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private Set<Address> addresses;
 
@@ -68,7 +68,7 @@ public class UserEntity {
     private List<Role> roles;
 
     @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
-    private  Images images;
+    private  Images image;
 
     public UserEntity() {
     }
@@ -186,11 +186,11 @@ public class UserEntity {
     }
 
     public Images getImages() {
-        return images;
+        return image;
     }
 
     public void setImages(Images images) {
-        this.images = images;
+        this.image = images;
     }
 
     @Override

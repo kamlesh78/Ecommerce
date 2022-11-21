@@ -20,4 +20,11 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", exception.getFieldError().getDefaultMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UserNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
+    }
+
 }

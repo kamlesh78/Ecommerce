@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Images;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.repository.ImageRepository;
@@ -42,7 +44,6 @@ public class CustomerController {
     private TokenService tokenService;
     private CustomerDaoService customerDaoService;
 
-
     @Autowired
     public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, ImageRepository imageRepository, TokenService tokenService, CustomerDaoService customerDaoService) {
         this.authenticationManager = authenticationManager;
@@ -61,6 +62,9 @@ public class CustomerController {
         return "a";
     }
 
+
+
+    /*send it to service layer*/
     @PostMapping(value = "upload/image")
     public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image,HttpServletRequest request) throws IOException {
 
@@ -88,8 +92,7 @@ public class CustomerController {
     @GetMapping("profile")
     public MappingJacksonValue viewCustomerProfile(HttpServletRequest request){
         String email = customerDaoService.emailFromToken(request);
-
-        customerDaoService.customerProfile(email);
+       return customerDaoService.customerProfile(email);
     }
 
     @GetMapping("profile/image")
@@ -108,6 +111,39 @@ public class CustomerController {
                 .contentType(MediaType.valueOf(customerImage.get().getFileType()))
                 .body(ImageUtility.decompressImage(customerImage.get().getImage()));
     }
+
+    @PostMapping("add-address")
+    public ResponseEntity<?> addCustomerAddress(@RequestBody Address address,HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+        return customerDaoService.insertCustomerAddress(email,address);
+    }
+
+    @GetMapping("view-address")
+    public MappingJacksonValue viewAddress(HttpServletRequest request) throws  IOException{
+        String email = customerDaoService.emailFromToken(request);
+
+        return  customerDaoService.viewCustomerAddresses(email);
+
+    }
+
+
+    @DeleteMapping("delete/address/{id}")
+    public String deleteCustomerAddress(@PathVariable("id") Long id,HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+
+        return customerDaoService.deleteCustomerAddressById(email,id);
+
+    }
+
+    @PatchMapping("/update/address/{id}")
+    public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id,HttpServletRequest request){
+        String email = customerDaoService.emailFromToken(request);
+        return customerDaoService.updateCustomerAddressById(email,id,address);
+    }
+
+
+
+
 }
 
 

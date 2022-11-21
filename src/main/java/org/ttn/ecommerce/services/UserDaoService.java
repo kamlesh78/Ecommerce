@@ -152,7 +152,7 @@ public class UserDaoService {
         accessToken.setUserEntity(user);
         accessToken.setToken(token);
         accessToken.setCreatedAt(LocalDateTime.now());
-        accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.REGISTER_TOKEN_EXPIRE_MIN));
+        accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.JWT_EXPIRATION));
         accessTokenRepository.save(accessToken);
 
 
