@@ -19,6 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 //    Page<Customer> findAll(Pageable pageable);
     List<Customer> findAll();
 
-    @Query(value = "UPDATE user SET is_active = 0 where id = :id",nativeQuery = true)
-    void disableCustomer(@Param("id") Long id);
+
 }

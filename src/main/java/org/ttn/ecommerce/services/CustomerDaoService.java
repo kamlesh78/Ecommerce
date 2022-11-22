@@ -157,11 +157,16 @@ public class CustomerDaoService {
     }
 
     /* Deactivate Customer*/
-    public String deactiveCustomer(Long id) {
-        customerRepository.disableCustomer(id);
+    public String deActiveCustomer(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
+        userRepository.disableCustomer(id);
         return "Customer with id : "+id+" deactivated";
     }
 
-
-
+    /*   Activate Customer   */
+    public String activeCustomer(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
+        userRepository.activateUserById(id);
+        return "Customer with id : "+id+" not found";
+    }
 }

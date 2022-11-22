@@ -32,15 +32,24 @@ check custom JsonFilter
 
     }
 
-
-    @PutMapping("deactive/customer/{id}")
+    @PatchMapping("deactive/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id){
-        return customerDaoService.deactiveCustomer(id);
+        return customerDaoService.deActiveCustomer(id);
     }
 
-
-    @PutMapping("deactive/seller/{id}")
+    @PatchMapping("deactive/seller/{id}")
     public String deActiveSeller(@PathVariable("id") Long id){
-        return sellerDaoService.deactivateSeller(id);
+        return sellerDaoService.deActivateSeller(id);
     }
+
+    @PatchMapping("activate/customer/{id}")
+    public String activeCustomer(@PathVariable("id") Long id){
+        return customerDaoService.activeCustomer(id);
+    }
+
+    @PatchMapping("activate/seller/{id}")
+    public String activeSeller(@PathVariable("id") Long id){
+        return sellerDaoService.activateSeller(id);
+    }
+
 }

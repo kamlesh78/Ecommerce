@@ -60,8 +60,9 @@ public class SellerDaoService {
 
 
     /*Deactivate Seller*/
-    public String deactivateSeller(Long id) {
-        sellerRepository.disableSeller(id);
+    public String deActivateSeller(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
+        userRepository.deactivateUserById(id);
         return "Seller with id : "+id+" deactivated";
     }
 
@@ -110,40 +111,35 @@ public class SellerDaoService {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         String output = mapper.writeValueAsString(addresses);
         return output;
-//        SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
-//        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
-//        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userEntity);
-//        mappingJacksonValue.setFilters(filterProvider);
-//        return mappingJacksonValue;
+    }
+
+    /* Delete Address by Id */
+    public String deleteSellerAddressById(String email, Long id) {
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not found"));
+        Address address =   addressRepository.findById(id).orElseThrow( ()->new AddressNotFoundException("Address associated with Id :"+ id +" Not Found .  Please provide correct Id"));
+
+
+        /*bonus feature */
+        /* check if Address record belong to current customer or not */
+
+        if(userEntity.getId() == address.getUserEntity().getId()){
+            addressRepository.deleteAddressById(id);
+            return "Address with id:" + id + " successfully deleted from database";
+        }else{
+            return "Address record associated with given ID provided do not belong to you! Please Proved correct address id";
+        }
 
     }
-//
-//    public String deleteCustomerAddressById(String email, Long id) {
-//        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not found"));
-//        Address address =   addressRepository.findById(id).orElseThrow( ()->new AddressNotFoundException("Address not Found"));
-//
-//
-//        /*bonus feature */
-//        /* check if Address record belong to current customer or not */
-//
-//        if(userEntity.getId() == address.getUserEntity().getId()){
-//            addressRepository.deleteAddressById(id);
-//            return "Address with id:" + id + " successfully deleted from database";
-//        }else{
-//            return "Address record associated with given ID provided do not belong to you!\n Please Proved correct address id";
-//        }
-//
-//    }
-//
-//    public String updateCustomerAddressById(String email,Long id,Address address){
-//        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
-//        Address userAddress = addressRepository.findById(id).orElseThrow(()->new AddressNotFoundException("Address Not Found"));
-//        address.setId(id);
-//        address.setUserEntity(userEntity);
-//        addressRepository.save(address);
-//        return "Address Updated";
-//    }
-//
+
+    public String updateSellerAddressById(String email,Long id,Address address){
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
+        Address userAddress = addressRepository.findById(id).orElseThrow(()->new AddressNotFoundException("Address associated with Id : "+ id + " Not Found .  Please provide correct Id\""));
+        address.setId(id);
+        address.setUserEntity(userEntity);
+        addressRepository.save(address);
+        return "Address Updated";
+    }
+
 
     /*Update Address*/
     public ResponseEntity<String> updateAddress(String email,Seller seller) {
@@ -164,6 +160,12 @@ public class SellerDaoService {
         sellerRepository.save(seller);
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
+    }
+
+    public String activateSeller(Long id){
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
+        userRepository.activateUserById(id);
+        return "Seller with id : "+id+" not found";
     }
 //
 //    /*list all customer*/

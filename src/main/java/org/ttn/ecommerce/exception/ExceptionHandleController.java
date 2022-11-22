@@ -27,4 +27,9 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<Object> handleAddressNotFoundException(AddressNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Address Not Found",ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
+    }
 }

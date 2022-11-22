@@ -110,20 +110,20 @@ public class SellerController {
         return  sellerDaoService.viewSellerAddresses(email);
 
     }
-//
-//    @DeleteMapping("delete/address/{id}")
-//    public String deleteCustomerAddress(@PathVariable("id") Long id,HttpServletRequest request){
-//        String email = customerDaoService.emailFromToken(request);
-//
-//        return customerDaoService.deleteCustomerAddressById(email,id);
-//
-//    }
-//
-//    @PatchMapping("/update/address/{id}")
-//    public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id,HttpServletRequest request){
-//        String email = customerDaoService.emailFromToken(request);
-//        return customerDaoService.updateCustomerAddressById(email,id,address);
-//    }
-//
+
+    @DeleteMapping("delete/address/{id}")
+    public String deleteSellerAddress(@PathVariable("id") Long id,HttpServletRequest request){
+        String email = sellerDaoService.emailFromToken(request);
+
+        return sellerDaoService.deleteSellerAddressById(email,id);
+
+    }
+
+    @PatchMapping("/update/address/{id}")
+    public String updateSellerAddress(@RequestBody Address address, @PathVariable("id") Long id,HttpServletRequest request){
+        String email = sellerDaoService.emailFromToken(request);
+        return sellerDaoService.updateSellerAddressById(email,id,address);
+    }
+
 
 }
