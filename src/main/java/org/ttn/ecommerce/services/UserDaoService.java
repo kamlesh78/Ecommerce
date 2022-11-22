@@ -40,14 +40,14 @@ public class UserDaoService {
     private JWTGenerator jwtGenerator;
     private CustomerRepository customerRepository;
     private EmailService emailService;
-    private SellerRepository customer;
+    private SellerRepository sellerRepository;
     private TokenService tokenService;
     private AccessTokenRepository accessTokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
 
 
     @Autowired
-    public UserDaoService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository customer, TokenService tokenService, AccessTokenRepository accessTokenService, RefreshTokenRepository refreshTokenService) {
+    public UserDaoService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -55,11 +55,13 @@ public class UserDaoService {
         this.jwtGenerator = jwtGenerator;
         this.customerRepository = customerRepository;
         this.emailService = emailService;
-        this.customer = customer;
-        this.tokenService=tokenService;
-        this.accessTokenRepository =accessTokenService;
-        this.refreshTokenRepository =refreshTokenService;
+        this.sellerRepository = sellerRepository;
+        this.tokenService = tokenService;
+        this.accessTokenRepository = accessTokenRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
+
+
 
     public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto){
         if(userRepository.existsByEmail(registerDto.getEmail())){
@@ -114,27 +116,42 @@ public class UserDaoService {
         seller.setMiddleName(sellerRegisterDto.getMiddleName());
         seller.setLastName(sellerRegisterDto.getLastName());
 
-        seller.setActive(false);
+        seller.setCompanyContact(sellerRegisterDto.getCompanyContact());
+        seller.setCompanyName(sellerRegisterDto.getCompanyName());
+        seller.setGst(sellerRegisterDto.getGstNumber());
+
+        seller.setActive(true);
         seller.setDeleted(false);
         seller.setExpired(false);
         seller.setLocked(false);
         seller.setInvalidAttemptCount(0);
 
-
         seller.setEmail(sellerRegisterDto.getEmail());
         seller.setPassword(passwordEncode.encode(sellerRegisterDto.getPassword()));
-
-        seller.setCompanyContact(sellerRegisterDto.getCompanyContact());
-        seller.setCompanyName("Kam");
-        seller.setGst("12345kkkkl");
-
 
         Role roles = roleRepository.findByAuthority("ROLE_SELLER").get();
         System.out.println(roles.getAuthority());
         seller.setRoles(Collections.singletonList(roles));
 
+        sellerRepository.save(seller);
 
-        return new ResponseEntity<>("Seller Registered Successfully",HttpStatus.OK);
+     /* Send Mail to Seller */
+        emailService.setSubject( seller.getFirstName()+" Your Account || " + " has been created! " );
+        emailService.setToEmail(seller.getEmail());
+        emailService.setMessage("Please Kindly wait for admin to approve your account");
+        emailService.sendEmail();
+
+        /* Sending mail to Admin user to activate Sellers Account*/
+        emailService.setSubject("New Seller Registered || Activate Sellers Account");
+        emailService.setMessage("Seller Id : " + seller.getId()+
+                "\nSeller Name : " + seller.getFirstName()+
+                "\nSeller Gst Number : " + seller.getGst()+
+                "\nReview and Activate Seller's Account");
+        emailService.setToEmail(SecurityConstants.ADMIN_EMAIL_ADDRESS);
+        emailService.sendEmail();
+
+        return new ResponseEntity<>("Seller Registered Successfully !! kindly wait for admin to approve your seller account",HttpStatus.OK);
+
 
     }
 

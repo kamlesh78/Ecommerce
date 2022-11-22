@@ -14,12 +14,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.dto.LoginDto;
+import org.ttn.ecommerce.dto.TestDao;
 import org.ttn.ecommerce.dto.accountAuthService.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
 import org.ttn.ecommerce.entities.Role;
+import org.ttn.ecommerce.entities.Test;
 import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.RoleRepository;
+import org.ttn.ecommerce.repository.TestRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
@@ -47,9 +51,11 @@ public class PublicController {
     private TokenService tokenService;
     private BlackListTokenService blackListTokenService;
 
+    private TestRepository testRepository;
+
 
     @Autowired
-    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService,TokenService tokenService,BlackListTokenService blackListTokenService) {
+    public PublicController(TestRepository testRepository,AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService,TokenService tokenService,BlackListTokenService blackListTokenService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -59,14 +65,16 @@ public class PublicController {
         this.userPasswordService = userPasswordService;
         this.tokenService = tokenService;
         this.blackListTokenService=blackListTokenService;
+        this.testRepository = testRepository;
     }
 
+    /*Common Login for Customer and Seller*/
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto ){
 
-        UserEntity user = userRepository.findByEmail(loginDto.getEmail()).get();
+        UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(()-> new UserNotFoundException("User with this email not found"));
 
-        if(user.isActive()){
+        if(!user.isActive()){
             return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
         }
         return userDaoService.loginCustomer(loginDto,user);
@@ -122,6 +130,32 @@ public class PublicController {
 
       return  blackListTokenService.blackListToken(token);
 
+
+    }
+
+    @PostMapping("test/add")
+    public String testUSer(@RequestBody Test test){
+
+        testRepository.save(test);
+        return "done";
+
+    }
+
+    @PatchMapping("test/patch")
+    public String testUserPut(@RequestBody Test  test){
+//         Test testUser = testRepository.findById(test.getId()).orElseThrow(()->new UserNotFoundException("Not dounf"));
+//         testUser.setC(test.getC());
+        testRepository.save(test);
+
+          return "done";
+
+    }
+
+    @PutMapping("test/put")
+    public String testUserPatch(@RequestBody Test test){
+
+        testRepository.save(test);
+        return "done";
 
     }
 }

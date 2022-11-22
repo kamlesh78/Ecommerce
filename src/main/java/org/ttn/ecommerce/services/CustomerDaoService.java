@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -20,10 +23,12 @@ import org.ttn.ecommerce.exception.AddressNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.CustomerRepository;
+import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,10 +42,14 @@ public class CustomerDaoService {
     CustomerRepository customerRepository;
 
     @Autowired
+    SellerRepository sellerRepository;
+
+    @Autowired
     private AddressRepository addressRepository;
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -118,7 +127,7 @@ public class CustomerDaoService {
         return "Address Updated";
     }
 
-    public ResponseEntity<String> updateAddress(String email,Customer customer) {
+    public ResponseEntity<String> updateProfile(String email,Customer customer) {
         Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
         if(customer.getContact()!=null) customerEntity.setContact(customer.getContact());
@@ -137,4 +146,22 @@ public class CustomerDaoService {
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
+
+    /*list all customer*/
+    public List<Customer> listAllCustomers(){
+        //Pageable pageable =  PageRequest.of(0,10,Sort.by("email").ascending());
+    //    customerRepository.findAll(pageable);
+        List<Customer> customers=customerRepository.findAll();
+        customers.stream().forEach(System.out::println);
+        return customers;
+    }
+
+    /* Deactivate Customer*/
+    public String deactiveCustomer(Long id) {
+        customerRepository.disableCustomer(id);
+        return "Customer with id : "+id+" deactivated";
+    }
+
+
+
 }

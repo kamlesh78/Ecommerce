@@ -43,6 +43,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
+            .antMatchers("/admin/**").permitAll()
             .antMatchers("/customer/**").hasRole("CUSTOMER")
             .antMatchers("/seller/**").hasRole("SELLER")
             .anyRequest().authenticated()

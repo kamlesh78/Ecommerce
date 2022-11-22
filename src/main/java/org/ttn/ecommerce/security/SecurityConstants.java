@@ -13,5 +13,6 @@ public class SecurityConstants {
 
     public static final long RESET_PASS_EXPIRE_MINUTES = 15;
 
+    public static final String ADMIN_EMAIL_ADDRESS = "kamlesh.singh@tothenew.com";
 
 }

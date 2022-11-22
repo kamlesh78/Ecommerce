@@ -41,6 +41,8 @@ public class TokenService {
         return claims.getSubject();
     }
 
+
+
     public String generateRegisterToken(Customer customer){
         String registerToken = UUID.randomUUID().toString();
         ActivateUserToken activateUserToken = new ActivateUserToken();

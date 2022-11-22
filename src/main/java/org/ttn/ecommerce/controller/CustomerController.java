@@ -100,7 +100,7 @@ public class CustomerController {
     @PatchMapping("profile/update")
     public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer,HttpServletRequest request){
         String email = customerDaoService.emailFromToken(request);
-        return customerDaoService.updateAddress(email,customer);
+        return customerDaoService.updateProfile(email,customer);
 
     }
 
