@@ -13,6 +13,14 @@ public interface AddressRepository extends JpaRepository<Address,Long> {
 
     Optional<Address> findById(Long id);
 
+
+    @Query(value = "select count(user_id) from address where id = :id ",nativeQuery = true)
+    long existsByUserId(@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "DELETE FROM address where user_id = :id",nativeQuery = true)
+    void deleteByUserId(@Param("id") Long id);
+
  //   boolean existById(Long id);
     @Modifying
     @Query(value = "delete from address where id = :id",nativeQuery = true)

@@ -37,7 +37,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         /* Exception handling */
 
-
         boolean blackList = blackListTokenRepository.existsByToken(token);
         System.out.println(blackListTokenRepository.existsByToken(token));
         if(StringUtils.hasText(token) && jwtGenerator.validateToken(token) && !blackList){

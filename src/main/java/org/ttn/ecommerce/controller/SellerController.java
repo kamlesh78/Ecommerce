@@ -9,10 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
-import org.ttn.ecommerce.entities.Address;
-import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.Images;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.dto.update.SellerPasswordDto;
+import org.ttn.ecommerce.entities.*;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.services.SellerDaoService;
 import org.ttn.ecommerce.services.util.ImageUtility;
@@ -66,20 +64,20 @@ public class SellerController {
         String email = sellerDaoService.emailFromToken(request);
         return sellerDaoService.sellerProfile(email);
     }
-//
-//    @PatchMapping("profile/update")
-//    public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, HttpServletRequest request){
-//        String email = customerDaoService.emailFromToken(request);
-//        return customerDaoService.updateProfile(email,customer);
-//
-//    }
-//
-//    @PatchMapping("update/password")
-//    public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, HttpServletRequest request){
-//        String email = customerDaoService.emailFromToken(request);
-//        return customerDaoService.updatePassword(customerPasswordDto,email);
-//
-//    }
+
+    @PatchMapping("update/profile")
+    public ResponseEntity<String> updateSellerAddress(@RequestBody Seller seller, HttpServletRequest request){
+        String email = sellerDaoService.emailFromToken(request);
+        return sellerDaoService.updateProfile(email,seller);
+
+    }
+
+    @PatchMapping("update/password")
+    public ResponseEntity<String> updateCustomerPassword(@RequestBody SellerPasswordDto sellerPasswordDto, HttpServletRequest request){
+        String email = sellerDaoService.emailFromToken(request);
+        return sellerDaoService.updatePassword(sellerPasswordDto,email);
+
+    }
 //    @GetMapping("profile/image")
 //    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
 //
@@ -97,19 +95,21 @@ public class SellerController {
 //                .body(ImageUtility.decompressImage(customerImage.get().getImage()));
 //    }
 //
-//    @PostMapping("add-address")
-//    public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, HttpServletRequest request){
-//        String email = customerDaoService.emailFromToken(request);
-//        return customerDaoService.insertCustomerAddress(email,address);
-//    }
-//
-//    @GetMapping("view-address")
-//    public MappingJacksonValue viewAddress(HttpServletRequest request) throws  IOException{
-//        String email = customerDaoService.emailFromToken(request);
-//
-//        return  customerDaoService.viewCustomerAddresses(email);
-//
-//    }
+
+    /*Seller Address Constraint :-> Seller should have only one address*/
+    @PostMapping("add-address")
+    public ResponseEntity<?> addSellerAddress(@RequestBody Address address, HttpServletRequest request){
+        String email = sellerDaoService.emailFromToken(request);
+        return sellerDaoService.insertSellerAddress(email,address);
+    }
+
+    @GetMapping("view-address")
+    public String viewAddress(HttpServletRequest request) throws  IOException{
+        String email = sellerDaoService.emailFromToken(request);
+
+        return  sellerDaoService.viewSellerAddresses(email);
+
+    }
 //
 //    @DeleteMapping("delete/address/{id}")
 //    public String deleteCustomerAddress(@PathVariable("id") Long id,HttpServletRequest request){

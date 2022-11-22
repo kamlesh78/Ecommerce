@@ -1,5 +1,7 @@
 package org.ttn.ecommerce.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
+import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.Seller;
@@ -24,8 +27,10 @@ import org.ttn.ecommerce.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -61,6 +66,7 @@ public class SellerDaoService {
     }
 
 
+    /*Seller's profile*/
     public MappingJacksonValue sellerProfile(String email){
         Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
 
@@ -69,35 +75,48 @@ public class SellerDaoService {
         MappingJacksonValue mappingJacksonValue= new MappingJacksonValue(seller);
         mappingJacksonValue.setFilters(filterProvider);
         return mappingJacksonValue;
+    }
+
+    public ResponseEntity<String> updateProfile(String email,Seller seller) {
+        Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        if(seller.getEmail()!=null) sellerEntity.setEmail(seller.getEmail());
+        if(seller.getCompanyContact()!=null) sellerEntity.setCompanyContact(seller.getCompanyContact());
+        if(seller.getFirstName()!=null) sellerEntity.setFirstName(seller.getFirstName());
+        if(seller.getMiddleName()!=null) sellerEntity.setMiddleName(seller.getMiddleName());
+        if(seller.getLastName()!=null) sellerEntity.setLastName(seller.getLastName());
+        sellerRepository.save(sellerEntity);
+        return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
+    }
+
+    /* Add Seller Address */
+    public ResponseEntity<?> insertSellerAddress(String email, Address address) {
+
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        if(addressRepository.existsByUserId(userEntity.getId())>=1){
+            addressRepository.deleteAddressById(userEntity.getId());
+        }
+        address.setUserEntity(userEntity);
+        addressRepository.save(address);
+        return new ResponseEntity<>("Address inserted",HttpStatus.OK);
 
     }
 
-//    /*add customer address*/
-//    public ResponseEntity<?> insertCustomerAddress(String email, Address address) {
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        if(userEntity.isPresent()){
-//            address.setUserEntity(userEntity.get());
-//            addressRepository.save(address);
-//            return new ResponseEntity<>("Address inserted",HttpStatus.OK);
-//        }else{
-//            /* exception*/
-//            return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//
-//
-//    /*display customer addresses*/
-//    public MappingJacksonValue viewCustomerAddresses(String email) throws IOException {
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-////        if(userEntity.isPresent()){
-//                        SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
-//            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
-//            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userEntity);
-//            mappingJacksonValue.setFilters(filterProvider);
-//        System.out.println("hh");
-//            return mappingJacksonValue;
-////              }
-//    }
+
+    /*display Seller addresses*/
+    public String viewSellerAddresses(String email) throws IOException {
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        Set<Address> addresses = userEntity.getAddresses();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        String output = mapper.writeValueAsString(addresses);
+        return output;
+//        SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
+//        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
+//        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userEntity);
+//        mappingJacksonValue.setFilters(filterProvider);
+//        return mappingJacksonValue;
+
+    }
 //
 //    public String deleteCustomerAddressById(String email, Long id) {
 //        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not found"));
@@ -125,25 +144,27 @@ public class SellerDaoService {
 //        return "Address Updated";
 //    }
 //
-//    public ResponseEntity<String> updateAddress(String email,Customer customer) {
-//        Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-//        if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
-//        if(customer.getContact()!=null) customerEntity.setContact(customer.getContact());
-//        if(customer.getFirstName()!=null) customerEntity.setFirstName(customer.getFirstName());
-//        if(customer.getMiddleName()!=null) customerEntity.setMiddleName(customer.getMiddleName());
-//        if(customer.getLastName()!=null) customerEntity.setLastName(customer.getLastName());
-//        customerRepository.save(customerEntity);
-//        return new ResponseEntity<>("Customer Profile Detail Updated!",HttpStatus.OK);
-//    }
-//
-//    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
-//
-//        Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-//        customer.setPassword(passwordEncoder.encode(customerPasswordDto.getPassword()));
-//        customerRepository.save(customer);
-//
-//        return new ResponseEntity<>("Password Updated",HttpStatus.OK);
-//    }
+
+    /*Update Address*/
+    public ResponseEntity<String> updateAddress(String email,Seller seller) {
+        Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
+        if(seller.getEmail()!=null) sellerEntity.setEmail(seller.getEmail());
+        if(seller.getCompanyContact()!=null) sellerEntity.setCompanyContact(seller.getCompanyContact());
+        if(seller.getFirstName()!=null) sellerEntity.setFirstName(seller.getFirstName());
+        if(seller.getMiddleName()!=null) sellerEntity.setMiddleName(seller.getMiddleName());
+        if(seller.getLastName()!=null) sellerEntity.setLastName(seller.getLastName());
+        sellerRepository.save(sellerEntity);
+        return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updatePassword(SellerPasswordDto sellerPasswordDto, String email) {
+
+        Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        seller.setPassword(passwordEncoder.encode(sellerPasswordDto.getPassword()));
+        sellerRepository.save(seller);
+
+        return new ResponseEntity<>("Password Updated",HttpStatus.OK);
+    }
 //
 //    /*list all customer*/
 //    public List<Customer> listAllSellers(){

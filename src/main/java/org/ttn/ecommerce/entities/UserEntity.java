@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -54,12 +55,10 @@ public class UserEntity {
     private Date passwordUpdateDate;
 
 
-
+    @JsonFilter("address-filter")
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private Set<Address> addresses;
-
-
 
 
     @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
