@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,7 @@ import org.ttn.ecommerce.controller.CustomerController;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
+import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.exception.AddressNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
@@ -68,22 +70,22 @@ public class CustomerDaoService {
 
 
     /*          list all customer           */
-    public MappingJacksonValue listAllCustomers() throws JsonProcessingException {
 
+    public MappingJacksonValue listAllCustomers(String pageSize,String pageOffset,String sortBy){
+
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
+                Sort.Direction.DESC,sortBy)));
+
+        Page<Customer> pages = customerRepository.findAll(pageable);
+        List<Customer> customerList = pages.getContent();
         ObjectMapper mapper = new ObjectMapper();
-        List<Customer> customers = customerRepository.findAll();
 
         FilterProvider filters = new SimpleFilterProvider() .addFilter(
                 "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
-//
-//        String jsonString = mapper.writer(filters)
-//                .withDefaultPrettyPrinter()
-//                .writeValueAsString(customers);
-//        return jsonString;
-        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customers);
+
+        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customerList);
         mappingJacksonValue.setFilters(filters);
         return mappingJacksonValue;
-
     }
 
     /*      Customer Profile        */

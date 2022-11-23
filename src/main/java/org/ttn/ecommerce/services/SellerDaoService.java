@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -177,6 +181,9 @@ public class SellerDaoService {
         return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
     }
 
+
+
+
     /* Update Sellers Password */
     public ResponseEntity<String> updatePassword(SellerPasswordDto sellerPasswordDto, String email) {
 
@@ -190,19 +197,25 @@ public class SellerDaoService {
 
 
 
-    /*list all customer*/
-    public MappingJacksonValue listAllSellers(){
+    /*                List all Sellers            */
+
+
+    public MappingJacksonValue listAllSellers(String pageSize,String pageOffset,String sortBy){
+
+        Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
+                Sort.Direction.DESC,sortBy)));
+
+        Page<Seller> pages = sellerRepository.findAll(pageable);
+       List<Seller> sellerList = pages.getContent();
         ObjectMapper mapper = new ObjectMapper();
-        List<Seller> sellers = sellerRepository.findAll();
 
         FilterProvider filters = new SimpleFilterProvider() .addFilter(
                 "sellerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","isActive","companyContact","companyName","gst","addresses"));
 
-        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(sellers);
+        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(sellerList);
         mappingJacksonValue.setFilters(filters);
         return mappingJacksonValue;
     }
-
 
 
 

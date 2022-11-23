@@ -29,19 +29,31 @@ check custom JsonFilter
     private SellerDaoService sellerDaoService;
 
 
-
+    /*  List Seller's address, User can provide Custom  pagination and sorting fields */
     @GetMapping("list/customers")
-    public MappingJacksonValue listAllCustomer() throws JsonProcessingException {
-        return customerDaoService.listAllCustomers();
+    public MappingJacksonValue listAllCustomer(
+            @RequestParam(name="pageSize",required = false) String pageSize,
+            @RequestParam(name = "pageOffset",required = false) String pageOffset,
+            @RequestParam(name ="sort",required = false) String sortBy
+    ) throws JsonProcessingException {
+        return customerDaoService.listAllCustomers(pageSize,pageOffset,sortBy);
 
     }
+
+
+    /* List Seller's address
+    *  User can provide Custom pagination and sorting fields
+    */
 
     @GetMapping("list/sellers")
-    public MappingJacksonValue listAllSeller() throws JsonProcessingException {
-        return sellerDaoService.listAllSellers();
+    public MappingJacksonValue listAllSeller(
+            @RequestParam(name="pageSize",required = false) String pageSize,
+            @RequestParam(name = "pageOffset",required = false) String pageOffset,
+            @RequestParam(name ="sort",required = false) String sortBy) throws JsonProcessingException {
+
+        return  sellerDaoService.listAllSellers(pageSize,pageOffset,sortBy);
 
     }
-
     @PatchMapping("deactivate/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id){
         return customerDaoService.deActiveCustomer(id);

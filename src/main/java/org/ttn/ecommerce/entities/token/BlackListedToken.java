@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class BlackListedToken {
+
     @Id
     @SequenceGenerator(name="blacklisted_token_sequence",sequenceName = "blacklisted_token_sequence",initialValue = 1,allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "blacklisted_token_sequence")

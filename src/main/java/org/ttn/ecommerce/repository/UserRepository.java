@@ -23,6 +23,8 @@ public interface UserRepository  extends JpaRepository<UserEntity,Long> {
     @Query(value = "UPDATE user SET is_active = 0 where id = :userId",nativeQuery = true)
     void deactivateUserById(@Param("userId") long id);
 
-
+    @Modifying
+    @Query(value = "UPDATE user SET a.invalid_attempt_count = ?1 WHERE a.email = ?2",nativeQuery = true)
+    void updateInvalidAttemptCount(Integer invalidAttemptCount, String email);
     Optional<UserEntity> findById(long id);
 }

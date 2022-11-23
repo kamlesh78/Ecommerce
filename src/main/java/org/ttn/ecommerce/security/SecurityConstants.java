@@ -15,4 +15,6 @@ public class SecurityConstants {
 
     public static final String ADMIN_EMAIL_ADDRESS = "kamlesh.singh@tothenew.com";
 
+    public static final int MAX_LOGIN_ATTEMPT = 3;
+
 }
