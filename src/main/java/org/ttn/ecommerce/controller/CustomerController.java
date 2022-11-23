@@ -79,7 +79,7 @@ public class CustomerController {
             imageRepository.save(Images.builder()
                     .name(image.getOriginalFilename())
                     .fileType(image.getContentType())
-                    .uploadedAt(LocalDateTime.now())
+                //    .uploadedAt(LocalDateTime.now())
                     .userEntity(userEntity.get())
                     .image(ImageUtility.compressImage(image.getBytes())).build());
             return ResponseEntity.status(HttpStatus.OK)

@@ -60,7 +60,7 @@ public class SellerController {
 //    }
 
     @GetMapping("profile/view")
-    public MappingJacksonValue viewCustomerProfile(HttpServletRequest request){
+    public MappingJacksonValue viewSellerProfile(HttpServletRequest request){
         String email = sellerDaoService.emailFromToken(request);
         return sellerDaoService.sellerProfile(email);
     }
@@ -73,7 +73,7 @@ public class SellerController {
     }
 
     @PatchMapping("update/password")
-    public ResponseEntity<String> updateCustomerPassword(@RequestBody SellerPasswordDto sellerPasswordDto, HttpServletRequest request){
+    public ResponseEntity<String> updateSellerPassword(@RequestBody SellerPasswordDto sellerPasswordDto, HttpServletRequest request){
         String email = sellerDaoService.emailFromToken(request);
         return sellerDaoService.updatePassword(sellerPasswordDto,email);
 

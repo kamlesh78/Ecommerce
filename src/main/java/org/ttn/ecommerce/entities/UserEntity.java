@@ -1,6 +1,9 @@
 package org.ttn.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,11 +31,13 @@ public class UserEntity {
 //    @Email
 //    @NotEmpty
 //    @NotNull
+
     @Column(name="Email")
     private String email;
 
 
     private String firstName;
+
 
     private String middleName;
 
@@ -44,7 +49,9 @@ public class UserEntity {
 
     private boolean isActive;
 
+
     private boolean isLocked;
+
 
     private boolean isDeleted;
 
@@ -55,9 +62,10 @@ public class UserEntity {
     private Date passwordUpdateDate;
 
 
-    @JsonFilter("address-filter")
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
+    @JsonManagedReference
     private Set<Address> addresses;
 
 
@@ -66,6 +74,7 @@ public class UserEntity {
                 inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles;
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
     private  Images image;
 

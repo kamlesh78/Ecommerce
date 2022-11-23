@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -33,9 +34,12 @@ public class Address {
 
     private String label;
 
-    @JsonIgnore
+
+
+
     @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonBackReference
     private UserEntity userEntity;
     @Override
     public String toString() {

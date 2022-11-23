@@ -1,7 +1,9 @@
 package org.ttn.ecommerce.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.Seller;
@@ -26,18 +28,26 @@ check custom JsonFilter
     @Autowired
     private SellerDaoService sellerDaoService;
 
+
+
     @GetMapping("list/customers")
-    public List<Customer> listAllCustomer(){
+    public MappingJacksonValue listAllCustomer() throws JsonProcessingException {
         return customerDaoService.listAllCustomers();
 
     }
 
-    @PatchMapping("deactive/customer/{id}")
+    @GetMapping("list/sellers")
+    public MappingJacksonValue listAllSeller() throws JsonProcessingException {
+        return sellerDaoService.listAllSellers();
+
+    }
+
+    @PatchMapping("deactivate/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id){
         return customerDaoService.deActiveCustomer(id);
     }
 
-    @PatchMapping("deactive/seller/{id}")
+    @PatchMapping("deactivate/seller/{id}")
     public String deActiveSeller(@PathVariable("id") Long id){
         return sellerDaoService.deActivateSeller(id);
     }

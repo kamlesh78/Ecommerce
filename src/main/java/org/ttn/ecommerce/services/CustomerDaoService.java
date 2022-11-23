@@ -1,6 +1,8 @@
 package org.ttn.ecommerce.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -30,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -53,12 +56,37 @@ public class CustomerDaoService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    EmailService emailService;
+
 
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
         String email = tokenService.getUsernameFromJWT(token);
         return email;
     }
+
+
+    /*          list all customer           */
+    public MappingJacksonValue listAllCustomers() throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<Customer> customers = customerRepository.findAll();
+
+        FilterProvider filters = new SimpleFilterProvider() .addFilter(
+                "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
+//
+//        String jsonString = mapper.writer(filters)
+//                .withDefaultPrettyPrinter()
+//                .writeValueAsString(customers);
+//        return jsonString;
+        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customers);
+        mappingJacksonValue.setFilters(filters);
+        return mappingJacksonValue;
+
+    }
+
+    /*      Customer Profile        */
     public MappingJacksonValue customerProfile(String email){
         Optional<Customer> customer = customerRepository.findByEmail(email);
         System.out.println(customer.get().getImages());
@@ -74,7 +102,7 @@ public class CustomerDaoService {
 
     }
 
-    /*add customer address*/
+    /*      Add customer address        */
     public ResponseEntity<?> insertCustomerAddress(String email, Address address) {
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if(userEntity.isPresent()){
@@ -88,7 +116,7 @@ public class CustomerDaoService {
     }
 
 
-    /*display customer addresses*/
+    /*      display customer addresses      */
     public MappingJacksonValue viewCustomerAddresses(String email) throws IOException {
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
 //        if(userEntity.isPresent()){
@@ -106,7 +134,7 @@ public class CustomerDaoService {
         Address address =   addressRepository.findById(id).orElseThrow( ()->new AddressNotFoundException("Address not Found"));
 
 
-        /*bonus feature */
+        /*      Bonus feature       */
         /* check if Address record belong to current customer or not */
 
         if(userEntity.getId() == address.getUserEntity().getId()){
@@ -115,9 +143,9 @@ public class CustomerDaoService {
         }else{
             return "Address record associated with given ID provided do not belong to you!\n Please Proved correct address id";
         }
-
     }
 
+    /*       Update Address        */
     public String updateCustomerAddressById(String email,Long id,Address address){
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
         Address userAddress = addressRepository.findById(id).orElseThrow(()->new AddressNotFoundException("Address Not Found"));
@@ -127,6 +155,7 @@ public class CustomerDaoService {
         return "Address Updated";
     }
 
+    /*    Update Profile      */
     public ResponseEntity<String> updateProfile(String email,Customer customer) {
         Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
@@ -138,35 +167,47 @@ public class CustomerDaoService {
         return new ResponseEntity<>("Customer Profile Detail Updated!",HttpStatus.OK);
     }
 
+    /*      Update Password         */
     public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-        customer.setPassword(passwordEncoder.encode(customerPasswordDto.getPassword()));
-        customerRepository.save(customer);
+
+        /*bonus feature :           update using patch using custom query*/
+
+        customerRepository.updatePassword(passwordEncoder.encode(customerPasswordDto.getPassword()),customer.getId());
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 
-    /*list all customer*/
-    public List<Customer> listAllCustomers(){
-        //Pageable pageable =  PageRequest.of(0,10,Sort.by("email").ascending());
-    //    customerRepository.findAll(pageable);
-        List<Customer> customers=customerRepository.findAll();
-        customers.stream().forEach(System.out::println);
-        return customers;
-    }
 
-    /* Deactivate Customer*/
+    /*       Deactivate Customer          */
     public String deActiveCustomer(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
-        userRepository.disableCustomer(id);
+        if(userEntity.isActive()){
+            userRepository.deactivateUserById(id);
+            emailService.setSubject("Account Deactivated");
+            emailService.setMessage(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
+            emailService.setToEmail(userEntity.getEmail());
+            emailService.sendEmail();
+            /*Exception handling for mail*/
+
+        }
+        userRepository.deactivateUserById(id);
         return "Customer with id : "+id+" deactivated";
     }
 
     /*   Activate Customer   */
     public String activeCustomer(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
-        userRepository.activateUserById(id);
+        if(!userEntity.isActive()){
+            userRepository.activateUserById(id);
+            emailService.setSubject("Account Activated");
+            emailService.setMessage(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
+            emailService.setToEmail(userEntity.getEmail());
+            emailService.sendEmail();
+            /*Exception handling for mail*/
+
+        }
         return "Customer with id : "+id+" not found";
     }
 }

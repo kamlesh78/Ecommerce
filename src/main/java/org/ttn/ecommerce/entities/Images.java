@@ -1,9 +1,11 @@
 package org.ttn.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 
 @Builder
 @Entity
@@ -18,8 +20,8 @@ public class Images {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "image_sequence")
     private Long id;
 
-    @Column(name="upload_time")
-    private LocalDateTime uploadedAt;
+//    @Column(name="upload_time")
+//    private LocalDateTime uploadedAt;
 
     @Column(name="file_name")
     private String name;
@@ -31,7 +33,8 @@ public class Images {
     private byte[] image;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @OneToOne
     @JoinColumn(name="user_id")
     private UserEntity userEntity;
 

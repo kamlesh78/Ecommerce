@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name="user_id")
 @Table(name="seller")
-@JsonFilter("seller-filter")
+@JsonFilter("sellerFilter")
 public class Seller extends  UserEntity{
 
     @NotNull
