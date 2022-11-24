@@ -15,13 +15,21 @@ public interface RegisterUserRepository extends JpaRepository<ActivateUserToken,
     @Query(value = "select * from activate_user_token where token = :token and user_id = :id",nativeQuery = true)
     Optional<ActivateUserToken> findByTokenAndUserEntity(@Param("token") String token,@Param("id") Long user_id);
 
+
+    @Query(value = "select count(user_id) from activate_user_token where user_id = :id",nativeQuery = true)
+    long existsByUserId(@Param("id") Long id);
+    @Modifying
+    @Query(value="DELETE FROM activate_user_token where token = :token and user_id = :id",nativeQuery = true)
+    void deleteActivateToken(@Param("token") String token,@Param("id") Long id);
+
     @Transactional
     @Modifying
     @Query(value = "UPDATE activate_user_token SET activated_at = :time where token = :token",nativeQuery = true)
     void confirmUserBytoken(@Param("token") String token, @Param("time") LocalDateTime time);
 
+
     @Modifying
-    @Query(value="DELETE FROM activate_user_token where token = :token and user_id = :id")
-    void deleteActivateToken(@Param("token") String token,@Param("id") Long id);
+    @Query(value = "DELETE FROM activate_user_token where user_id = :id ",nativeQuery = true)
+    void deleteByUserId(@Param("id") Long id);
 
 }

@@ -24,11 +24,14 @@ import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entities.token.ActivateUserToken;
 import org.ttn.ecommerce.exception.AddressNotFoundException;
+import org.ttn.ecommerce.exception.TokenNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
+import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +68,9 @@ public class CustomerDaoService {
 
     @Autowired
     EmailServicetry emailServicetry;
+
+    @Autowired
+    RegisterUserRepository registerUserRepository;
 
 
     public String emailFromToken(HttpServletRequest request){
@@ -236,5 +242,40 @@ public class CustomerDaoService {
 
         }
         return "Customer with id + " + id+" activated Successfully";
+    }
+
+    public String resendActivationLink(String email) {
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer with given email not found"));
+
+
+
+        /* If User's account is not active */
+        if(!customer.isActive()){
+
+            /*            Delete Activation Token Of Current User             */
+            if(registerUserRepository.existsByUserId(customer.getId()) > 0){
+                registerUserRepository.deleteByUserId(customer.getId());
+
+            }
+            String activationToken =  tokenService.generateRegisterToken(customer);
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setTo(customer.getEmail());
+            simpleMailMessage.setSubject("Account Activation Token");
+            simpleMailMessage.setText(customer.getFirstName() +
+                    " Please Use this Activation Code to activate your account within 3 hours"
+                    +"\nNew Token : " + activationToken);
+            emailServicetry.sendEmail(simpleMailMessage);
+
+            return "New Activation Token sent to your email id .Please activate account within 3 hours";
+
+
+        }else{
+            return  "Account is already active";
+        }
+
+
+
+
+
     }
 }

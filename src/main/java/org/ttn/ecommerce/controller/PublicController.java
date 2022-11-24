@@ -18,10 +18,7 @@ import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.TestRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
-import org.ttn.ecommerce.services.BlackListTokenService;
-import org.ttn.ecommerce.services.TokenService;
-import org.ttn.ecommerce.services.UserDaoService;
-import org.ttn.ecommerce.services.UserPasswordService;
+import org.ttn.ecommerce.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -41,10 +38,11 @@ public class PublicController {
     private TokenService tokenService;
     private BlackListTokenService blackListTokenService;
     private TestRepository testRepository;
+    private CustomerDaoService customerDaoService;
 
 
     @Autowired
-    public PublicController(TestRepository testRepository,AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService,TokenService tokenService,BlackListTokenService blackListTokenService) {
+    public PublicController(TestRepository testRepository, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerDaoService customerDaoService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -55,6 +53,7 @@ public class PublicController {
         this.tokenService = tokenService;
         this.blackListTokenService=blackListTokenService;
         this.testRepository = testRepository;
+        this.customerDaoService = customerDaoService;
     }
 
 
@@ -100,7 +99,10 @@ public class PublicController {
         return new ResponseEntity<>("Account with this email do not exists",HttpStatus.BAD_REQUEST);
     }
 
-    public
+    @PostMapping("/resend/activation-link")
+    public String resentActivationLink(@Valid @PathVariable("email") String email){
+        return customerDaoService.resendActivationLink(email);
+    }
 
     @GetMapping("forget-password/{email}")
     public ResponseEntity<?> forgetUserPassword(@PathVariable("email") String email){

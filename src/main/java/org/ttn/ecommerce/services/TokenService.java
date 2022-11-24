@@ -111,7 +111,8 @@ public class TokenService {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setTo(customer.getEmail());
             simpleMailMessage.setSubject("Account Activation Token");
-            simpleMailMessage.setText(customer.getFirstName() + " Please Use this Activation Code to activate your account within 3 hours");
+            simpleMailMessage.setText(customer.getFirstName() + " Please Use this Activation Code to activate your account within 3 hours"
+                    +"\nPlease use this Token : " + activationToken);
             emailServicetry.sendEmail(simpleMailMessage);
 
             return "New Activation Token sent to your email id .Please activate account within 3 hours";
