@@ -74,9 +74,9 @@ public class UserEntity {
                 inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles;
 
-    @JsonManagedReference
-    @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
-    private  Images image;
+//    @JsonManagedReference
+//    @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
+//    private  Images image;
 
     public UserEntity() {
     }
@@ -193,13 +193,13 @@ public class UserEntity {
         this.roles = roles;
     }
 
-    public Images getImages() {
-        return image;
-    }
+//    public Images getImages() {
+//        return image;
+//    }
 
-    public void setImages(Images images) {
-        this.image = images;
-    }
+//    public void setImages(Images images) {
+//        this.image = images;
+//    }
 
     @Override
     public String toString() {

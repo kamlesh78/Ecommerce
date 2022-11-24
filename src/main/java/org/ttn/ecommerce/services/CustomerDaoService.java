@@ -101,9 +101,9 @@ public class CustomerDaoService {
     /*      Customer Profile        */
     public MappingJacksonValue customerProfile(String email){
         Optional<Customer> customer = customerRepository.findByEmail(email);
-        System.out.println(customer.get().getImages());
+//        System.out.println(customer.get().getImages());
 //        if(customer.isPresent()){
-            SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","email","isActive","contact","image");
+            SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","email","isActive","contact");
             FilterProvider filterProvider =new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
             MappingJacksonValue mappingJacksonValue= new MappingJacksonValue(customer);
             mappingJacksonValue.setFilters(filterProvider);

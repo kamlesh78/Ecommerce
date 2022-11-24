@@ -3,10 +3,12 @@ package org.ttn.ecommerce.dto.register;
 import lombok.Data;
 import org.ttn.ecommerce.validations.Gst;
 import org.ttn.ecommerce.validations.Password;
+import org.ttn.ecommerce.validations.PhoneNumber;
 import org.ttn.ecommerce.validations.SellerPasswordMatcher;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 
@@ -18,7 +20,7 @@ public class SellerRegisterDto {
     private String lastName;
     private String middleName;
 
-    @Password
+
     @NotBlank(message = "Phone number can not be empty")
     private String companyContact;
 
@@ -30,6 +32,8 @@ public class SellerRegisterDto {
     @NotBlank(message = "Password can not be empty")
     private String password;
 
+
+    @NotNull(message = "Password can not be null")
     @Password
     private String confirmPassword;
 

@@ -9,7 +9,6 @@ import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.services.SellerDaoService;
-import org.ttn.ecommerce.validations.SellerPasswordMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;

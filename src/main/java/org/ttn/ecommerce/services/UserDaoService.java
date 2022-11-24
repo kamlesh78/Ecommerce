@@ -118,7 +118,7 @@ public class UserDaoService {
         seller.setCompanyName(sellerRegisterDto.getCompanyName());
         seller.setGst(sellerRegisterDto.getGstNumber());
 
-        seller.setActive(true);
+        seller.setActive(false);
         seller.setDeleted(false);
         seller.setExpired(false);
         seller.setLocked(false);

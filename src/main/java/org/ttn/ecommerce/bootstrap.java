@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Role;
 import org.ttn.ecommerce.entities.UserEntity;
@@ -18,16 +19,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Transactional
 public class bootstrap implements ApplicationRunner {
 
-    @Autowired
+
     private RoleRepository roleRepository;
 
-    @Autowired
+
     private UserRepository userRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public bootstrap(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -75,6 +83,7 @@ public class bootstrap implements ApplicationRunner {
             userEntity.setAddresses(addresses);
 
             Role roles = roleRepository.findByAuthority("ROLE_ADMIN").get();
+            System.out.println(roles.getId());
             userEntity.setRoles(Collections.singletonList(roles));
 
             userRepository.save(userEntity);

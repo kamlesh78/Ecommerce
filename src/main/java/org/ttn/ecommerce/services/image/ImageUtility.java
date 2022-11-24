@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.services.util;
+package org.ttn.ecommerce.services.image;
 
 import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;

@@ -7,7 +7,7 @@ import org.ttn.ecommerce.entities.Token;
 import java.util.Optional;
 
 @Repository
-public interface AccessTokenRepository extends JpaRepository<Token,Long> {
+public interface AccessTokenRepository extends JpaRepository<Token, Long> {
 
     Optional<Token> findByToken(String token);
 }

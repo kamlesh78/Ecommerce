@@ -30,7 +30,11 @@ public class AdminController {
             @RequestParam(name = "pageOffset", required = false) String pageOffset,
             @RequestParam(name = "sort", required = false) String sortBy
     ) throws JsonProcessingException {
-        return customerDaoService.listAllCustomers(pageSize, pageOffset, sortBy);
+
+        String customPageSize = pageSize == null ? "10" : pageSize;
+        String customPageOffset = pageOffset == null ? "0" : pageOffset;
+        String customSortBy = sortBy == null ? "email" : sortBy;
+        return customerDaoService.listAllCustomers(customPageSize, customPageOffset, customSortBy);
 
     }
 
@@ -45,10 +49,12 @@ public class AdminController {
             @RequestParam(name = "pageOffset", required = false) String pageOffset,
             @RequestParam(name = "sort", required = false) String sortBy) throws JsonProcessingException {
 
-        String customPageSize    = pageSize==null?"10":pageSize;
-        String customPageOffset  = pageOffset==null?"0":pageOffset;
-        String customSortBy      = sortBy==null?"email":sortBy;
-        return sellerDaoService.listAllSellers(customPageSize,customPageOffset,customSortBy);
+
+        /*      Default Values if Custom Pagination and Sorting fields not provided      */
+        String customPageSize = pageSize == null ? "10" : pageSize;
+        String customPageOffset = pageOffset == null ? "0" : pageOffset;
+        String customSortBy = sortBy == null ? "email" : sortBy;
+        return sellerDaoService.listAllSellers(customPageSize, customPageOffset, customSortBy);
     }
 
     @PatchMapping("deactivate/customer/{id}")
