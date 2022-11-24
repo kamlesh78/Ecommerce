@@ -105,8 +105,6 @@ public class UserDaoService {
     }
 
 
-
-
     public ResponseEntity<String> registerSeller(SellerRegisterDto sellerRegisterDto){
         if(userRepository.existsByEmail(sellerRegisterDto.getEmail())){
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);

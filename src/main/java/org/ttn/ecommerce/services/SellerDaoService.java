@@ -133,6 +133,7 @@ public class SellerDaoService {
         return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
     }
 
+
     /* Add Seller Address */
     public ResponseEntity<?> insertSellerAddress(String email, Address address) {
 
@@ -195,8 +196,6 @@ public class SellerDaoService {
         sellerRepository.save(sellerEntity);
         return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
     }
-
-
 
 
     /* Update Sellers Password */
