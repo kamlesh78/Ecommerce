@@ -19,4 +19,9 @@ public interface RegisterUserRepository extends JpaRepository<ActivateUserToken,
     @Modifying
     @Query(value = "UPDATE activate_user_token SET activated_at = :time where token = :token",nativeQuery = true)
     void confirmUserBytoken(@Param("token") String token, @Param("time") LocalDateTime time);
+
+    @Modifying
+    @Query(value="DELETE FROM activate_user_token where token = :token and user_id = :id")
+    void deleteActivateToken(@Param("token") String token,@Param("id") Long id);
+
 }

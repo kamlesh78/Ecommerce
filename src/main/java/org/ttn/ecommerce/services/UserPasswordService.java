@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ttn.ecommerce.dto.accountAuthService.ResetPasswordDto;
+import org.ttn.ecommerce.dto.accountAuth.ResetPasswordDto;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.token.ForgetPasswordToken;
 import org.ttn.ecommerce.repository.TokenRepository.ForgetPasswordRepository;

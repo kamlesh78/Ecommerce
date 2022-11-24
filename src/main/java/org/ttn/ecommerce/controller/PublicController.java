@@ -2,29 +2,20 @@ package org.ttn.ecommerce.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.dto.LoginDto;
-import org.ttn.ecommerce.dto.TestDao;
-import org.ttn.ecommerce.dto.accountAuthService.ResetPasswordDto;
+import org.ttn.ecommerce.dto.accountAuth.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entities.Role;
 import org.ttn.ecommerce.entities.Test;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.TestRepository;
-import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.BlackListTokenService;
@@ -34,7 +25,6 @@ import org.ttn.ecommerce.services.UserPasswordService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.Optional;
 
 @RestController
@@ -50,7 +40,6 @@ public class PublicController {
     private UserPasswordService userPasswordService;
     private TokenService tokenService;
     private BlackListTokenService blackListTokenService;
-
     private TestRepository testRepository;
 
 
@@ -67,6 +56,7 @@ public class PublicController {
         this.blackListTokenService=blackListTokenService;
         this.testRepository = testRepository;
     }
+
 
     /*Common Login for Customer and Seller*/
     @PostMapping("login")
@@ -94,7 +84,7 @@ public class PublicController {
     }
 
     @PostMapping("seller/register")
-    public ResponseEntity<String> registerSeller(@RequestBody SellerRegisterDto sellerRegisterDto){
+    public ResponseEntity<String> registerSeller(@Valid @RequestBody SellerRegisterDto sellerRegisterDto){
 
         return userDaoService.registerSeller(sellerRegisterDto);
     }
@@ -110,6 +100,7 @@ public class PublicController {
         return new ResponseEntity<>("Account with this email do not exists",HttpStatus.BAD_REQUEST);
     }
 
+    public
 
     @GetMapping("forget-password/{email}")
     public ResponseEntity<?> forgetUserPassword(@PathVariable("email") String email){

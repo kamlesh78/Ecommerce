@@ -2,7 +2,7 @@ package org.ttn.ecommerce.dto.register;
 
 import lombok.Data;
 
-import org.ttn.ecommerce.validations.ConfirmPassword;
+import org.ttn.ecommerce.validations.CustomerPasswordMatcher;
 import org.ttn.ecommerce.validations.Email;
 import org.ttn.ecommerce.validations.Password;
 import org.ttn.ecommerce.validations.PhoneNumber;
@@ -10,6 +10,7 @@ import org.ttn.ecommerce.validations.PhoneNumber;
 import javax.validation.constraints.*;
 
 @Data
+
 public class CustomerRegisterDto {
 
 
@@ -17,10 +18,9 @@ public class CustomerRegisterDto {
     private String lastName;
     private String middleName;
 
-   // @Pattern(regexp = "(^$|[0-9]{10})",message = "Phone number should be of 10 digits")
+    @PhoneNumber
     @NotNull
     @NotBlank
-    @PhoneNumber
     private String contact;
 
 

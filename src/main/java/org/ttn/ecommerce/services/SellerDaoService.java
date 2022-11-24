@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ import org.ttn.ecommerce.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -55,6 +57,9 @@ public class SellerDaoService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    EmailServicetry emailServicetry;
+
 
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
@@ -68,10 +73,16 @@ public class SellerDaoService {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
         if(userEntity.isActive()){
             userRepository.deactivateUserById(id);
-            emailService.setSubject("Account Deactivated");
-            emailService.setMessage(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
-            emailService.setToEmail(userEntity.getEmail());
-            emailService.sendEmail();
+
+            /*      Sending DeActivation Mail To Seller       */
+
+            SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+            simpleMailMessage.setSubject("Account Deactivated");
+            simpleMailMessage.setText(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
+            simpleMailMessage.setTo(userEntity.getEmail());
+
+            emailServicetry.sendEmail(simpleMailMessage);
+
             /*Exception handling for mail*/
 
         }
@@ -84,10 +95,14 @@ public class SellerDaoService {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
         if(!userEntity.isActive()){
             userRepository.activateUserById(id);
-            emailService.setSubject("Account Activated");
-            emailService.setMessage(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
-            emailService.setToEmail(userEntity.getEmail());
-            emailService.sendEmail();
+
+            /* Sending Mail To Seller*/
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setSubject("Account Activated");
+            simpleMailMessage.setText(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
+            simpleMailMessage.setTo(userEntity.getEmail());
+
+            emailServicetry.sendEmail(simpleMailMessage);
             /*Exception handling for mail*/
 
         }
@@ -190,15 +205,17 @@ public class SellerDaoService {
         Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
 
         sellerRepository.updatePassword(passwordEncoder.encode(sellerPasswordDto.getPassword()),seller.getId());
-     //   seller.setPassword(passwordEncoder.encode(sellerPasswordDto.getPassword()));
+
+        /*      Sending Email to USer for password reset Alert      */
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(seller.getEmail());
+        simpleMailMessage.setSubject("Password Updated");
+        simpleMailMessage.setText(seller.getFirstName() + " password for your account has updated at : " + LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you");
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 
-
-
-    /*                List all Sellers            */
-
+    /*          List all Sellers            */
 
     public MappingJacksonValue listAllSellers(String pageSize,String pageOffset,String sortBy){
 

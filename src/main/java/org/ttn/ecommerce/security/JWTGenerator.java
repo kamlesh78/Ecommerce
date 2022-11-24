@@ -3,9 +3,7 @@ package org.ttn.ecommerce.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -18,12 +16,10 @@ import java.util.stream.Collectors;
 public class JWTGenerator {
 
 
-
-
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         Token token1 = new Token();
         String username = authentication.getName();
-        Date currentDate= new Date();
+        Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
 
@@ -35,25 +31,25 @@ public class JWTGenerator {
                 .setIssuedAt(new Date())
                 .claim("ROLE", authorities)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512,SecurityConstants.JWT_SECRET)
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.JWT_SECRET)
                 .compact();
-      return token;
+        return token;
 
 
     }
 
 
-    public String getUsernameFromJWT(String token){
+    public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SecurityConstants.JWT_SECRET)
                 .parseClaimsJws(token)
                 .getBody();
-                return claims.getSubject();
+        return claims.getSubject();
     }
 
 
-    public boolean validateToken(String token) throws AccessDeniedException{
-        try{
+    public boolean validateToken(String token) throws AccessDeniedException {
+        try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SecurityConstants.JWT_SECRET)
                     .parseClaimsJws(token)
@@ -62,7 +58,7 @@ public class JWTGenerator {
             Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).parseClaimsJws(token);
 
             return true;
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new AccessDeniedException("JWT was expired or incorrect");
         }
     }

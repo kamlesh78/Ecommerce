@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import org.ttn.ecommerce.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -61,6 +63,9 @@ public class CustomerDaoService {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    EmailServicetry emailServicetry;
+
 
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
@@ -78,7 +83,6 @@ public class CustomerDaoService {
 
         Page<Customer> pages = customerRepository.findAll(pageable);
         List<Customer> customerList = pages.getContent();
-        ObjectMapper mapper = new ObjectMapper();
 
         FilterProvider filters = new SimpleFilterProvider() .addFilter(
                 "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
@@ -157,7 +161,8 @@ public class CustomerDaoService {
         return "Address Updated";
     }
 
-    /*    Update Profile      */
+
+    /*     Update Profile         */
     public ResponseEntity<String> updateProfile(String email,Customer customer) {
         Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
@@ -169,14 +174,23 @@ public class CustomerDaoService {
         return new ResponseEntity<>("Customer Profile Detail Updated!",HttpStatus.OK);
     }
 
+
     /*      Update Password         */
     public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
 
-        /*bonus feature :           update using patch using custom query*/
+
+        /*bonus feature :    update using patch using custom query*/
 
         customerRepository.updatePassword(passwordEncoder.encode(customerPasswordDto.getPassword()),customer.getId());
+
+        /*          Sending Mail To Alert Password Change Event         */
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(customer.getEmail());
+        simpleMailMessage.setSubject("Password Updated");
+        simpleMailMessage.setText(customer.getFirstName() + " password for your account has updated at : " + LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you");
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
@@ -187,10 +201,16 @@ public class CustomerDaoService {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
         if(userEntity.isActive()){
             userRepository.deactivateUserById(id);
-            emailService.setSubject("Account Deactivated");
-            emailService.setMessage(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
-            emailService.setToEmail(userEntity.getEmail());
-            emailService.sendEmail();
+
+            /* Sending Deactivation Mail to Customer*/
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(userEntity.getEmail());
+            mailMessage.setSubject(userEntity.getFirstName()+"Account Deactivated");
+            mailMessage.setText(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account");
+
+            emailServicetry.sendEmail(mailMessage);
+
+
             /*Exception handling for mail*/
 
         }
@@ -203,13 +223,18 @@ public class CustomerDaoService {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Customer with Id : "+id+" not found"));
         if(!userEntity.isActive()){
             userRepository.activateUserById(id);
-            emailService.setSubject("Account Activated");
-            emailService.setMessage(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
-            emailService.setToEmail(userEntity.getEmail());
-            emailService.sendEmail();
+
+
+            /* Sending Mail to Customer*/
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(userEntity.getEmail());
+            mailMessage.setSubject(userEntity.getFirstName()+"Account Activated");
+            mailMessage.setText(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
+
+            emailServicetry.sendEmail(mailMessage);
             /*Exception handling for mail*/
 
         }
-        return "Customer with id : "+id+" not found";
+        return "Customer with id + " + id+" activated Successfully";
     }
 }

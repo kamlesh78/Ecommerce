@@ -17,7 +17,15 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
 
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", exception.getFieldError().getDefaultMessage());
+
+        String errMessage="";
+        if(exception.getFieldError()==null){
+            errMessage = exception.getGlobalError().getDefaultMessage();
+        }else{
+            errMessage = exception.getFieldError().getDefaultMessage();
+        }
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", errMessage);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
@@ -31,5 +39,11 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAddressNotFoundException(AddressNotFoundException ex){
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Address Not Found",ex.getMessage());
         return new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TokenNotFoundException.class)
+    public ResponseEntity<Object> handleTokenNotFoundException(TokenNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Token Not Found",ex.getMessage());
+        return  new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
     }
 }

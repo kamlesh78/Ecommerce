@@ -13,7 +13,7 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
     @Override
     public boolean isValid(String phoneNumber, ConstraintValidatorContext constraintValidatorContext) {
 
-        if(true){
+        if(phoneNumber.matches("^$|[0-9]{10}")){
             return true;
         }else{
             return false;
