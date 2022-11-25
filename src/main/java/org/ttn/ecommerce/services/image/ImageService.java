@@ -20,15 +20,18 @@ public class ImageService {
     @Autowired
     UserRepository userRepository;
 
-    public  String uploadImage(String email, MultipartFile multipartFile) throws IOException {
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
+    public String uploadImage(String email, MultipartFile multipartFile) throws IOException {
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User Not Found"));
+
+        String[] arr = multipartFile.getContentType().split("/");
+
         Path uploadPath = Paths.get("/home/kamlesh/Pictures/ecommerce_image");
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve( userEntity.getId()+"."+multipartFile.getContentType());
+            Path filePath = uploadPath.resolve(userEntity.getId() + "."+arr[1]);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
             throw new IOException("Could not save file " , ioe);
@@ -36,3 +39,4 @@ public class ImageService {
         return "Image Uploaded Successfully";
     }
 }
+

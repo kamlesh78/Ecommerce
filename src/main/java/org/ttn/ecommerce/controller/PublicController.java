@@ -8,7 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.LoginDto;
-import org.ttn.ecommerce.dto.accountAuth.ResetPasswordDto;
+import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
 import org.ttn.ecommerce.entities.Test;

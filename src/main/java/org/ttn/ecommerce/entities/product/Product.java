@@ -1,0 +1,41 @@
+package org.ttn.ecommerce.entities.product;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ttn.ecommerce.entities.Seller;
+
+import javax.persistence.*;
+
+public class Product {
+
+    @Id
+    @SequenceGenerator(name="category_sequence",sequenceName = "category_sequence",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_sequence")
+    private Long id;
+
+    private String name;
+
+    private String description;
+
+    private boolean isCancellable;
+
+    private boolean isReturnable;
+
+    private boolean isActive;
+
+    private boolean isDeleted;
+
+    private String brand;
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "seller_user_id")
+    private Seller seller;
+
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
+
+
+}

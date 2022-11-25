@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.dto.accountAuth;
+package org.ttn.ecommerce.dto.reset;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

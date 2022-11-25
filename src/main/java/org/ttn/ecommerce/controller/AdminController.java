@@ -77,6 +77,7 @@ public class AdminController {
 
     @PatchMapping("activate/seller/{id}")
     public String activeSeller(@PathVariable("id") Long id) {
+
         return sellerDaoService.activateSeller(id);
     }
 
