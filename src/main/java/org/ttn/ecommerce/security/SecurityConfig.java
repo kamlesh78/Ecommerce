@@ -54,6 +54,7 @@ public class SecurityConfig {
             .antMatchers("/admin/**").hasRole("ADMIN")
             .antMatchers("/customer/**").hasRole("CUSTOMER")
             .antMatchers("/seller/**").hasRole("SELLER")
+            .antMatchers("/category/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .httpBasic();

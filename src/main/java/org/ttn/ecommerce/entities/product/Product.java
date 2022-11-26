@@ -1,11 +1,12 @@
 package org.ttn.ecommerce.entities.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ttn.ecommerce.entities.Seller;
+import org.ttn.ecommerce.entities.category.Category;
 
 import javax.persistence.*;
+import java.util.List;
 
+@Entity
 public class Product {
 
     @Id
@@ -36,6 +37,13 @@ public class Product {
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
+
+    @OneToMany
+    private List<ProductVariation> productVariations;
+
+    @OneToMany
+    private List<ProductReview> productReviews;
+
 
 
 }

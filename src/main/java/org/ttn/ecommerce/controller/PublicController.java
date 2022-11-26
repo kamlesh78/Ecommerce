@@ -15,7 +15,6 @@ import org.ttn.ecommerce.entities.Test;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.RoleRepository;
-import org.ttn.ecommerce.repository.TestRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.*;
@@ -37,12 +36,11 @@ public class PublicController {
     private final UserPasswordService userPasswordService;
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
-    private final TestRepository testRepository;
-    private final CustomerDaoService customerDaoService;
+     private final CustomerDaoService customerDaoService;
 
 
     @Autowired
-    public PublicController(TestRepository testRepository, AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerDaoService customerDaoService) {
+    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerDaoService customerDaoService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -52,7 +50,6 @@ public class PublicController {
         this.userPasswordService = userPasswordService;
         this.tokenService = tokenService;
         this.blackListTokenService = blackListTokenService;
-        this.testRepository = testRepository;
         this.customerDaoService = customerDaoService;
     }
 
@@ -126,29 +123,5 @@ public class PublicController {
 
     }
 
-    @PostMapping("test/add")
-    public String testUSer(@RequestBody Test test) {
 
-        testRepository.save(test);
-        return "done";
-
-    }
-
-    @PatchMapping("test/patch")
-    public String testUserPut(@RequestBody Test test) {
-//         Test testUser = testRepository.findById(test.getId()).orElseThrow(()->new UserNotFoundException("Not dounf"));
-//         testUser.setC(test.getC());
-        testRepository.save(test);
-
-        return "done";
-
-    }
-
-    @PutMapping("test/put")
-    public String testUserPatch(@RequestBody Test test) {
-
-        testRepository.save(test);
-        return "done";
-
-    }
 }

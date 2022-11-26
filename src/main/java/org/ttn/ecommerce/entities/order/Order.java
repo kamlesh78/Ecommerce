@@ -1,10 +1,12 @@
 package org.ttn.ecommerce.entities.order;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import org.ttn.ecommerce.entities.Customer;
 
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+@Entity
 public class Order {
 
     @Id
@@ -12,5 +14,22 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "order_sequence")
     private Long id;
 
+    private double amountPaid;
+
+    private Date dateCreated;
+    private String paymentMethod;
+    private String customerAddressCity;
+    private String customerAddressState;
+    private String customerAddressCountry;
+    private String customerAddressAddressLine;
+    private String customerAddressZipCode;
+    private String customerAddressLabel;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_user_id")
+    private Customer customer;
+
+    @OneToMany(mappedBy = "order")
+    List<OrderProduct> orderProducts;
 
 }
