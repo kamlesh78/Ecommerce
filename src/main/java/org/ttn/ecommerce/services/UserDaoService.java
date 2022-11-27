@@ -25,6 +25,7 @@ import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.security.SecurityConstants;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
@@ -63,6 +64,11 @@ public class UserDaoService {
 
 
 
+    public String emailFromToken(HttpServletRequest request){
+        String token = tokenService.getJWTFromRequest(request);
+        String email = tokenService.getUsernameFromJWT(token);
+        return email;
+    }
     public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto){
         if(userRepository.existsByEmail(registerDto.getEmail())){
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);

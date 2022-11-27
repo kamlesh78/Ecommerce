@@ -131,25 +131,14 @@ public class SellerController {
         String email = sellerDaoService.emailFromToken(request);
 
         return imageService.uploadImage(email, image);
-
-
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        Optional<Images> userImage = imageRepository.findByUserId(userEntity.get().getId());
-//        if(userImage.isPresent()){
-//            imageRepository.delete(userImage.get());
-//        }else{
-//            imageRepository.save(Images.builder()
-//                    .name(image.getOriginalFilename())
-//                    .fileType(image.getContentType())
-//                   .uploadedAt(LocalDateTime.now())
-//                    .userEntity(userEntity.get())
-//                    .image(ImageUtility.compressImage(image.getBytes())).build());
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body("Image uploaded Successfully" + image.getOriginalFilename());
-//        }
-//
-//
-//        return new ResponseEntity<>("Error in uploading image",HttpStatus.BAD_REQUEST);
-
     }
+
+    @GetMapping("view/image")
+    public ResponseEntity<?> listFilesUsingJavaIO( HttpServletRequest request){
+
+        String email = sellerDaoService.emailFromToken(request);
+        return imageService.getImage(email);
+    }
+
+
 }

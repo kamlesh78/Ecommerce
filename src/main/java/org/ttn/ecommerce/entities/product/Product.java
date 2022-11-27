@@ -38,10 +38,10 @@ public class Product {
     @JoinColumn(name="category_id")
     private Category category;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<ProductReview> productReviews;
 
 

@@ -19,6 +19,7 @@ import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.image.ImageService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 
 @RestController
@@ -66,25 +67,30 @@ public class CustomerController {
 
         return imageService.uploadImage(email, image);
 
+    }
 
+//    @GetMapping("view/profile/image")
+//    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
+//
+//
+//        String email = customerDaoService.emailFromToken(request);
 //        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        Optional<Images> userImage = imageRepository.findByUserId(userEntity.get().getId());
-//        if(userImage.isPresent()){
-//            imageRepository.delete(userImage.get());
-//        }else{
-//            imageRepository.save(Images.builder()
-//                    .name(image.getOriginalFilename())
-//                    .fileType(image.getContentType())
-//                   .uploadedAt(LocalDateTime.now())
-//                    .userEntity(userEntity.get())
-//                    .image(ImageUtility.compressImage(image.getBytes())).build());
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body("Image uploaded Successfully" + image.getOriginalFilename());
-//        }
+//
+//        Optional<Images> customerImage = imageRepository.findByUserId(userEntity.get().getId());
 //
 //
-//        return new ResponseEntity<>("Error in uploading image",HttpStatus.BAD_REQUEST);
+//        System.out.println(customerImage.get().getImage());
+//        return ResponseEntity
+//                .ok()
+//                .contentType(MediaType.valueOf(customerImage.get().getFileType()))
+//                .body(ImageUtility.decompressImage(customerImage.get().getImage()));
+//    }
 
+    @GetMapping("/view/image")
+    public ResponseEntity<?> listFilesUsingJavaIO( HttpServletRequest request){
+
+        String email = customerDaoService.emailFromToken(request);
+        return imageService.getImage(email);
     }
 
     @GetMapping("profile/view")
@@ -106,22 +112,7 @@ public class CustomerController {
         return customerDaoService.updatePassword(customerPasswordDto, email);
 
     }
-//    @GetMapping("profile/image")
-//    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
-//
-//        System.out.println("a");
-//        String email = customerDaoService.emailFromToken(request);
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//
-//        Optional<Images> customerImage = imageRepository.findByUserId(userEntity.get().getId());
-//
-//
-//        System.out.println(customerImage.get().getImage());
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.valueOf(customerImage.get().getFileType()))
-//                .body(ImageUtility.decompressImage(customerImage.get().getImage()));
-//    }
+
 
     @PostMapping("add-address")
     public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, HttpServletRequest request) {

@@ -245,6 +245,7 @@ public class CustomerDaoService {
     }
 
     public String resendActivationLink(String email) {
+
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer with given email not found"));
 
         /*               If token not expired         */
@@ -252,16 +253,10 @@ public class CustomerDaoService {
 
 
 
-
-
-
-
-
-
         /* If User's account is not active */
         if(!customer.isActive()){
 
-            /*            Delete Activation Token Of Current User             */
+            /*        Delete Activation Token Of Current User             */
             if(registerUserRepository.existsByUserId(customer.getId()) > 0){
                 registerUserRepository.deleteByUserId(customer.getId());
 

@@ -93,10 +93,11 @@ public class TokenService {
     @Transactional
     public String  confirmAccount(Long id, String token){
 
-        Customer customer = customerRepository.findById(id).orElseThrow(()->new UserNotFoundException("User with given id "+id+"not found"));
+        Customer customer = customerRepository.findById(id).
+                orElseThrow(()->new UserNotFoundException("User with given id "+id+"not found"));
 
-        ActivateUserToken activateUserToken = registerUserRepository.findByTokenAndUserEntity(token,id).orElseThrow(
-                ()->new TokenNotFoundException("Activation Token not found or invalid ! Please Provide valid token!"));
+        ActivateUserToken activateUserToken = registerUserRepository.findByTokenAndUserEntity(token,id)
+                .orElseThrow(()->new TokenNotFoundException("Activation Token not found or invalid ! Please Provide valid token!"));
 
 
         if(activateUserToken.getActivatedAt() !=null){
@@ -106,6 +107,10 @@ public class TokenService {
         LocalDateTime expireAt = activateUserToken.getExpireAt();
         if(expireAt.isBefore(LocalDateTime.now())){
 
+
+            /*
+                   If Token Expired Resend New Activation Token To The User
+             */
             registerUserRepository.deleteActivateToken(activateUserToken.getToken(),id);
             String activationToken =  generateRegisterToken(customer);
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
