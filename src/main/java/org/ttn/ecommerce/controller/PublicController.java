@@ -11,7 +11,6 @@ import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entities.Test;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.RoleRepository;
@@ -21,11 +20,7 @@ import org.ttn.ecommerce.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api/auth")

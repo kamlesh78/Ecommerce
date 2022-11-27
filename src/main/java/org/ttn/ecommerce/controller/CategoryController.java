@@ -1,10 +1,13 @@
 package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.category.CategoryDto;
+import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
+import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
 import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.UserDaoService;
 
@@ -31,10 +34,18 @@ public class CategoryController {
         return categoryService.getMetaDataField();
     }
 
-    @PostMapping("add/category")
+    @PostMapping("create/metadata-field-value/{categoryId}/{metaDataFieldId}")
+    public ResponseEntity<?> createMetaDataFieldValues(@PathVariable("categoryId") long categoryId,
+                                                       @PathVariable("metaDataFieldId") Long metaDataFieldId,
+                                                       @RequestBody CategoryMetaValueDto categoryMetaValueDto){
+        return categoryService.createMetaDataFieldValue(categoryId,metaDataFieldId,categoryMetaValueDto);
+    }
+
+    @PostMapping("create/category")
     public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto){
 
         return categoryService.createCategory(categoryDto);
-
     }
+
+
 }

@@ -6,16 +6,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.category.CategoryDto;
+import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
+import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
 import org.ttn.ecommerce.exception.CategoryNotFoundException;
 import org.ttn.ecommerce.repository.CategoryMetaDataFieldRepository;
+import org.ttn.ecommerce.repository.CategoryMetaDataFieldValueRepository;
 import org.ttn.ecommerce.repository.CategoryRepository;
 import org.ttn.ecommerce.repository.ProductRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -33,6 +38,9 @@ public class CategoryService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    CategoryMetaDataFieldValueRepository categoryMetaDataFieldValueRepository;
 
     public String createMetaDataField(CategoryMetaDataField metaDataField) {
         String name = metaDataField.getName();
@@ -89,6 +97,33 @@ public class CategoryService {
         categoryRepository.save(category1);
 
         return new ResponseEntity<>("Category Created",HttpStatus.CREATED);
+
+    }
+
+    public ResponseEntity<?> createMetaDataFieldValue(Long categoryId,
+                                                      Long metaDataFieldId,
+                                                      CategoryMetaValueDto categoryMetaValueDto) {
+
+
+        Category category = categoryRepository.findById(categoryId).
+                orElseThrow(()-> new CategoryNotFoundException("Category Not Found"));
+
+        CategoryMetaDataField categoryMetaDataField = categoryMetaDataFieldRepository.findById(metaDataFieldId).
+                orElseThrow(()-> new CategoryNotFoundException("Category MetaData Field Not Found"));
+
+        CategoryMetadataFieldValue categoryMetadataFieldValue = new CategoryMetadataFieldValue();
+
+        String values = categoryMetaValueDto.getValues()
+                .stream().collect(Collectors.joining(","));
+
+
+        categoryMetadataFieldValue.setCategory(category);
+        categoryMetadataFieldValue.setCategoryMetaDataField(categoryMetaDataField);
+        categoryMetadataFieldValue.setValue(values);
+
+        categoryMetaDataFieldValueRepository.save(categoryMetadataFieldValue);
+
+        return new ResponseEntity<>("Category MetaDataValue Created",HttpStatus.CREATED);
 
     }
 }

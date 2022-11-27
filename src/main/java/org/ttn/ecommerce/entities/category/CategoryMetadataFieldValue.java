@@ -10,11 +10,15 @@ import javax.persistence.*;
 @Entity
 @Table(name="category_metadata_field_values")
 public class CategoryMetadataFieldValue {
-
+//
+//    @Id
+//    @SequenceGenerator(name="category_metadata_value_sequence",sequenceName = "category_metadata_value_sequence",initialValue = 1,allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_metadata_value_sequence")
+//    private Long id;
     @Id
-    @SequenceGenerator(name="category_metadata_sequence",sequenceName = "category_metadata_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_metadata_sequence")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
 
     private String value;
 
