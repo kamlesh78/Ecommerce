@@ -19,6 +19,6 @@ public class CategoryMetaDataField {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "categoryMetaDataField")
+    @OneToMany(mappedBy = "categoryMetaDataField")
     private List<CategoryMetadataFieldValue> categoryMetadataFieldValues;
 }

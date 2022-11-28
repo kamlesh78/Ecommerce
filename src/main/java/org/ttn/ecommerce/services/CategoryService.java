@@ -126,4 +126,9 @@ public class CategoryService {
         return new ResponseEntity<>("Category MetaDataValue Created",HttpStatus.CREATED);
 
     }
+
+    public String updateMetaDataFieldValues(Long categoryId, Long metaDataFieldId, CategoryMetaValueDto categoryMetaValueDto) {
+
+
+    }
 }

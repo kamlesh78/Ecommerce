@@ -59,7 +59,6 @@ public class CustomerController {
     }
 
 
-    /*send it to service layer*/
     @PostMapping(value = "upload/image")
     public String uploadImage(@RequestParam("image") MultipartFile image, HttpServletRequest request) throws IOException {
 
@@ -69,22 +68,6 @@ public class CustomerController {
 
     }
 
-//    @GetMapping("view/profile/image")
-//    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
-//
-//
-//        String email = customerDaoService.emailFromToken(request);
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//
-//        Optional<Images> customerImage = imageRepository.findByUserId(userEntity.get().getId());
-//
-//
-//        System.out.println(customerImage.get().getImage());
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.valueOf(customerImage.get().getFileType()))
-//                .body(ImageUtility.decompressImage(customerImage.get().getImage()));
-//    }
 
     @GetMapping("/view/image")
     public ResponseEntity<?> listFilesUsingJavaIO( HttpServletRequest request){
@@ -113,14 +96,13 @@ public class CustomerController {
 
     }
 
-
-    @PostMapping("add-address")
+    @PostMapping("add/address")
     public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, HttpServletRequest request) {
         String email = customerDaoService.emailFromToken(request);
         return customerDaoService.insertCustomerAddress(email, address);
     }
 
-    @GetMapping("view-address")
+    @GetMapping("view/address")
     public MappingJacksonValue viewAddress(HttpServletRequest request) throws IOException {
         String email = customerDaoService.emailFromToken(request);
 

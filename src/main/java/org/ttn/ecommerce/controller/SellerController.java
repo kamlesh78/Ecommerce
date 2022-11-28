@@ -33,30 +33,6 @@ public class SellerController {
         return "a";
     }
 
-    /*send it to service layer*/
-//    @PostMapping(value = "upload/image")
-//    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image, HttpServletRequest request) throws IOException {
-//
-//        String email = customerDaoService.emailFromToken(request);
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        Optional<Images> userImage = imageRepository.findByUserId(userEntity.get().getId());
-//        if(userImage.isPresent()){
-//            imageRepository.delete(userImage.get());
-//        }else{
-//            imageRepository.save(Images.builder()
-//                    .name(image.getOriginalFilename())
-//                    .fileType(image.getContentType())
-//                    .uploadedAt(LocalDateTime.now())
-//                    .userEntity(userEntity.get())
-//                    .image(ImageUtility.compressImage(image.getBytes())).build());
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body("Image uploaded Successfully" + image.getOriginalFilename());
-//        }
-//
-//
-//        return new ResponseEntity<>("Error in uploading image",HttpStatus.BAD_REQUEST);
-//
-//    }
 
     @GetMapping("profile/view")
     public MappingJacksonValue viewSellerProfile(HttpServletRequest request) {
@@ -77,32 +53,16 @@ public class SellerController {
         return sellerDaoService.updatePassword(sellerPasswordDto, email);
 
     }
-//    @GetMapping("profile/image")
-//    public ResponseEntity<byte[]> getImage(HttpServletRequest request) throws IOException {
-//
-//        System.out.println("a");
-//        String email = customerDaoService.emailFromToken(request);
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//
-//        Optional<Images> customerImage = imageRepository.findByUserId(userEntity.get().getId());
-//
-//
-//        System.out.println(customerImage.get().getImage());
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.valueOf(customerImage.get().getFileType()))
-//                .body(ImageUtility.decompressImage(customerImage.get().getImage()));
-//    }
-//
+
 
     /*Seller Address Constraint :-> Seller should have only one address*/
-    @PostMapping("add-address")
+    @PostMapping("add/address")
     public ResponseEntity<?> addSellerAddress(@RequestBody Address address, HttpServletRequest request) {
         String email = sellerDaoService.emailFromToken(request);
         return sellerDaoService.insertSellerAddress(email, address);
     }
 
-    @GetMapping("view-address")
+    @GetMapping("view/address")
     public String viewAddress(HttpServletRequest request) throws IOException {
         String email = sellerDaoService.emailFromToken(request);
 

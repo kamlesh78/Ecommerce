@@ -41,6 +41,18 @@ public class CategoryController {
         return categoryService.createMetaDataFieldValue(categoryId,metaDataFieldId,categoryMetaValueDto);
     }
 
+    @PutMapping("/update/metadata-field-values/{categoryId}/{metaDataFieldId}")
+    public String updateMetaDataFieldValues(
+            @PathVariable("categoryId") Long categoryId,
+            @PathVariable("metaDataFieldId") Long metaDataFieldId,
+            @RequestBody CategoryMetaValueDto categoryMetaValueDto
+    ){
+        return categoryService.updateMetaDataFieldValues(categoryId,metaDataFieldId,categoryMetaValueDto);
+    }
+
+
+
+
     @PostMapping("create/category")
     public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto){
 
