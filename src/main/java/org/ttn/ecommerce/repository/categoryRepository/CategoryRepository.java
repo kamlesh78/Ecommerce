@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.repository;
+package org.ttn.ecommerce.repository.categoryRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -50,4 +50,12 @@ public class BlackListTokenService {
         }
 
     }
+
+    public void addTokenToBlackList(Token accessToken){
+        BlackListedToken blackListedToken = new BlackListedToken();
+        blackListedToken.setToken(accessToken.getToken());
+        blackListedToken.setAccessTokenExpireAt(accessToken.getExpiredAt());
+        blackListedToken.setUserId(accessToken.getUserEntity().getId());
+        blackListTokenRepository.save(blackListedToken);
+    }
 }

@@ -50,6 +50,7 @@ public class ImageService {
         return "Image Uploaded Successfully";
     }
 
+
     public ResponseEntity<?> getImage(String email){
 
         String dir="/home/kamlesh/Pictures/ecommerce_image";

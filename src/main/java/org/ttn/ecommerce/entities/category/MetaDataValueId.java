@@ -13,6 +13,8 @@ import java.util.Objects;
 @Data
 @EqualsAndHashCode
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class MetaDataValueId implements Serializable {
     private static final long serialVersionUID = 2702030623316532366L;
 

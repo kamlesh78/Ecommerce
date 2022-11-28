@@ -43,7 +43,13 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(TokenNotFoundException.class)
     public ResponseEntity<Object> handleTokenNotFoundException(TokenNotFoundException ex){
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Token Not Found",ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());
+        return  new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());
         return  new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
     }
 }

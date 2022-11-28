@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -75,14 +76,18 @@ public class SellerDaoService {
             userRepository.deactivateUserById(id);
 
             /*      Sending DeActivation Mail To Seller       */
+        try {
 
-            SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
             simpleMailMessage.setSubject("Account Deactivated");
             simpleMailMessage.setText(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
             simpleMailMessage.setTo(userEntity.getEmail());
 
             emailServicetry.sendEmail(simpleMailMessage);
-
+        }catch (MailException ex){
+            return "Cant Send Mail || Mailing server is down || Kindly wait";
+        }
             /*Exception handling for mail*/
 
         }
