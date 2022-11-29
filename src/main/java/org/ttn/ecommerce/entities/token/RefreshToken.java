@@ -1,7 +1,8 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entities.token;
 
 
 import lombok.Data;
+import org.ttn.ecommerce.entities.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -95,11 +95,20 @@ public class PublicController {
         return new ResponseEntity<>("Account with this email do not exists", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/resend/activation-link")
+
+    @PostMapping("resend/activation-link")
     public String resentActivationLink(@Valid @PathVariable("email") String email) {
         return customerDaoService.resendActivationLink(email);
     }
 
+
+    /**       Generate New Access Token From RefreshToken       */
+    @GetMapping("resend/accessToken/{refreshToken}")
+    public ResponseEntity<?> accessTokenFromRefreshToken(@RequestParam("refreshToken") String refreshToken){
+
+        return  tokenService.newAccessToken(refreshToken);
+
+    }
     @GetMapping("forget-password/{email}")
     public ResponseEntity<?> forgetUserPassword(@PathVariable("email") String email) {
         return userPasswordService.forgetPassword(email);

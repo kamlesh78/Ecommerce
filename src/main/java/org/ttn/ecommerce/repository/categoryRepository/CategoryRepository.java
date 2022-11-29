@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.repository.categoryRepository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.ttn.ecommerce.entities.category.Category;
 
@@ -13,4 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     Optional<Category> findByName(String name);
 
     List<Category> findByParentCategory(Category category);
+
+    @Query(value = "SELECT * FROM category where parent_category_id = null",nativeQuery = true)
+    List<Category> findAllRootCategories();
 }

@@ -16,6 +16,7 @@ import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
 import org.ttn.ecommerce.entities.*;
+import org.ttn.ecommerce.entities.token.RefreshToken;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.SellerRepository;

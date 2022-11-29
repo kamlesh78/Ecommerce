@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
+import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.SellerDaoService;
 import org.ttn.ecommerce.services.image.ImageService;
 
@@ -26,6 +27,8 @@ public class SellerController {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    CategoryService categoryService;
 
     @PreAuthorize("hasRole('ROLE_SELLER')")
     @GetMapping("login")
@@ -101,4 +104,11 @@ public class SellerController {
     }
 
 
+
+    @GetMapping("view/all-categories")
+    public ResponseEntity<?> viewAllCategories(){
+
+        return categoryService.viewAllCategory();
+
+    }
 }

@@ -14,12 +14,12 @@ import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
+import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.CustomerDaoService;
 import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.image.ImageService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 
 @RestController
@@ -39,8 +39,10 @@ public class CustomerController {
     private final CustomerDaoService customerDaoService;
     private final ImageService imageService;
 
+    private CategoryService categoryService;
+
     @Autowired
-    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerDaoService customerDaoService, ImageService imageService) {
+    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerDaoService customerDaoService, ImageService imageService, CategoryService categoryService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -50,6 +52,7 @@ public class CustomerController {
         this.tokenService = tokenService;
         this.customerDaoService = customerDaoService;
         this.imageService = imageService;
+        this.categoryService = categoryService;
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -76,13 +79,14 @@ public class CustomerController {
         return imageService.getImage(email);
     }
 
-    @GetMapping("profile/view")
+    @GetMapping("view/profile")
     public MappingJacksonValue viewCustomerProfile(HttpServletRequest request) {
         String email = customerDaoService.emailFromToken(request);
         return customerDaoService.customerProfile(email);
     }
 
-    @PatchMapping("profile/update")
+
+    @PatchMapping("update/profile")
     public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, HttpServletRequest request) {
         String email = customerDaoService.emailFromToken(request);
         return customerDaoService.updateProfile(email, customer);
@@ -118,11 +122,26 @@ public class CustomerController {
 
     }
 
+
+    /**
+     *      Return List all root level Categories if no ID is passed, else
+     *      list of all immediate child nodes of passed category ID
+     */
+    @GetMapping(value = {"view/categories","view/categories/{id}"})
+    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
+
+        return  categoryService.listCategoriesOfCustomer(id);
+    }
+
+
     @PatchMapping("/update/address/{id}")
     public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id, HttpServletRequest request) {
         String email = customerDaoService.emailFromToken(request);
         return customerDaoService.updateCustomerAddressById(email, id, address);
     }
+
+
+
 
 
 }

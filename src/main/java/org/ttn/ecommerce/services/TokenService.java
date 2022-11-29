@@ -1,20 +1,27 @@
 package org.ttn.ecommerce.services;
 
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.RefreshToken;
+import org.ttn.ecommerce.entities.Role;
+import org.ttn.ecommerce.entities.Token;
+import org.ttn.ecommerce.entities.token.RefreshToken;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.token.ActivateUserToken;
 import org.ttn.ecommerce.exception.TokenNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.CustomerRepository;
+import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RefreshTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
@@ -22,8 +29,10 @@ import org.ttn.ecommerce.security.SecurityConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,6 +52,9 @@ public class TokenService {
 
     @Autowired
     EmailServicetry emailServicetry;
+
+    @Autowired
+    AccessTokenRepository accessTokenRepository;
 
     public String getUsernameFromJWT(String token){
         Claims claims = Jwts.parser()
@@ -128,38 +140,6 @@ public class TokenService {
         userRepository.activateUserById(id);
 
         return "Account Activated";
-
-
-
-
-
-
-//
-//        Optional<ActivateUserToken> activateUserToken = registerUserRepository.findByTokenAndUserEntity(token,id);
-//        String errMessage="";
-//        if(activateUserToken.isPresent()){
-//
-//            System.out.println(activateUserToken.get().getToken());
-//            if(activateUserToken.get().getActivatedAt() !=null){
-//
-//                errMessage="Email Already confirmed";
-//                return errMessage;
-//            }
-//            LocalDateTime expireAt = activateUserToken.get().getExpireAt();
-//            if(expireAt.isBefore(LocalDateTime.now())){
-//                errMessage= "Token Expired";
-//
-//            }
-//
-//            registerUserRepository.confirmUserBytoken(token,LocalDateTime.now());
-//            userRepository.activateUserById(id);
-//
-//
-//
-//
-//        }else{
-//            return  "token not found";
-//        }
     }
 
 
@@ -172,4 +152,60 @@ public class TokenService {
         return null;
     }
 
+
+    /**
+     *      Generate New Access Token Using Refresh Token
+     */
+    public ResponseEntity<?> newAccessToken(String refreshToken) {
+        RefreshToken refreshToken1 = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(()->new TokenNotFoundException("Refresh Token not found or invalid ! Please Provide a valid refresh token!"));
+
+        UserEntity userEntity = refreshToken1.getUserEntity();
+        LocalDateTime expireAt = refreshToken1.getExpireAt();
+
+        /**      If Refresh Token Expired        */
+        if(expireAt.isBefore(LocalDateTime.now())){
+            throw new TokenNotFoundException("Refresh Token Got Expired" +"\n"+"Please login Again to generate new Access and Refresh Token");
+        }else{
+
+
+            String username = userEntity.getEmail();
+            Date currentDate = new Date();
+            Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
+
+                String role = "";
+
+                Set<Role> roles  = (Set<Role>) userEntity.getRoles();
+                for(Role r : roles){
+                    if(r.getAuthority().equals("ROLE_SELLER")){
+                        role = "SELLER";
+                    }
+                    if(r.getAuthority().equals("ROLE_CUSTOMER")){
+                        role = "CUSTOMER";
+                    }
+                    if(r.getAuthority().equals("ROLE_ADMIN")){
+                        role = "ADMIN";
+                    }
+                }
+            String token = Jwts.builder()
+                    .setSubject(username)
+                    .setIssuedAt(new Date())
+                    .claim("ROLE", role)
+                    .setExpiration(expireDate)
+                    .signWith(SignatureAlgorithm.HS512, SecurityConstants.JWT_SECRET)
+                    .compact();
+
+
+            /* Access Token */
+            Token accessToken = new Token();
+            accessToken.setUserEntity(userEntity);
+            accessToken.setToken(token);
+            accessToken.setCreatedAt(LocalDateTime.now());
+            accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.JWT_EXPIRATION));
+            accessTokenRepository.save(accessToken);
+
+
+            return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken), HttpStatus.CREATED);
+        }
+    }
 }

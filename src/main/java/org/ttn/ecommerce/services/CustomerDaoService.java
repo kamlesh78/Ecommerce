@@ -161,9 +161,13 @@ public class CustomerDaoService {
     public String updateCustomerAddressById(String email,Long id,Address address){
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
         Address userAddress = addressRepository.findById(id).orElseThrow(()->new AddressNotFoundException("Address Not Found"));
-        address.setId(id);
-        address.setUserEntity(userEntity);
-        addressRepository.save(address);
+        if(address.getCity()!=null) userAddress.setCity(address.getCity());
+        if(address.getState()!=null) userAddress.setState(address.getState());
+        if(address.getCountry()!=null) userAddress.setCountry(address.getCountry());
+        if(address.getAddressLine()!=null) userAddress.setAddressLine(address.getAddressLine());
+        if(address.getLabel()!=null) userAddress.setLabel(address.getLabel());
+        if(address.getZipCode()!=null) userAddress.setZipCode(address.getZipCode());
+        addressRepository.save(userAddress);
         return "Address Updated";
     }
 
@@ -185,7 +189,9 @@ public class CustomerDaoService {
     public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-
+        if(!customerPasswordDto.getPassword().equals(customerPasswordDto.getConfirmPassword())){
+            return new ResponseEntity<>("Password did not matched! Please recheck Confirm Password",HttpStatus.BAD_REQUEST);
+        }
 
         /*bonus feature :    update using patch using custom query*/
 

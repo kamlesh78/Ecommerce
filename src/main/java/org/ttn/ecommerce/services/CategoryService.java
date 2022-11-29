@@ -193,4 +193,21 @@ public class CategoryService {
         return  new ResponseEntity<>("Category Updated Successfully",HttpStatus.OK);
 
     }
+
+    public ResponseEntity<?> listCategoriesOfCustomer(Long id) {
+
+        Category category=null;
+        if(id!=null){
+
+            category = categoryRepository.findById(id).orElseThrow(()->new CategoryNotFoundException("Category Not Found"));
+
+            List<Category> categoryList = category.getSubCategory();
+            return new ResponseEntity<>(categoryList,HttpStatus.OK);
+        }else{
+
+            List<Category> categoryList = categoryRepository.findAllRootCategories();
+            return new ResponseEntity<>(categoryList,HttpStatus.OK);
+        }
+
+    }
 }
