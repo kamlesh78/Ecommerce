@@ -74,9 +74,6 @@ public class UserEntity {
                 inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles;
 
-//    @JsonManagedReference
-//    @OneToOne(mappedBy = "userEntity",fetch = FetchType.LAZY)
-//    private  Images image;
 
     public UserEntity() {
     }

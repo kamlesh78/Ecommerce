@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.services;
+package org.ttn.ecommerce.services.tokenService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -26,10 +26,12 @@ import org.ttn.ecommerce.repository.TokenRepository.RefreshTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.SecurityConstants;
+import org.ttn.ecommerce.services.EmailServicetry;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -175,7 +177,7 @@ public class TokenService {
 
                 String role = "";
 
-                Set<Role> roles  = (Set<Role>) userEntity.getRoles();
+                List<Role> roles  = (List<Role>) userEntity.getRoles();
                 for(Role r : roles){
                     if(r.getAuthority().equals("ROLE_SELLER")){
                         role = "SELLER";

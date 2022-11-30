@@ -15,6 +15,6 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
 
     List<Category> findByParentCategory(Category category);
 
-    @Query(value = "SELECT * FROM category where parent_category_id = null",nativeQuery = true)
+    @Query(value = "SELECT * FROM category where parent_category_id IS NULL",nativeQuery = true)
     List<Category> findAllRootCategories();
 }

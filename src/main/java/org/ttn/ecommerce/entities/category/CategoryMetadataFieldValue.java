@@ -23,7 +23,7 @@ public class CategoryMetadataFieldValue {
 
 
     @ManyToOne
-    @MapsId("categoryMetadataFieldId")
+    @MapsId("categoryMetaDataFieldId")
     @JoinColumn(name = "category_metadata_field_id")
     private CategoryMetaDataField categoryMetaDataField;
 

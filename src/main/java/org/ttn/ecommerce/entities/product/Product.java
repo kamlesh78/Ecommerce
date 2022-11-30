@@ -1,17 +1,23 @@
 package org.ttn.ecommerce.entities.product;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.entities.category.Category;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Product {
 
     @Id
-    @SequenceGenerator(name="category_sequence",sequenceName = "category_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_sequence")
+    @SequenceGenerator(name="product_sequence",sequenceName = "product_sequence",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "product_sequence")
     private Long id;
 
     private String name;
@@ -27,7 +33,6 @@ public class Product {
     private boolean isDeleted;
 
     private String brand;
-
 
 
     @ManyToOne

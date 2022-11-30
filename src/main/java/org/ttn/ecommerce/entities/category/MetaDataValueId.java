@@ -23,5 +23,4 @@ public class MetaDataValueId implements Serializable {
 
     @Column(name = "category_metadata_field_id")
     private Long categoryMetaDataFieldId;
-
 }

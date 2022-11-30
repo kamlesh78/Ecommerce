@@ -7,19 +7,20 @@ import javax.persistence.*;
 @Entity
 public class ProductReview{
 
-    @Id
-    @SequenceGenerator(name="category_sequence",sequenceName = "category_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_sequence")
-    private Long id;
+    @EmbeddedId
+    private ProductReviewKey id;
 
     private String review;
 
     private int rating;
+
     @ManyToOne
+    @MapsId("customerId")
     @JoinColumn(name="customer_user_id")
     private Customer customer;
 
     @ManyToOne
+    @MapsId("productId")
     @JoinColumn(name="product_id")
     private Product product;
 }

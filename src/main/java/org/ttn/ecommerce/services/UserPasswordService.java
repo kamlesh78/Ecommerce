@@ -13,10 +13,10 @@ import org.ttn.ecommerce.entities.Token;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.token.ForgetPasswordToken;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
-import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.ForgetPasswordRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.SecurityConstants;
+import org.ttn.ecommerce.services.tokenService.BlackListTokenService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

@@ -16,7 +16,7 @@ import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.CustomerDaoService;
-import org.ttn.ecommerce.services.TokenService;
+import org.ttn.ecommerce.services.tokenService.TokenService;
 import org.ttn.ecommerce.services.image.ImageService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,7 +111,6 @@ public class CustomerController {
         String email = customerDaoService.emailFromToken(request);
 
         return customerDaoService.viewCustomerAddresses(email);
-
     }
 
     @DeleteMapping("delete/address/{id}")
@@ -119,7 +118,6 @@ public class CustomerController {
         String email = customerDaoService.emailFromToken(request);
 
         return customerDaoService.deleteCustomerAddressById(email, id);
-
     }
 
 
@@ -141,7 +139,11 @@ public class CustomerController {
     }
 
 
+    /**
+     *
+     * API to fetch filtering details for a category
 
+            */
 
 
 }

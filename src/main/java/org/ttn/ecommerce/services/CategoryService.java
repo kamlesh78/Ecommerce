@@ -15,7 +15,7 @@ import org.ttn.ecommerce.exception.CategoryNotFoundException;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryMetaDataFieldRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryMetaDataFieldValueRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
-import org.ttn.ecommerce.repository.ProductRepository;
+import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,17 +65,20 @@ public class CategoryService {
                                                       Long metaDataFieldId,
                                                       CategoryMetaValueDto categoryMetaValueDto) {
 
-
+        System.out.println(categoryId + " "+ metaDataFieldId);
         Category category = categoryRepository.findById(categoryId).
                 orElseThrow(()-> new CategoryNotFoundException("Category Not Found"));
 
         CategoryMetaDataField categoryMetaDataField = categoryMetaDataFieldRepository.findById(metaDataFieldId).
                 orElseThrow(()-> new CategoryNotFoundException("Category MetaData Field Not Found"));
 
+        System.out.println(category.getName() + " " + categoryMetaDataField.getName());
         CategoryMetadataFieldValue categoryMetadataFieldValue = new CategoryMetadataFieldValue();
 
         String values = categoryMetaValueDto.getValues()
                 .stream().collect(Collectors.joining(","));
+
+        System.out.println(values);
 
 
         categoryMetadataFieldValue.setCategory(category);

@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.ttn.ecommerce.entities.product.Product;
@@ -24,6 +25,8 @@ public class Category {
     @JoinColumn(name="parent_category_id")
     private Category parentCategory;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategory;
 

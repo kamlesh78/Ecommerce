@@ -17,6 +17,8 @@ import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.*;
+import org.ttn.ecommerce.services.tokenService.BlackListTokenService;
+import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -104,9 +106,9 @@ public class PublicController {
 
     /**       Generate New Access Token From RefreshToken       */
     @GetMapping("resend/accessToken/{refreshToken}")
-    public ResponseEntity<?> accessTokenFromRefreshToken(@RequestParam("refreshToken") String refreshToken){
+    public ResponseEntity<?> accessTokenFromRefreshToken(@PathVariable("refreshToken") String refreshToken){
 
-        return  tokenService.newAccessToken(refreshToken);
+      return  tokenService.newAccessToken(refreshToken);
 
     }
     @GetMapping("forget-password/{email}")

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
-import org.ttn.ecommerce.services.BlackListTokenService;
+import org.ttn.ecommerce.services.tokenService.BlackListTokenService;
 
 @SpringBootTest
 public class BlackListTokenTest {
