@@ -162,7 +162,7 @@ public class UserDaoService {
     }
 
 
-    public ResponseEntity<?> loginCustomer(LoginDto loginDto,UserEntity user){
+    public ResponseEntity<?> login(LoginDto loginDto,UserEntity user){
 
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));

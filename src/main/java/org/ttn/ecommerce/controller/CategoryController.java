@@ -7,7 +7,7 @@ import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
-import org.ttn.ecommerce.services.CategoryService;
+import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.UserDaoService;
 
 @RestController

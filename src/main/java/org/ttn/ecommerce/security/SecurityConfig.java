@@ -50,7 +50,7 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/api/auth/**").permitAll()
+            .antMatchers("/api/public/**").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .antMatchers("/customer/**").hasRole("CUSTOMER")
             .antMatchers("/seller/**").hasRole("SELLER")

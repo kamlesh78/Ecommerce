@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.services;
+package org.ttn.ecommerce.services.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
+import org.ttn.ecommerce.services.EmailServicetry;
 
 import java.util.List;
 
@@ -98,6 +99,8 @@ public class ProductService {
 
         return new ResponseEntity<>("New Product Added Successfully", HttpStatus.OK);
     }
+
+
 
 
 }

@@ -52,4 +52,10 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());
         return  new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());
+        return  new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
+    }
 }

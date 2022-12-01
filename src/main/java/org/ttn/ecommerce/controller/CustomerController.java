@@ -14,7 +14,7 @@ import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
-import org.ttn.ecommerce.services.CategoryService;
+import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.CustomerDaoService;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 import org.ttn.ecommerce.services.image.ImageService;

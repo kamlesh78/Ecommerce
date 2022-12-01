@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.services;
+package org.ttn.ecommerce.services.categoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +41,14 @@ public class CategoryService {
     @Autowired
     CategoryMetaDataFieldValueRepository categoryMetaDataFieldValueRepository;
 
+    public static  boolean check_subcategory(Category category,String name){
+        if(category.getName().equals(name)) return false;
+        for(Category checkCategory : category.getSubCategory()){
+            boolean check = check_subcategory(checkCategory,name);
+            if(check == false) return false;        }
+        return true;
+
+    }
     public String createMetaDataField(CategoryMetaDataField metaDataField) {
         String name = metaDataField.getName();
         Optional<CategoryMetaDataField> categoryMetaDataField = categoryMetaDataFieldRepository.findByName(name);
@@ -185,15 +193,38 @@ public class CategoryService {
                         "Category Not Found For Id "+ id
                 ));
 
-        Optional<Category> category2 = categoryRepository.findByName(category.getName());
-        if(category2.isPresent()){
-            return new ResponseEntity<>("Category Name Already Exists",HttpStatus.BAD_REQUEST);
+        /**
+         *  Check If Name Is Unique From Current Category Till Parent Category
+         */
+
+        Category parentCheck = category1.getParentCategory();
+        while(parentCheck !=null){
+            if(parentCheck.getName().equals(category.getName())){
+                return new ResponseEntity<>("Category Name Already Exists",HttpStatus.BAD_REQUEST);
+            }
+            parentCheck = parentCheck.getParentCategory();
         }
 
-        category1.setName(category.getName());
-        categoryRepository.save(category1);
 
-        return  new ResponseEntity<>("Category Updated Successfully",HttpStatus.OK);
+        List<Category> subCategoryList = category1.getParentCategory().getSubCategory();
+
+        /**
+         *
+         *      Check if category name is unique along breadth/depth
+         */
+        Category parentCheck2 = category1.getParentCategory();
+        if(check_subcategory(parentCheck2,category.getName())){
+            category1.setName(category.getName());
+            categoryRepository.save(category1);
+            return  new ResponseEntity<>("Category Updated Successfully",HttpStatus.OK);
+
+        }else{
+            return new ResponseEntity<>("Category Name Already Used By SubCategories Please Use Unique Name",HttpStatus.BAD_REQUEST);
+        }
+
+
+
+
 
     }
 
@@ -213,4 +244,6 @@ public class CategoryService {
         }
 
     }
+
+
 }

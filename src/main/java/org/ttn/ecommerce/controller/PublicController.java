@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/api/auth")
+@RequestMapping(value = "/api/public")
 public class PublicController {
 
     private final AuthenticationManager authenticationManager;
@@ -64,7 +64,7 @@ public class PublicController {
         if (!user.isActive()) {
             return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
         }
-        return userDaoService.loginCustomer(loginDto, user);
+        return userDaoService.login(loginDto, user);
     }
 
     @GetMapping("hello")

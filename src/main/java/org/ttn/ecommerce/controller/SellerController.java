@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
-import org.ttn.ecommerce.services.CategoryService;
+import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.SellerDaoService;
 import org.ttn.ecommerce.services.image.ImageService;
 

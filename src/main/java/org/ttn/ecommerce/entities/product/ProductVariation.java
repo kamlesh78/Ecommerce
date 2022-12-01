@@ -1,11 +1,14 @@
 package org.ttn.ecommerce.entities.product;
 
+import lombok.Data;
 import org.ttn.ecommerce.entities.order.OrderProduct;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name="product_variation")
 public class ProductVariation {
@@ -34,6 +37,5 @@ public class ProductVariation {
 
     @OneToMany(mappedBy = "order")
     List<OrderProduct> orderProducts;
-
 
 }

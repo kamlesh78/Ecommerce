@@ -127,7 +127,6 @@ public class UserPasswordService {
 
                     userEntity.setPassword(passwordEncoder.encode(resetPasswordDto.getPassword()));
                     userRepository.save(userEntity);
-
                     forgetPasswordRepository.deleteByTokenId(forgetPasswordToken.get().getId());
 
 
