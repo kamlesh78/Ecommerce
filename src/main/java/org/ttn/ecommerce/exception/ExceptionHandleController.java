@@ -3,6 +3,9 @@ package org.ttn.ecommerce.exception;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,24 +14,61 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionHandleController extends ResponseEntityExceptionHandler {
 
 
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//
+//        String errorMessage = exception.getBindingResult()
+//                .getFieldErrors()
+//                .stream()
+//                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+//                .collect(Collectors.joining("; "));
+//
+//
+////        String errMessage="";
+////        if(exception.getFieldError()==null){
+////            errMessage = exception.getGlobalError().getDefaultMessage();
+////        }else{
+////            errMessage = exception.getFieldError().getDefaultMessage();
+////        }
+//
+////        BindingResult result = exception.getBindingResult();
+////        List<FieldError> errors = result.getFieldErrors();
+////        List<String> list=new ArrayList<>();
+////        for(FieldError fieldErrors : errors){
+////            list.add(fieldErrors.getDefaultMessage());
+////        }
+//      //  List<FieldError> fieldErrors = result.getFieldErrors().
+//        //ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", fieldErrors);
+//        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+//    }
 
-        String errMessage="";
-        if(exception.getFieldError()==null){
-            errMessage = exception.getGlobalError().getDefaultMessage();
-        }else{
-            errMessage = exception.getFieldError().getDefaultMessage();
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
+        List<String> errors = new ArrayList<String>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+
+            errors.add(error.getField() + ": " + error.getDefaultMessage());
+        }
+        for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
+            errors.add("password" + ": " + error.getDefaultMessage());
         }
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", errMessage);
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        Collections.sort(errors);
+        ApiError apiError =
+                new ApiError(HttpStatus.BAD_REQUEST, "Validation Errors", errors);
+        return handleExceptionInternal(
+                ex, apiError, headers, apiError.getStatus(), request);
     }
-
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUsernameNotFoundException(UserNotFoundException ex){
         ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(),"Not Found",ex.getMessage());

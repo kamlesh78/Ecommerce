@@ -191,11 +191,11 @@ public class SellerDaoService {
     /*Update Address*/
     public ResponseEntity<String> updateAddress(String email,Seller seller) {
         Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-        if(seller.getEmail()!=null) sellerEntity.setEmail(seller.getEmail());
-        if(seller.getCompanyContact()!=null) sellerEntity.setCompanyContact(seller.getCompanyContact());
-        if(seller.getFirstName()!=null) sellerEntity.setFirstName(seller.getFirstName());
-        if(seller.getMiddleName()!=null) sellerEntity.setMiddleName(seller.getMiddleName());
-        if(seller.getLastName()!=null) sellerEntity.setLastName(seller.getLastName());
+        if(seller.getEmail()!=null || seller.getEmail()!="") sellerEntity.setEmail(seller.getEmail());
+        if(seller.getCompanyContact()!=null || seller.getCompanyContact()!="") sellerEntity.setCompanyContact(seller.getCompanyContact());
+        if(seller.getFirstName()!=null || seller.getFirstName()!="") sellerEntity.setFirstName(seller.getFirstName());
+        if(seller.getMiddleName()!=null || seller.getMiddleName()!="") sellerEntity.setMiddleName(seller.getMiddleName());
+        if(seller.getLastName()!=null || seller.getLastName()!="") sellerEntity.setLastName(seller.getLastName());
         sellerRepository.save(sellerEntity);
         return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
     }

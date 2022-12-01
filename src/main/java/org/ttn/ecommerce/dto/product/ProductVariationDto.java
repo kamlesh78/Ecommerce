@@ -1,13 +1,17 @@
 package org.ttn.ecommerce.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
+@NoArgsConstructor
 public class ProductVariationDto {
 
 //    @NotNull(message = "Product Id Can Not Be Null")
@@ -15,7 +19,7 @@ public class ProductVariationDto {
 
 //    @JsonProperty(value = "metaData")
 //    @NotNull(message = "MetaData Can Not Be Null")
-    @Type(type = "json")
+
     private String metaData;
 
 //    @Min(value = 0, message = "Quantity should be greater than 0")

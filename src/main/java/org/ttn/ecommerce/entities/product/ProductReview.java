@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.ttn.ecommerce.entities.Customer;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class ProductReview{
     @JoinColumn(name="customer_user_id")
     private Customer customer;
 
-    @ManyToOne
+     @ManyToOne
     @MapsId("productId")
     @JoinColumn(name="product_id")
     private Product product;

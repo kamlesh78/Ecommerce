@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities.category;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,6 @@ public class CategoryMetaDataField {
 
     private String name;
 
-    @OneToMany(mappedBy = "categoryMetaDataField")
+     @OneToMany(mappedBy = "categoryMetaDataField")
     private List<CategoryMetadataFieldValue> categoryMetadataFieldValues;
 }

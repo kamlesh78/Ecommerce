@@ -16,7 +16,7 @@ import static java.lang.annotation.ElementType.TYPE;
 @Target({TYPE})
 public @interface CustomerPasswordMatcher {
 
-    String message() default "{Password did not matched}";
+    String message() default "Password did not matched";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

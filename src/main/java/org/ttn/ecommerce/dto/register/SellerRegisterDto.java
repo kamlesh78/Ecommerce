@@ -6,45 +6,44 @@ import org.ttn.ecommerce.validations.Password;
 import org.ttn.ecommerce.validations.PhoneNumber;
 import org.ttn.ecommerce.validations.SellerPasswordMatcher;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 
 @Data
 @SellerPasswordMatcher()
 public class SellerRegisterDto {
 
+    @NotEmpty(message = "Please Provide First Name")
     private String firstName;
+
+    @NotEmpty(message = "Please Provide Last Name")
     private String lastName;
+
     private String middleName;
 
-
-    @NotBlank(message = "Phone number can not be empty")
+    @PhoneNumber
+    @NotEmpty(message = "Phone number can not be empty")
     private String companyContact;
 
     @Email
-    @NotBlank(message = "Email can not be empty")
+    @NotEmpty(message = "Email can not be empty")
     private String email;
 
     @Password
-    @NotBlank(message = "Password can not be empty")
+    @NotEmpty(message = "Password can not be empty")
     private String password;
 
-
-    @NotNull(message = "Password can not be null")
     @Password
+    @NotEmpty(message ="Confirm Password can not be Empty")
     private String confirmPassword;
 
+    @NotEmpty(message = "Gst Number can not be empty")
     @Gst
     private String gstNumber;
 
-    @NotBlank(message = "Company name can not be empty")
+    @NotEmpty(message = "Company name can not be empty")
     @Pattern(regexp = "^[a-zA-Z0-9 ]*$",flags = Pattern.Flag.CASE_INSENSITIVE,message = "Company name should be unique")
     private String companyName;
-
-
 
 
 

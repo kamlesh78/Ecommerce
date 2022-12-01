@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = GstValidator.class)
 @Target({ElementType.FIELD})
 public @interface Gst {
-    String message() default "{Provided Gst number is not valid ! Please provide valid Gst number}";
+    String message() default "Provided Gst number is not valid ! Please provide valid Gst number";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

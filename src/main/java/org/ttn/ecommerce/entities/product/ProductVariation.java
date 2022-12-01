@@ -1,5 +1,8 @@
 package org.ttn.ecommerce.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.ttn.ecommerce.entities.order.OrderProduct;
 
@@ -22,20 +25,22 @@ public class ProductVariation {
 
     private double price;
 
+    @JsonProperty
     private boolean isActive;
 
     private String primaryImageName;
 
-
+    @JsonProperty
     @Column(columnDefinition = "JSON")
     private String metadata;
+
 
     @NotNull
     @ManyToOne
     @JoinColumn(name="product_id")
     private Product product;
-
-    @OneToMany(mappedBy = "order")
-    List<OrderProduct> orderProducts;
+//
+//    @OneToMany(mappedBy = "order")
+//    List<OrderProduct> orderProducts;
 
 }

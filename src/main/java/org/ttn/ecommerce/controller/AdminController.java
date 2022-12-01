@@ -3,10 +3,12 @@ package org.ttn.ecommerce.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.services.CustomerDaoService;
 import org.ttn.ecommerce.services.SellerDaoService;
+import org.ttn.ecommerce.services.product.ProductService;
 
 @RestController
 @RequestMapping("/admin")
@@ -22,7 +24,8 @@ public class AdminController {
     @Autowired
     private SellerDaoService sellerDaoService;
 
-
+    @Autowired
+    private  ProductService productService;
     /*  List Seller's address, User can provide Custom  pagination and sorting fields */
     @GetMapping("list/customers")
     public MappingJacksonValue listAllCustomer(
@@ -81,4 +84,23 @@ public class AdminController {
         return sellerDaoService.activateSeller(id);
     }
 
+
+    /**
+     *      Activate Product Created By Seller
+     */
+
+    @PutMapping("activate/product/{productId}")
+    public String activateProduct(@PathVariable("productId") long productId){
+
+        return productService.activateProduct(productId);
+    }
+
+    /**
+     *      DeActivate Product
+     */
+    @PutMapping("deactivate/product/{productId}")
+    public String deactivateProduct(@Param("productId") Long id){
+
+        return productService.deactivateProduct(id);
+    }
 }

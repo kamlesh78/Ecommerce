@@ -1,6 +1,8 @@
 package org.ttn.ecommerce.entities.category;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.ttn.ecommerce.entities.product.Product;
@@ -21,19 +23,19 @@ public class Category {
 
     String name;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="parent_category_id")
     private Category parentCategory;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "parentCategory")
+     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategory;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+
+     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     private List<Product> products;
 
-    @OneToMany(mappedBy = "category")
+     @OneToMany(mappedBy = "category")
     private List<CategoryMetadataFieldValue> categoryMetadataFieldValues;
 
 

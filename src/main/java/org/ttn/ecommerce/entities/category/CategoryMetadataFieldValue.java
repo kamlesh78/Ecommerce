@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.entities.category;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,12 +16,12 @@ public class CategoryMetadataFieldValue {
     @EmbeddedId
     private MetaDataValueId id =new MetaDataValueId();
 
-    @ManyToOne
+     @ManyToOne
     @MapsId("categoryId")
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
+     @ManyToOne
     @MapsId("categoryMetaDataFieldId")
     @JoinColumn(name = "category_metadata_field_id")
     private CategoryMetaDataField categoryMetaDataField;
