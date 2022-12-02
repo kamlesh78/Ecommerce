@@ -1,16 +1,23 @@
 package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.CategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
+import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
+import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.UserServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,7 +31,7 @@ public class CategoryController {
     UserServiceImpl userDaoService;
 
 
-    /*
+    /**
             MetaData For Category
      */
 
@@ -70,12 +77,14 @@ public class CategoryController {
     }
 
     @GetMapping("view/category/{id}")
-    public ResponseEntity<?> viewCategory(@PathVariable("id") Long id){
+    public CategoryResponseDto viewCategory(@PathVariable("id") Long id){
+
+
         return categoryService.viewCategory(id);
     }
 
     @GetMapping("view/all-categories")
-    public ResponseEntity<?> viewAllCategories(){
+    public List<SubCategoryResponseDto> viewAllCategories(){
 
         return categoryService.viewAllCategory();
     }
@@ -87,5 +96,10 @@ public class CategoryController {
     }
 
 
+    @GetMapping("seller")
+    public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory(){
+        List<SellerCategoryResponseDTO> responseList = categoryService.viewSellerCategory();
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
 
 }

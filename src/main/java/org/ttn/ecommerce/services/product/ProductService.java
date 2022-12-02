@@ -1,11 +1,14 @@
 package org.ttn.ecommerce.services.product;
 
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.ttn.ecommerce.dto.product.CategoryDto;
+import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.category.Category;
@@ -104,7 +107,7 @@ public class ProductService {
     }
 
 
-    public Product viewProductById(Long id, String email) throws Exception {
+    public ResponseEntity<?> viewProductById(Long id, String email) throws Exception {
 
         UserEntity seller = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserNotFoundException("User Not Found"));
@@ -113,25 +116,32 @@ public class ProductService {
                 .orElseThrow(()->new ProductNotFoundException("Product Not Found For Given ProductID"));
 
         if(product.isDeleted()){
-            throw new Exception("a");
 
-
-
-
-
-
-
-
-
-
-
-           // return new ResponseEntity<>("Product Should Not Be Deleted",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Product Is Deleted",HttpStatus.BAD_REQUEST);
         }
+
         if(!(product.getSeller().getId() == seller.getId())){
-            throw new Exception("a");
 
+            return new ResponseEntity<>("Only Owner Of Product Can View It",HttpStatus.BAD_REQUEST);
         }
-        return product;
+
+        /* Set Category Of The Product */
+        Category category = product.getCategory();
+        CategoryDto categoryDto =new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setId(product.getId());
+        productResponseDto.setName(product.getName());
+        productResponseDto.setActive(product.isActive());
+        productResponseDto.setBrand(product.getBrand());
+        productResponseDto.setDeleted(product.isDeleted());
+        productResponseDto.setCancellable(product.isCancellable());
+        productResponseDto.setDescription(product.getDescription());
+        productResponseDto.setCategory(categoryDto);
+
+        return new ResponseEntity<>(productResponseDto,HttpStatus.OK);
     }
 
     public String deleteProduct(String email, Long id) {
@@ -167,9 +177,8 @@ public class ProductService {
         /**
          *      Check If product is Unique WithRespect TO Category and Seller Or Not
          */
-
-
-        if (product.getName() != null){
+        System.out.println(productUpdate.getBrand());
+        if (productUpdate.getName() != null){
             List<Product> productList = product.getCategory().getProducts();
             if(productList.size()!=0){
                 for(Product productCheck : productList){
@@ -183,9 +192,14 @@ public class ProductService {
             product.setName(productUpdate.getName());
         }
 
-        if (product.getDescription() !=  null)
+        if (productUpdate.getDescription() != null)
             product.setDescription(productUpdate.getDescription());
-        if (product.isReturnable())
+        if (productUpdate.getBrand() !=  null)
+            product.setBrand(productUpdate.getBrand());
+        if(productUpdate.getName()!=null)
+            product.setName(productUpdate.getName());
+
+        if (productUpdate.isReturnable())
             product.setReturnable(productUpdate.isReturnable());
         if (product.isCancellable())
             product.setCancellable(productUpdate.isCancellable());

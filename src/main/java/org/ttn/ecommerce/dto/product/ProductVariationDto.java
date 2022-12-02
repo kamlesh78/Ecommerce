@@ -14,20 +14,19 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ProductVariationDto {
 
-//    @NotNull(message = "Product Id Can Not Be Null")
+    @NotNull(message = "Product Id Can Not Be Null")
     private Long productId;
 
-//    @JsonProperty(value = "metaData")
-//    @NotNull(message = "MetaData Can Not Be Null")
-
+    @JsonProperty(value = "metaData")
+    @NotNull(message = "MetaData Can Not Be Null")
     private String metaData;
 
-//    @Min(value = 0, message = "Quantity should be greater than 0")
-//    @NotNull(message = "Quantity Can Not Null")
+    @Min(value = 0, message = "Quantity should be greater than 0")
+    @NotNull(message = "Quantity Can Not Null")
     private int quantityAvailable;
-//
-//    @Min(value = 0, message = "Price should be greater than 0")
-//    @NotNull(message ="Price Can Not Be Null")
+
+    @Min(value = 0, message = "Price should be greater than 0")
+    @NotNull(message ="Price Can Not Be Null")
     private double price;
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
-import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.*;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
 import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
@@ -179,21 +179,72 @@ public class CategoryService {
     }
 
 
-    /*           View Category            */
-    public ResponseEntity<?> viewCategory(Long id) {
+    /**
+     *  View Category
+     *  */
+    public CategoryResponseDto viewCategory(Long id) {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(()-> new CategoryNotFoundException("Category Not Found FOR ID " + id));
 
-        return new ResponseEntity<>(category,HttpStatus.OK);
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto();
+        categoryResponseDto.setId(category.getId());
+        categoryResponseDto.setName(category.getName());
+
+        List<Category> subCategory = category.getSubCategory();
+
+        SubCategoryResponseDto temp =new SubCategoryResponseDto();
+        List<SubCategoryResponseDto> childCategoryList = new ArrayList<>();
+        List<SubCategoryResponseDto> parentCategoryList = new ArrayList<>();
+
+
+        /**
+         *      Get All Child Categories
+         */
+        for(Category childCategory : subCategory){
+            temp.setId(childCategory.getId());
+            temp.setName(childCategory.getName());
+            childCategoryList.add(temp);
+        }
+        categoryResponseDto.setChildCategories(childCategoryList);
+
+        /**
+         *          Get Parent Categories
+         */
+        ;
+
+        Category parentCategory= category.getParentCategory();
+        while(parentCategory!=null){
+            SubCategoryResponseDto parentDto =new SubCategoryResponseDto();
+            parentDto.setId(parentCategory.getId());
+            parentDto.setName(parentCategory.getName());
+            parentCategoryList.add(parentDto);
+            parentCategory=parentCategory.getParentCategory();
+
+        }
+        categoryResponseDto.setParentCategories(parentCategoryList);
+        return categoryResponseDto;
     }
 
 
     /*        View All Category           */
-    public ResponseEntity<?> viewAllCategory(){
+    public List<SubCategoryResponseDto> viewAllCategory(){
 
         List<Category> categoryList = categoryRepository.findAll();
-        return new ResponseEntity<>(categoryList,HttpStatus.OK);
+
+        /*      List of Response DTO         */
+
+        List<SubCategoryResponseDto> subCategoryResponseDtoList = new ArrayList<>();
+        for (Category category : categoryList){
+            SubCategoryResponseDto subCategoryResponseDto = new SubCategoryResponseDto();
+            subCategoryResponseDto.setId(category.getId());
+            subCategoryResponseDto.setName(category.getName());
+
+            subCategoryResponseDtoList.add(subCategoryResponseDto);
+        }
+
+        return subCategoryResponseDtoList;
+
     }
 
     /*                Update Category             */
@@ -220,7 +271,6 @@ public class CategoryService {
         List<Category> subCategoryList = category1.getParentCategory().getSubCategory();
 
         /**
-         *
          *      Check if category name is unique along breadth/depth
          */
         Category parentCheck2 = category1.getParentCategory();
@@ -257,4 +307,37 @@ public class CategoryService {
     }
 
 
+    /**
+     *  List of all leaf node categories along with their metadata fields,
+     *  field's possible values and parent node chain details
+     */
+
+    public List<SellerCategoryResponseDTO> viewSellerCategory(){
+        List<Category> categoryList = categoryRepository.findAll();
+        List<SellerCategoryResponseDTO> resultList = new ArrayList<>();
+
+        for(Category category: categoryList){
+            if(category.getSubCategory().isEmpty()){
+
+                List<CategoryMetadataFieldValue> metadataList =
+                        categoryMetaDataFieldValueRepository.findByCategoryId(category.getId());
+
+                SellerCategoryResponseDTO sellerResponse = new SellerCategoryResponseDTO();
+                sellerResponse.setId(category.getId());
+                sellerResponse.setName(category.getName());
+                sellerResponse.setParent(category.getParentCategory());
+                List<MetadataResponseDTO> metaList = new ArrayList<>();
+                for (CategoryMetadataFieldValue metadata: metadataList){
+                    MetadataResponseDTO metadataResponseDTO = new MetadataResponseDTO();
+                    metadataResponseDTO.setMetadataId(metadata.getCategoryMetaDataField().getId());
+                    metadataResponseDTO.setFieldName(metadata.getCategoryMetaDataField().getName());
+                    metadataResponseDTO.setPossibleValues(metadata.getValue());
+                    metaList.add(metadataResponseDTO);
+                }
+                sellerResponse.setMetadata(metaList);
+                resultList.add(sellerResponse);
+            }
+        }
+        return resultList;
+    }
 }

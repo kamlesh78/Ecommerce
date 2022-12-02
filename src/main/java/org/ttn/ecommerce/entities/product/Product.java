@@ -19,8 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@SQLDelete(sql = "UPDATE Product SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 public class Product {
 
     @Id

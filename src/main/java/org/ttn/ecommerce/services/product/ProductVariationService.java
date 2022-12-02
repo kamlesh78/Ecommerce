@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.ttn.ecommerce.dto.product.CategoryDto;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
-import org.ttn.ecommerce.dto.responseDto.ProductResponseDto;
+import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.category.Category;
@@ -118,7 +119,7 @@ public class ProductVariationService {
         return productVariationDto;
      }
 
-    public List<ProductResponseDto> viewAllProducts(String email) {
+    public List<ProductResponseDto> viewAllProductsOfSeller(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseThrow(()->new UserNotFoundException("User Not Found"));
@@ -128,29 +129,60 @@ public class ProductVariationService {
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
 
-        ProductResponseDto productResponseDto = new ProductResponseDto();
 
-        for(Product product : productList){
-            productResponseDto.setProduct(product);
-            productResponseDto.setCategory(product.getCategory());
 
+        for(Product product : productList) {
+            if (!product.isDeleted()) {
+
+
+            ProductResponseDto productResponseDto = new ProductResponseDto();
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setId(product.getCategory().getId());
+            categoryDto.setName(product.getCategory().getName());
+
+
+            productResponseDto.setBrand(product.getBrand());
+            productResponseDto.setActive(product.isActive());
+            productResponseDto.setDeleted(product.isDeleted());
+            productResponseDto.setId(product.getId());
+            productResponseDto.setName(product.getName());
+            productResponseDto.setDescription(product.getDescription());
+            productResponseDto.setCancellable(product.isCancellable());
+            productResponseDto.setReturnable(product.isReturnable());
+
+            productResponseDto.setCategory(categoryDto);
 
             productResponseDtoList.add(productResponseDto);
-//            tempProduct.setCategory(product.getCategory());
-//            tempProduct.setCategory(.getCategory());
-//            tempProduct.setBrand(product.getBrand());
-//            tempProduct.setActive(product.isActive());
-//            tempProduct.setDeleted(product.isDeleted());
-//            tempProduct.setId(product.getId());
-//            tempProduct.setName(product.getName());
-//            tempProduct.setDescription(product.getDescription());
-//            tempProduct.setCancellable(product.isCancellable());
-//            tempProduct.setReturnable(product.isReturnable());
-//            outList.add(tempProduct);
+        }
         }
 
 
         return productResponseDtoList;
 
+    }
+
+    public ResponseEntity<?> viewProductVariationByProduct(Long productId) {
+
+        Product product=productRepository.findById(productId)
+                .orElseThrow(()->new ProductNotFoundException("Product Not Found For Given ID"));
+
+        if(product.isDeleted()){
+            return new ResponseEntity<>("Product IS Deleted",HttpStatus.BAD_REQUEST);
+        }
+
+        List<ProductVariation> productVariationList = product.getProductVariations();
+        List<ProductVariationDto> productResponseDtoList = new ArrayList<>();
+
+        for(ProductVariation productVariation:productVariationList){
+            ProductVariationDto productVariationDto = new ProductVariationDto();
+            productVariationDto.setProductId(productVariation.getId());
+            productVariationDto.setMetaData(productVariation.getMetadata());
+            productVariationDto.setPrice(productVariation.getPrice());
+            productVariationDto.setQuantityAvailable(productVariation.getQuantityAvailable());
+
+            productResponseDtoList.add(productVariationDto);
+        }
+
+        return new ResponseEntity<>(productResponseDtoList,HttpStatus.OK);
     }
 }

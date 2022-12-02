@@ -7,15 +7,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.image.ImageResponse;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
+import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.image.ImageService;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/seller")
@@ -109,10 +113,11 @@ public class SellerController {
 
 
     @GetMapping("view/all-categories")
-    public ResponseEntity<?> viewAllCategories(){
+    public List<SubCategoryResponseDto> viewAllCategories(){
 
         return categoryService.viewAllCategory();
 
     }
+
 
 }

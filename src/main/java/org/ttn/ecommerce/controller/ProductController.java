@@ -2,11 +2,12 @@ package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
-import org.ttn.ecommerce.dto.responseDto.ProductResponseDto;
+import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entities.product.Product;
 import org.ttn.ecommerce.services.SellerServiceImpl;
@@ -43,10 +44,10 @@ public class ProductController {
 
 
     /**
-     * View Product By Product ID
+     *              View Product By Product ID
      */
     @GetMapping("view/product/{id}")
-    public Product viewProductById(@PathVariable("id") Long id, Authentication authentication) throws Exception {
+    public ResponseEntity<?> viewProductById(@PathVariable("id") Long id,Authentication authentication) throws Exception {
         String email = authentication.getName();
         return productService.viewProductById(id, email);
     }
@@ -62,7 +63,8 @@ public class ProductController {
 
 
     /**
-     * View Product Variation By Id
+     * @Probelem    : View Product Variation By Id
+     * @OutPut      : Product Variation with Parent Product Details
      */
     @GetMapping("view/product-variation/{variationId}")
     public ProductVariationResponseDto viewProductVariation(@PathVariable("variationId") Long productVariationId, Authentication authentication) {
@@ -72,15 +74,28 @@ public class ProductController {
 
 
     /**
-     * View All Products    By Seller
-     */
-
+     *     @Problem : View All Products Created By Seller
+     *     @Output  : All non-deleted product with Category details
+    */
     @GetMapping("view/all-products")
     public List<ProductResponseDto> viewAllProduct(Authentication authentication) {
+
         String email = authentication.getName();
-        return productVariationService.viewAllProducts(email);
+        return productVariationService.viewAllProductsOfSeller(email);
 
     }
+
+
+    /**
+     *      @Problem : View All Product Variations For A Product
+     *      @Outptut : Product Variations OF The Product
+     */
+    @GetMapping("seller/view/product-variation/{productId}")
+    public ResponseEntity<?> viewProductVariationOfProduct(@PathVariable("productId") Long productId){
+
+        return productVariationService.viewProductVariationByProduct(productId);
+    }
+
 
     /**
      * Delete Product
@@ -93,12 +108,15 @@ public class ProductController {
     }
 
     /**
-     * Update Product
+     *      @Problem :  (1) Update Product
+     *                  (2) Check If Updatable Product Name IS UNIQUE
+     *                  WITH Respect TO  {BRAND , CATEGORY, SELLER} Combination
+     *      @Output  :  Update Product Or Return Error If Any .
      */
     @PutMapping("/update/product/{productId}")
     public String updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product, Authentication authentication) {
-        String email = authentication.getName();
 
+        String email = authentication.getName();
         return productService.updateProduct(email, productId, product);
     }
 

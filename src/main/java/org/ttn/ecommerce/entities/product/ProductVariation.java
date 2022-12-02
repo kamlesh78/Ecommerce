@@ -34,6 +34,7 @@ public class ProductVariation {
     @Column(columnDefinition = "JSON")
     private String metadata;
 
+
     @NotNull
     @ManyToOne
     @JoinColumn(name="product_id")

@@ -28,8 +28,10 @@ public class Category {
     private Category parentCategory;
 
 
+    @JsonBackReference
     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategory;
+
 
 
      @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
