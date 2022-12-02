@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
 import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
@@ -17,6 +18,7 @@ import org.ttn.ecommerce.repository.categoryRepository.CategoryMetaDataFieldValu
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
 import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,10 +63,19 @@ public class CategoryService {
         }
     }
 
-    public ResponseEntity<?> getMetaDataField() {
+    public List<MetaDataFieldResponse> getMetaDataField() {
 
         List<CategoryMetaDataField> categoryMetaDataFields= categoryMetaDataFieldRepository.findAll();
-        return new ResponseEntity<>(categoryMetaDataFields, HttpStatus.OK);
+        List<MetaDataFieldResponse> metaList= new ArrayList<>();
+        for(CategoryMetaDataField metaDataField : categoryMetaDataFields){
+
+            MetaDataFieldResponse metaDataFieldResponse = new MetaDataFieldResponse();
+            metaDataFieldResponse.setId(metaDataField.getId());
+            metaDataFieldResponse.setName(metaDataField.getName());
+
+            metaList.add(metaDataFieldResponse);
+        }
+        return metaList;
 
     }
 

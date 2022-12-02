@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.dto.product.responseDto;
+package org.ttn.ecommerce.dto.responseDto;
 
 import lombok.Data;
 import org.ttn.ecommerce.entities.category.Category;

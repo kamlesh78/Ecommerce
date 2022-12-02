@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.dto.product.responseDto.userDto;
+package org.ttn.ecommerce.dto.responseDto.userDto;
 
 import lombok.Data;
 import org.aspectj.apache.bcel.classfile.Module;

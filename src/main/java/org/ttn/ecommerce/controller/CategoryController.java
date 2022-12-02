@@ -5,10 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
+import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.UserServiceImpl;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
@@ -33,7 +36,7 @@ public class CategoryController {
 
 
     @GetMapping("view/metadata-field")
-    public ResponseEntity<?> viewMetaField() {
+    public List<MetaDataFieldResponse> viewMetaField() {
 
         return categoryService.getMetaDataField();
     }

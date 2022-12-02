@@ -1,15 +1,13 @@
 package org.ttn.ecommerce.services.product;
 
-import org.apache.catalina.User;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
-import org.ttn.ecommerce.dto.product.responseDto.ProductResponseDto;
-import org.ttn.ecommerce.dto.product.responseDto.ProductVariationResponseDto;
-import org.ttn.ecommerce.entities.Seller;
+import org.ttn.ecommerce.dto.responseDto.ProductResponseDto;
+import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;

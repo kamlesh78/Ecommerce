@@ -2,9 +2,6 @@ package org.ttn.ecommerce.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,13 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ttn.ecommerce.dto.product.responseDto.userDto.SellerResponseDto;
+import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
@@ -28,7 +24,6 @@ import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository;
-import org.ttn.ecommerce.security.SecurityConstants;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -243,7 +238,9 @@ public class SellerServiceImpl{
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 
-    /*          List all Sellers            */
+    /**
+     *                      List all Sellers
+     */
 
 
     public List<SellerResponseDto> listAllSellers(String pageSize, String pageOffset, String sortBy){
@@ -262,17 +259,13 @@ public class SellerServiceImpl{
            sellerResponseDto.setFirstName(seller.getFirstName());
            sellerResponseDto.setLastName(seller.getLastName());
            sellerResponseDto.setCompanyContact(seller.getCompanyContact());
+           sellerResponseDto.setCompanyName(seller.getCompanyName());
+           sellerResponseDto.setGst(seller.getGst());
            sellerResponseDto.setActive(seller.isActive());
-
+           sellerResponseDto.setAddress(seller.getAddresses());
            responseDtoList.add(sellerResponseDto);
        }
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//        FilterProvider filters = new SimpleFilterProvider() .addFilter(
-//                "sellerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","isActive","companyContact","companyName","gst","addresses"));
-//
-//        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(sellerList);
-//        mappingJacksonValue.setFilters(filters);
+
         return responseDtoList;
     }
 

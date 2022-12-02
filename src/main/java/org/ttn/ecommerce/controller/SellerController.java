@@ -2,13 +2,12 @@ package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.image.ImageResponse;
-import org.ttn.ecommerce.dto.product.responseDto.userDto.SellerResponseDto;
+import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
@@ -16,7 +15,6 @@ import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.image.ImageService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
