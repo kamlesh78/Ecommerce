@@ -34,6 +34,7 @@ import org.ttn.ecommerce.services.tokenService.TokenService;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -79,20 +80,30 @@ public class CustomerServiceImpl implements CustomerService{
 
     /*          list all customer           */
 
-    public MappingJacksonValue listAllCustomers(String pageSize,String pageOffset,String sortBy){
+    public List<CustomerResponseDto> listAllCustomers(String pageSize,String pageOffset,String sortBy){
 
         Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
                 Sort.Direction.DESC,sortBy)));
 
         Page<Customer> pages = customerRepository.findAll(pageable);
         List<Customer> customerList = pages.getContent();
+        List<CustomerResponseDto> responseDtoList = new ArrayList<>();
+        for(Customer customer : customerList){
+            CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+            customerResponseDto.setId(customer.getId());
+            customerResponseDto.setFirstName(customer.getFirstName());
+            customerResponseDto.setLastName(customer.getLastName());
+            customerResponseDto.setContact(customer.getContact());
+            customerResponseDto.setActive(customer.isActive());
 
-        FilterProvider filters = new SimpleFilterProvider() .addFilter(
-                "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
-
-        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customerList);
-        mappingJacksonValue.setFilters(filters);
-        return mappingJacksonValue;
+            responseDtoList.add(customerResponseDto);
+        }
+//        FilterProvider filters = new SimpleFilterProvider() .addFilter(
+//                "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
+//
+//        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customerList);
+//        mappingJacksonValue.setFilters(filters);
+        return responseDtoList;
     }
 
     /*      Customer Profile        */

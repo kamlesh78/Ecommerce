@@ -4,11 +4,14 @@ package org.ttn.ecommerce.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.CustomerResponseDto;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.services.CustomerServiceImpl;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.product.ProductService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -25,10 +28,11 @@ public class AdminController {
     private SellerServiceImpl sellerDaoService;
 
     @Autowired
-    private  ProductService productService;
+    private ProductService productService;
+
     /*  List Seller's address, User can provide Custom  pagination and sorting fields */
     @GetMapping("list/customers")
-    public MappingJacksonValue listAllCustomer(
+    public List<CustomerResponseDto> listAllCustomer(
             @RequestParam(name = "pageSize", required = false) String pageSize,
             @RequestParam(name = "pageOffset", required = false) String pageOffset,
             @RequestParam(name = "sort", required = false) String sortBy
@@ -47,7 +51,7 @@ public class AdminController {
      */
 
     @GetMapping("list/sellers")
-    public MappingJacksonValue listAllSeller(
+    public List<SellerResponseDto> listAllSeller(
             @RequestParam(name = "pageSize", required = false) String pageSize,
             @RequestParam(name = "pageOffset", required = false) String pageOffset,
             @RequestParam(name = "sort", required = false) String sortBy) throws JsonProcessingException {
@@ -88,20 +92,20 @@ public class AdminController {
 
 
     /**
-     *      Activate Product Created By Seller
+     * Activate Product Created By Seller
      */
 
     @PutMapping("activate/product/{productId}")
-    public String activateProduct(@PathVariable("productId") long productId){
+    public String activateProduct(@PathVariable("productId") long productId) {
 
         return productService.activateProduct(productId);
     }
 
     /**
-     *      DeActivate Product
+     * DeActivate Product
      */
     @PutMapping("deactivate/product/{productId}")
-    public String deactivateProduct(@Param("productId") Long id){
+    public String deactivateProduct(@Param("productId") Long id) {
 
         return productService.deactivateProduct(id);
     }

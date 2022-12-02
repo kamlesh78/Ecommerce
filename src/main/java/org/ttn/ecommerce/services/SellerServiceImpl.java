@@ -246,21 +246,34 @@ public class SellerServiceImpl{
     /*          List all Sellers            */
 
 
-    public MappingJacksonValue listAllSellers(String pageSize, String pageOffset, String sortBy){
+    public List<SellerResponseDto> listAllSellers(String pageSize, String pageOffset, String sortBy){
 
         Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
                 Sort.Direction.DESC,sortBy)));
 
         Page<Seller> pages = sellerRepository.findAll(pageable);
        List<Seller> sellerList = pages.getContent();
-        ObjectMapper mapper = new ObjectMapper();
+       List<SellerResponseDto> responseDtoList = new ArrayList<>();
 
-        FilterProvider filters = new SimpleFilterProvider() .addFilter(
-                "sellerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","isActive","companyContact","companyName","gst","addresses"));
+       for(Seller seller : sellerList){
 
-        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(sellerList);
-        mappingJacksonValue.setFilters(filters);
-        return mappingJacksonValue;
+           SellerResponseDto sellerResponseDto = new SellerResponseDto();
+           sellerResponseDto.setId(seller.getId());
+           sellerResponseDto.setFirstName(seller.getFirstName());
+           sellerResponseDto.setLastName(seller.getLastName());
+           sellerResponseDto.setCompanyContact(seller.getCompanyContact());
+           sellerResponseDto.setActive(seller.isActive());
+
+           responseDtoList.add(sellerResponseDto);
+       }
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        FilterProvider filters = new SimpleFilterProvider() .addFilter(
+//                "sellerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","isActive","companyContact","companyName","gst","addresses"));
+//
+//        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(sellerList);
+//        mappingJacksonValue.setFilters(filters);
+        return responseDtoList;
     }
 
 
