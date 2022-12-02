@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.ttn.ecommerce.entities.Seller;
 import org.ttn.ecommerce.entities.category.Category;
 
@@ -17,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE Product SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Product {
 
     @Id

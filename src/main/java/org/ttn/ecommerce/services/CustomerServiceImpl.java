@@ -15,11 +15,14 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.AddressResponseDto;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.exception.AddressNotFoundException;
+import org.ttn.ecommerce.exception.CategoryNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.CustomerRepository;
@@ -33,10 +36,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
-public class CustomerDaoService {
+public class CustomerServiceImpl implements CustomerService{
 
     @Autowired
     TokenService tokenService;
@@ -92,19 +96,19 @@ public class CustomerDaoService {
     }
 
     /*      Customer Profile        */
-    public MappingJacksonValue customerProfile(String email){
-        Optional<Customer> customer = customerRepository.findByEmail(email);
-//        System.out.println(customer.get().getImages());
-//        if(customer.isPresent()){
-            SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","email","isActive","contact");
-            FilterProvider filterProvider =new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
-            MappingJacksonValue mappingJacksonValue= new MappingJacksonValue(customer);
-            mappingJacksonValue.setFilters(filterProvider);
-            return mappingJacksonValue;
+    public CustomerResponseDto customerProfile(String email){
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(()->new CategoryNotFoundException("Customer Not found"));
 
-//        }else{
-//        }
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+        customerResponseDto.setId(customer.getId());
+        customerResponseDto.setFirstName(customer.getFirstName());
+        customerResponseDto.setLastName(customer.getLastName());
+        customerResponseDto.setActive(customer.getIsActive());
+        customerResponseDto.setContact(customer.getContact());
+        customerResponseDto.setProfileImageUrl("");
 
+        return customerResponseDto;
     }
 
     /*      Add customer address        */
@@ -122,16 +126,17 @@ public class CustomerDaoService {
 
 
     /*      display customer addresses      */
-    public MappingJacksonValue viewCustomerAddresses(String email) throws IOException {
-        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        if(userEntity.isPresent()){
-                        SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("addresses");
-            FilterProvider filterProvider = new SimpleFilterProvider().addFilter("customerFilter",simpleBeanPropertyFilter);
-            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(userEntity);
-            mappingJacksonValue.setFilters(filterProvider);
-        System.out.println("hh");
-            return mappingJacksonValue;
-//              }
+    public AddressResponseDto viewCustomerAddresses(String email) throws IOException {
+
+        UserEntity userEntity = customerRepository.findByEmail(email)
+                .orElseThrow(()->new UserNotFoundException("Customer Not Found"));
+
+        AddressResponseDto addressResponseDto = new AddressResponseDto();
+        Set<Address> customerAddress = userEntity.getAddresses();
+        addressResponseDto.setAddressList(customerAddress);
+
+        return addressResponseDto;
+
     }
 
     public String deleteCustomerAddressById(String email, Long id) {

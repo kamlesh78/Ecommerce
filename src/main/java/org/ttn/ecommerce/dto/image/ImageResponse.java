@@ -6,7 +6,7 @@ import lombok.Data;
 public class ImageResponse
 {
 
-    private String name;
+    private String fileName;
     private String url;
     private String message;
 

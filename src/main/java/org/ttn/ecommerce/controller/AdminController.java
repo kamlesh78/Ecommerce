@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-import org.ttn.ecommerce.services.CustomerDaoService;
-import org.ttn.ecommerce.services.SellerDaoService;
+import org.ttn.ecommerce.services.CustomerServiceImpl;
+import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.product.ProductService;
 
 @RestController
@@ -19,10 +19,10 @@ public class AdminController {
     check custom JsonFilter
      */
     @Autowired
-    private CustomerDaoService customerDaoService;
+    private CustomerServiceImpl customerDaoService;
 
     @Autowired
-    private SellerDaoService sellerDaoService;
+    private SellerServiceImpl sellerDaoService;
 
     @Autowired
     private  ProductService productService;
@@ -53,7 +53,9 @@ public class AdminController {
             @RequestParam(name = "sort", required = false) String sortBy) throws JsonProcessingException {
 
 
-        /*      Default Values if Custom Pagination and Sorting fields not provided      */
+        /**
+         *         Default Values if Custom Pagination and Sorting fields not provided
+         */
         String customPageSize = pageSize == null ? "10" : pageSize;
         String customPageOffset = pageOffset == null ? "0" : pageOffset;
         String customSortBy = sortBy == null ? "email" : sortBy;

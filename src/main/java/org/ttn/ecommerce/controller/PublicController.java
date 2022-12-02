@@ -2,6 +2,7 @@ package org.ttn.ecommerce.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.Optional;
 
 @RestController
@@ -33,25 +35,27 @@ public class PublicController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncode;
     private final JWTGenerator jwtGenerator;
-    private final UserDaoService userDaoService;
-    private final UserPasswordService userPasswordService;
+    private final UserService userService;
+    private final UserPasswordServiceImpl userPasswordService;
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
-     private final CustomerDaoService customerDaoService;
+    private final CustomerServiceImpl customerDaoService;
+    private MessageSource messageSource;
 
 
     @Autowired
-    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserDaoService userDaoService, UserPasswordService userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerDaoService customerDaoService) {
+    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserServiceImpl userService, UserPasswordServiceImpl userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerServiceImpl customerDaoService, MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncode = passwordEncode;
         this.jwtGenerator = jwtGenerator;
-        this.userDaoService = userDaoService;
+        this.userService = userService;
         this.userPasswordService = userPasswordService;
         this.tokenService = tokenService;
         this.blackListTokenService = blackListTokenService;
         this.customerDaoService = customerDaoService;
+        this.messageSource = messageSource;
     }
 
 
@@ -64,7 +68,7 @@ public class PublicController {
         if (!user.isActive()) {
             return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
         }
-        return userDaoService.login(loginDto, user);
+        return userService.login(loginDto, user);
     }
 
     @GetMapping("hello")
@@ -76,14 +80,14 @@ public class PublicController {
     @PostMapping("customer/register")
     public ResponseEntity<String> registerCustomer(@Valid @RequestBody CustomerRegisterDto customerRegisterDto) {
 
-        return userDaoService.registerCustomer(customerRegisterDto);
+        return userService.registerCustomer(customerRegisterDto);
 
     }
 
     @PostMapping("seller/register")
     public ResponseEntity<String> registerSeller(@Valid @RequestBody SellerRegisterDto sellerRegisterDto) {
 
-        return userDaoService.registerSeller(sellerRegisterDto);
+        return userService.registerSeller(sellerRegisterDto);
     }
 
     @GetMapping("activate_account/{email}/{token}")
@@ -91,7 +95,7 @@ public class PublicController {
 
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
-            return userDaoService.confirmAccount(userEntity.get(), token);
+            return userService.confirmAccount(userEntity.get(), token);
         }
 
         return new ResponseEntity<>("Account with this email do not exists", HttpStatus.BAD_REQUEST);
@@ -104,7 +108,9 @@ public class PublicController {
     }
 
 
-    /**       Generate New Access Token From RefreshToken       */
+    /**
+     *          Generate New Access Token From RefreshToken
+     */
     @GetMapping("resend/accessToken/{refreshToken}")
     public ResponseEntity<?> accessTokenFromRefreshToken(@PathVariable("refreshToken") String refreshToken){
 
@@ -123,17 +129,16 @@ public class PublicController {
 
     @GetMapping("logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {
-        String token = tokenService.getJWTFromRequest(request);
-        if (token == null) {
-            return new ResponseEntity<>("Token not found", HttpStatus.BAD_REQUEST);
-        }
 
-        return blackListTokenService.blackListToken(token);
+        String email = userService.emailFromToken(request);
 
-
+        return blackListTokenService.logOutUser(email);
     }
 
 
-
+    @GetMapping("/check")
+    public String getCheck(){
+        return messageSource.getMessage("ecommerce.error.userNotFound ",null, Locale.ENGLISH);
+    }
 
 }

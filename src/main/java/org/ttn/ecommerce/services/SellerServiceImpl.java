@@ -18,6 +18,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Seller;
@@ -27,6 +28,7 @@ import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.security.SecurityConstants;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +38,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class SellerDaoService {
+public class SellerServiceImpl{
 
     @Autowired
     TokenService tokenService;
@@ -60,6 +62,7 @@ public class SellerDaoService {
     EmailServicetry emailServicetry;
 
 
+
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
         String email = tokenService.getUsernameFromJWT(token);
@@ -68,6 +71,7 @@ public class SellerDaoService {
 
 
     /*Deactivate Seller*/
+
     public String deActivateSeller(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
         if(userEntity.isActive()){
@@ -94,6 +98,7 @@ public class SellerDaoService {
     }
 
     /* Activate Seller */
+
     public String activateSeller(Long id){
         UserEntity userEntity = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("Seller with Id : "+id+" not found"));
         if(!userEntity.isActive()){
@@ -114,18 +119,26 @@ public class SellerDaoService {
     }
 
     /*Seller's profile*/
-    public MappingJacksonValue sellerProfile(String email){
+
+    public SellerResponseDto sellerProfile(String email){
         Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
 
-        SimpleBeanPropertyFilter simpleBeanPropertyFilter=SimpleBeanPropertyFilter.filterOutAllExcept("firstName","lastName","email","companyContact","contact","image");
-        FilterProvider filterProvider =new SimpleFilterProvider().addFilter("seller-filter",simpleBeanPropertyFilter);
-        MappingJacksonValue mappingJacksonValue= new MappingJacksonValue(seller);
-        mappingJacksonValue.setFilters(filterProvider);
-        return mappingJacksonValue;
+        SellerResponseDto sellerResponseDto = new SellerResponseDto();
+        sellerResponseDto.setId(seller.getId());
+        sellerResponseDto.setFirstName(seller.getFirstName());
+        sellerResponseDto.setLastName(seller.getLastName());
+        sellerResponseDto.setCompanyName(seller.getCompanyName());
+        sellerResponseDto.setCompanyContact(seller.getCompanyContact());
+        sellerResponseDto.setGst(seller.getGst());
+        sellerResponseDto.setAddress(seller.getAddresses());
+
+        return sellerResponseDto;
+
     }
 
     /* Update Profile */
-    public ResponseEntity<String> updateProfile(String email,Seller seller) {
+
+    public ResponseEntity<String> updateProfile(String email, Seller seller) {
         Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
         if(seller.getEmail()!=null) sellerEntity.setEmail(seller.getEmail());
         if(seller.getCompanyContact()!=null) sellerEntity.setCompanyContact(seller.getCompanyContact());
@@ -138,6 +151,7 @@ public class SellerDaoService {
 
 
     /* Add Seller Address */
+
     public ResponseEntity<?> insertSellerAddress(String email, Address address) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
@@ -152,6 +166,7 @@ public class SellerDaoService {
 
 
     /*display Seller addresses*/
+
     public String viewSellerAddresses(String email) throws IOException {
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
         Set<Address> addresses = userEntity.getAddresses();
@@ -162,6 +177,7 @@ public class SellerDaoService {
     }
 
     /* Delete Address by Id */
+
     public String deleteSellerAddressById(String email, Long id) {
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not found"));
         Address address =   addressRepository.findById(id).orElseThrow( ()->new AddressNotFoundException("Address associated with Id :"+ id +" Not Found .  Please provide correct Id"));
@@ -178,18 +194,27 @@ public class SellerDaoService {
     }
 
     /* Update Seller Address */
-    public String updateSellerAddressById(String email,Long id,Address address){
+
+    public String updateSellerAddressById(String email, Long id, Address address){
+
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("User Not Found"));
         Address userAddress = addressRepository.findById(id).orElseThrow(()->new AddressNotFoundException("Address associated with Id : "+ id + " Not Found .  Please provide correct Id\""));
-        address.setId(id);
-        address.setUserEntity(userEntity);
-        addressRepository.save(address);
+
+        if(address.getCity()!=null) userAddress.setCity(address.getCity());
+        if(address.getState()!=null) userAddress.setState(address.getState());
+        if(address.getCountry()!=null) userAddress.setCountry(address.getCountry());
+        if(address.getAddressLine()!=null) userAddress.setAddressLine(address.getAddressLine());
+        if(address.getLabel()!=null) userAddress.setLabel(address.getLabel());
+        if(address.getZipCode()!=null) userAddress.setZipCode(address.getZipCode());
+
+        addressRepository.save(userAddress);
         return "Address Updated";
     }
 
 
     /*Update Address*/
-    public ResponseEntity<String> updateAddress(String email,Seller seller) {
+
+    public ResponseEntity<String> updateAddress(String email, Seller seller) {
         Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(seller.getEmail()!=null || seller.getEmail()!="") sellerEntity.setEmail(seller.getEmail());
         if(seller.getCompanyContact()!=null || seller.getCompanyContact()!="") sellerEntity.setCompanyContact(seller.getCompanyContact());
@@ -202,6 +227,7 @@ public class SellerDaoService {
 
 
     /* Update Sellers Password */
+
     public ResponseEntity<String> updatePassword(SellerPasswordDto sellerPasswordDto, String email) {
 
         Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
@@ -219,7 +245,8 @@ public class SellerDaoService {
 
     /*          List all Sellers            */
 
-    public MappingJacksonValue listAllSellers(String pageSize,String pageOffset,String sortBy){
+
+    public MappingJacksonValue listAllSellers(String pageSize, String pageOffset, String sortBy){
 
         Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
                 Sort.Direction.DESC,sortBy)));

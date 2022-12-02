@@ -16,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name="customer")
 @PrimaryKeyJoinColumn(name = "user_id")
-@JsonFilter("customerFilter")
-public class Customer  extends  UserEntity{
+ public class Customer  extends  UserEntity{
 
     @Column(name = "contact")
     private String contact;

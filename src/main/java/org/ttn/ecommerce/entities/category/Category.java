@@ -23,12 +23,12 @@ public class Category {
 
     String name;
 
-     @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="parent_category_id")
     private Category parentCategory;
 
 
-     @OneToMany(mappedBy = "parentCategory")
+    @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategory;
 
 

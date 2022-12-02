@@ -8,11 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.entities.Token;
 import org.ttn.ecommerce.entities.UserEntity;
 import org.ttn.ecommerce.entities.token.BlackListedToken;
+import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +38,7 @@ public class BlackListTokenService {
         /*Exception*/
 
         if(accessToken.isPresent()){
+
             BlackListedToken blackListedToken = new BlackListedToken();
             blackListedToken.setToken(token);
             blackListedToken.setAccessTokenExpireAt(accessToken.get().getExpiredAt());
@@ -48,6 +51,23 @@ public class BlackListTokenService {
             return new ResponseEntity<>("Access Token Not Found",HttpStatus.BAD_REQUEST);
             /* Exception*/
         }
+
+    }
+
+
+    public ResponseEntity<String> logOutUser(String email) {
+
+        UserEntity userEntity =userRepository.findByEmail(email)
+                .orElseThrow(()->new UserNotFoundException("User Not Found"));
+
+        List<Token> accessTokens = accessTokenRepository.findTokensByUserId(userEntity.getId());
+        if(accessTokens.size()>0){
+            accessTokenRepository.deleteByUserId(userEntity.getId());
+            return new ResponseEntity<>("User LogOut Successfully",HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Token Not Found ",HttpStatus.NOT_FOUND);
+        }
+
 
     }
 

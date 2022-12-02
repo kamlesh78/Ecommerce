@@ -17,4 +17,6 @@ public class SecurityConstants {
 
     public static final int MAX_LOGIN_ATTEMPT = 3;
 
+    public static String FILE_UPLOAD_URL ="/home/kamlesh/Pictures/ecommerce_image";
+
 }

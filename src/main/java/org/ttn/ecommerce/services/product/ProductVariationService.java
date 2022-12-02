@@ -64,23 +64,12 @@ public class ProductVariationService {
             meta.put(categoryMetadataFieldValue.getCategoryMetaDataField().getName(),
                    listSet);
 
-//            meta.put(categoryMetadataFieldValue.getCategoryMetaDataField().getName(),
-//                    categoryMetadataFieldValue.getValue());
         }
-//    for(Map.Entry<Object,Set<String>> itr : meta.entrySet()){
-//        System.out.println(itr.getKey() + " " + itr.getValue());
-//    }
+
         String metadata = productVariationDto.getMetaData();
 
         JSONObject jsonObj = new JSONObject(metadata);
         Iterator keys = jsonObj.keys();
-//        while(keys.hasNext()){
-//            String currentKey = (String) keys.next();
-//            System.out.println(currentKey);
-//            System.out.println("value");
-//            System.out.println(jsonObj.getString(currentKey));
-//        }
-
 
         while(keys.hasNext()){
             String currentKey = (String)keys.next();

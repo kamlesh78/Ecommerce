@@ -8,7 +8,7 @@ import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
-import org.ttn.ecommerce.services.UserDaoService;
+import org.ttn.ecommerce.services.UserServiceImpl;
 
 @RestController
 @RequestMapping("/category")
@@ -18,7 +18,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @Autowired
-    UserDaoService userDaoService;
+    UserServiceImpl userDaoService;
 
 
     /*
@@ -27,6 +27,7 @@ public class CategoryController {
 
     @PostMapping("create/metadata-field")
     public String createMetaField(@RequestBody CategoryMetaDataField categoryMetaDataField) {
+
         return categoryService.createMetaDataField(categoryMetaDataField);
     }
 

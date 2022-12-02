@@ -34,7 +34,7 @@ import java.util.Collections;
 @Service
 @Transactional
 @NoArgsConstructor
-public class UserDaoService {
+public class UserServiceImpl implements UserService {
 
     private AuthenticationManager authenticationManager;
     private UserRepository userRepository;
@@ -50,7 +50,7 @@ public class UserDaoService {
 
 
     @Autowired
-    public UserDaoService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -66,11 +66,13 @@ public class UserDaoService {
 
 
 
+    @Override
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
         String email = tokenService.getUsernameFromJWT(token);
         return email;
     }
+    @Override
     public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto){
         if(userRepository.existsByEmail(registerDto.getEmail())){
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
@@ -113,6 +115,7 @@ public class UserDaoService {
     }
 
 
+    @Override
     public ResponseEntity<String> registerSeller(SellerRegisterDto sellerRegisterDto){
         if(userRepository.existsByEmail(sellerRegisterDto.getEmail())){
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
@@ -162,7 +165,8 @@ public class UserDaoService {
     }
 
 
-    public ResponseEntity<?> login(LoginDto loginDto,UserEntity user){
+    @Override
+    public ResponseEntity<?> login(LoginDto loginDto, UserEntity user){
 
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
@@ -187,8 +191,11 @@ public class UserDaoService {
         return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<String> confirmAccount(UserEntity userEntity, String token) {
        String out =  tokenService.confirmAccount(userEntity.getId(),token);
        return new ResponseEntity<>(out,HttpStatus.OK);
     }
+
+
 }

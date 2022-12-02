@@ -5,9 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.ttn.ecommerce.dto.image.ImageResponse;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.AddressResponseDto;
+import org.ttn.ecommerce.dto.product.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
 import org.ttn.ecommerce.entities.Address;
 import org.ttn.ecommerce.entities.Customer;
@@ -15,7 +19,7 @@ import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
-import org.ttn.ecommerce.services.CustomerDaoService;
+import org.ttn.ecommerce.services.CustomerServiceImpl;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 import org.ttn.ecommerce.services.image.ImageService;
 
@@ -36,13 +40,13 @@ public class CustomerController {
     private final JWTGenerator jwtGenerator;
 
     private final TokenService tokenService;
-    private final CustomerDaoService customerDaoService;
+    private final CustomerServiceImpl customerDaoService;
     private final ImageService imageService;
 
     private CategoryService categoryService;
 
     @Autowired
-    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerDaoService customerDaoService, ImageService imageService, CategoryService categoryService) {
+    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerServiceImpl customerDaoService, ImageService imageService, CategoryService categoryService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -63,9 +67,9 @@ public class CustomerController {
 
 
     @PostMapping(value = "upload/image")
-    public String uploadImage(@RequestParam("image") MultipartFile image, HttpServletRequest request) throws IOException {
+    public ImageResponse uploadImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
 
-        String email = customerDaoService.emailFromToken(request);
+        String email = authentication.getName();
 
         return imageService.uploadImage(email, image);
 
@@ -73,49 +77,49 @@ public class CustomerController {
 
 
     @GetMapping("/view/image")
-    public ResponseEntity<?> listFilesUsingJavaIO( HttpServletRequest request){
+    public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
 
-        String email = customerDaoService.emailFromToken(request);
+        String email = authentication.getName();
         return imageService.getImage(email);
     }
 
     @GetMapping("view/profile")
-    public MappingJacksonValue viewCustomerProfile(HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public CustomerResponseDto viewCustomerProfile(Authentication authentication) {
+        String email = authentication.getName();
         return customerDaoService.customerProfile(email);
     }
 
 
     @PatchMapping("update/profile")
-    public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, Authentication authentication) {
+        String email = authentication.getName();
         return customerDaoService.updateProfile(email, customer);
 
     }
 
     @PatchMapping("update/password")
-    public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, Authentication authentication) {
+        String email = authentication.getName();
         return customerDaoService.updatePassword(customerPasswordDto, email);
 
     }
 
     @PostMapping("add/address")
-    public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, Authentication authentication) {
+        String email = authentication.getName();
         return customerDaoService.insertCustomerAddress(email, address);
     }
 
     @GetMapping("view/address")
-    public MappingJacksonValue viewAddress(HttpServletRequest request) throws IOException {
-        String email = customerDaoService.emailFromToken(request);
+    public AddressResponseDto viewAddress(Authentication authentication) throws IOException {
+        String email = authentication.getName();
 
         return customerDaoService.viewCustomerAddresses(email);
     }
 
     @DeleteMapping("delete/address/{id}")
-    public String deleteCustomerAddress(@PathVariable("id") Long id, HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public String deleteCustomerAddress(@PathVariable("id") Long id, Authentication authentication) {
+        String email = authentication.getName();
 
         return customerDaoService.deleteCustomerAddressById(email, id);
     }
@@ -133,8 +137,8 @@ public class CustomerController {
 
 
     @PatchMapping("/update/address/{id}")
-    public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id, HttpServletRequest request) {
-        String email = customerDaoService.emailFromToken(request);
+    public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id, Authentication authentication) {
+        String email = authentication.getName();
         return customerDaoService.updateCustomerAddressById(email, id, address);
     }
 

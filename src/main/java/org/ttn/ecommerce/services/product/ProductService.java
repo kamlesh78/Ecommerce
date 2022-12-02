@@ -114,6 +114,17 @@ public class ProductService {
 
         if(product.isDeleted()){
             throw new Exception("a");
+
+
+
+
+
+
+
+
+
+
+
            // return new ResponseEntity<>("Product Should Not Be Deleted",HttpStatus.NOT_FOUND);
         }
         if(!(product.getSeller().getId() == seller.getId())){
