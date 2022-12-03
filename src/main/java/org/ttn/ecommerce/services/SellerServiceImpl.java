@@ -16,14 +16,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
-import org.ttn.ecommerce.entities.Address;
-import org.ttn.ecommerce.entities.Seller;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entity.Address;
+import org.ttn.ecommerce.entity.Seller;
+import org.ttn.ecommerce.entity.UserEntity;
 import org.ttn.ecommerce.exception.AddressNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.AddressRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.services.image.ImageService;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,8 @@ public class SellerServiceImpl{
     @Autowired
     EmailServicetry emailServicetry;
 
-
+    @Autowired
+    ImageService imageService;
 
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
@@ -125,6 +127,7 @@ public class SellerServiceImpl{
         sellerResponseDto.setCompanyName(seller.getCompanyName());
         sellerResponseDto.setCompanyContact(seller.getCompanyContact());
         sellerResponseDto.setGst(seller.getGst());
+        sellerResponseDto.setProfileImageUrl(imageService.getImagePath(seller));
         sellerResponseDto.setAddress(seller.getAddresses());
 
         return sellerResponseDto;

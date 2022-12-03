@@ -7,13 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.image.ImageResponse;
-import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
-import org.ttn.ecommerce.entities.Address;
-import org.ttn.ecommerce.entities.Seller;
-import org.ttn.ecommerce.entities.category.Category;
+import org.ttn.ecommerce.entity.Address;
+import org.ttn.ecommerce.entity.Seller;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.image.ImageService;
@@ -41,13 +39,20 @@ public class SellerController {
         return "a";
     }
 
-
+    /**
+     * @Problem : View Profile
+     * @Output  : Sellers Basic Detail, Profile Image URl And Address
+     */
     @GetMapping("view/profile")
     public SellerResponseDto viewSellerProfile(Authentication authentication) {
         String email = authentication.getName();
         return sellerDaoService.sellerProfile(email);
     }
 
+    /**
+     * @Problem : Update Seller Profile
+     * @param   : Fields To Be Uploaded
+     */
     @PatchMapping("update/profile")
     public ResponseEntity<String> updateSellerAddress(@RequestBody Seller seller, Authentication authentication) {
         String email = authentication.getName();
@@ -55,6 +60,10 @@ public class SellerController {
 
     }
 
+    /**
+     *      @Problem    :   Update Sellers Password
+     *      @param      :   <<Username>>  and <<Password>>
+     */
     @PatchMapping("update/password")
     public ResponseEntity<String> updateSellerPassword(@RequestBody SellerPasswordDto sellerPasswordDto, Authentication authentication) {
         String email = authentication.getName();
@@ -64,14 +73,18 @@ public class SellerController {
 
 
     /**
-     *       Seller Address Constraint :-> Seller should have only one address
-     *  */
+     *      @Problem         : Add Sellers Address
+     *      @Constriants     : Seller Should Have Only One Address
+     */
     @PostMapping("add/address")
     public ResponseEntity<?> addSellerAddress(@RequestBody Address address, Authentication authentication) {
         String email = authentication.getName();
         return sellerDaoService.insertSellerAddress(email, address);
     }
 
+    /**
+     *      @Problem  : View Sellers Address
+     */
     @GetMapping("view/address")
     public String viewAddress(Authentication authentication) throws IOException {
         String email = authentication.getName();
@@ -80,6 +93,10 @@ public class SellerController {
 
     }
 
+    /**
+     *      @Problem   :   Delete Sellers Address
+     *      @Param     :   Seller's Address ID
+     */
     @DeleteMapping("delete/address/{id}")
     public String deleteSellerAddress(@PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
@@ -88,13 +105,21 @@ public class SellerController {
 
     }
 
+    /**
+     *      @Problem  :  Update Seller's Address
+     *      @Param    :  Seller's Address ID
+     */
     @PatchMapping("/update/address/{id}")
     public String updateSellerAddress(@RequestBody Address address, @PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
         return sellerDaoService.updateSellerAddressById(email, id, address);
     }
 
-
+    /**
+     *      @Problem        : Upload Image
+     *      @Param          : Image
+     *      @Constraints    : Only Jpeg, Jpg, Png FileTypes Allowed
+     */
     @PostMapping(value = "upload/image")
     public ImageResponse uploadImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
 
@@ -103,12 +128,16 @@ public class SellerController {
         return imageService.uploadImage(email, image);
     }
 
+    /**
+     *      @Probelem  :  View Image
+     */
     @GetMapping("view/image")
     public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
 
         String email = authentication.getName();
         return imageService.getImage(email);
     }
+
 
 
     @GetMapping("view/all-categories")

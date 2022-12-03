@@ -1,11 +1,9 @@
-package org.ttn.ecommerce.entities.category;
+package org.ttn.ecommerce.entity.category;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.ttn.ecommerce.entities.product.Product;
+import org.ttn.ecommerce.entity.product.Product;
 
 import javax.persistence.*;
 import java.util.List;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,12 +22,8 @@ import javax.servlet.Filter;
 public class SecurityConfig {
 
 
-    private CustomUserDetailService userDetailService;
-
-
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-
+    private final CustomUserDetailService userDetailService;
 
 
     @Autowired
@@ -37,49 +32,52 @@ public class SecurityConfig {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 
     }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-    http
-            .csrf().disable()
-            .exceptionHandling()
-            .accessDeniedHandler(customAccessDeniedException())
-            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers("/api/public/**").permitAll()
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .antMatchers("/customer/**").hasRole("CUSTOMER")
-            .antMatchers("/seller/**").hasRole("SELLER")
-            .antMatchers("/category/**").permitAll()
-            .antMatchers("/product/**").permitAll()
-            .antMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .httpBasic();
-    http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf().disable()
+                .exceptionHandling()
+                .accessDeniedHandler(customAccessDeniedException())
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/customer/**").hasRole("CUSTOMER")
+                .antMatchers("/seller/**").hasRole("SELLER")
+                .antMatchers("/category/**").permitAll()
+                .antMatchers("/product/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
     @Bean
-    public  PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public Filter jwtAuthenticationFilter(){
+    public Filter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
     }
+
     @Bean
-    public CustomAccessDeniedException customAccessDeniedException(){
+    public CustomAccessDeniedException customAccessDeniedException() {
         return new CustomAccessDeniedException();
     }
 

@@ -1,6 +1,5 @@
 package org.ttn.ecommerce.services.product;
 
-import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.product.CategoryDto;
 import org.ttn.ecommerce.dto.product.ProductResponseDto;
-import org.ttn.ecommerce.entities.Seller;
-import org.ttn.ecommerce.entities.UserEntity;
-import org.ttn.ecommerce.entities.category.Category;
-import org.ttn.ecommerce.entities.product.Product;
+import org.ttn.ecommerce.entity.Seller;
+import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.entity.category.Category;
+import org.ttn.ecommerce.entity.product.Product;
 import org.ttn.ecommerce.exception.CategoryNotFoundException;
 import org.ttn.ecommerce.exception.ProductNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
@@ -25,7 +24,6 @@ import org.ttn.ecommerce.services.EmailServicetry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,6 +44,7 @@ public class ProductService {
     @Autowired
     EmailServicetry emailServicetry;
 
+    public static List<ProductResponseDto> staticList= new ArrayList<>();
     public ResponseEntity<?> addProduct(Product product,Long categoryId,String email){
 
         Seller seller = sellerRepository.findByEmail(email)
@@ -323,7 +322,9 @@ public class ProductService {
             List<Category> subCategories = category.getSubCategory();
             List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
             for(Category category1 : subCategories){
-                output.add(getLeafCategory(category1,productResponseDtoList));
+                for(ProductResponseDto productResponseDto : staticList){
+                    productResponseDto.getName();
+                }
             }
 
 
@@ -358,44 +359,44 @@ public class ProductService {
 
     }
 
-    public static List<ProductResponseDto> getLeafCategory(Category category,List<ProductResponseDto> productResponseDtoList){
-        if(category == null){
-
-            return new ArrayList<ProductResponseDto>();
-        }
-        if(category.getSubCategory() == null) {
-            System.out.println("not null");
-
-            List<Product> productList = category.getProducts();
-            List<ProductResponseDto> list = new ArrayList<>();
-            for(Product product : productList){
-                ProductResponseDto productResponseDto = new ProductResponseDto();
-                productResponseDto.setId(product.getId());
-                productResponseDto.setName(product.getName());
-                productResponseDto.setBrand(product.getBrand());
-                productResponseDto.setDescription(product.getDescription());
-                productResponseDto.setActive(product.isActive());
-                productResponseDto.setCancellable(product.isCancellable());
-                productResponseDto.setReturnable(product.isReturnable());
-                CategoryDto categoryDto =new CategoryDto();
-                categoryDto.setId(product.getCategory().getId());
-                categoryDto.setName(product.getCategory().getName());
-                System.out.println(productResponseDto.getName());
-                productResponseDto.setCategory(categoryDto);
-                list.add(productResponseDto);
-            }
-            return list;
-        }
-
-        for(Category category1 : category.getSubCategory()){
-            productResponseDtoList.addAll(getLeafCategory(category1,productResponseDtoList));
-        }
-
-        return productResponseDtoList;
-
-    }
-
+//    public static List<ProductResponseDto> getLeafCategory(Category category,List<ProductResponseDto> productResponseDtoList){
+//        if(category == null){
 //
+//            return new ArrayList<ProductResponseDto>();
+//        }
+//        if(category.getSubCategory() == null) {
+//            System.out.println("not null");
+//
+//            List<Product> productList = category.getProducts();
+//            List<ProductResponseDto> list = new ArrayList<>();
+//            for(Product product : productList){
+//                ProductResponseDto productResponseDto = new ProductResponseDto();
+//                productResponseDto.setId(product.getId());
+//                productResponseDto.setName(product.getName());
+//                productResponseDto.setBrand(product.getBrand());
+//                productResponseDto.setDescription(product.getDescription());
+//                productResponseDto.setActive(product.isActive());
+//                productResponseDto.setCancellable(product.isCancellable());
+//                productResponseDto.setReturnable(product.isReturnable());
+//                CategoryDto categoryDto =new CategoryDto();
+//                categoryDto.setId(product.getCategory().getId());
+//                categoryDto.setName(product.getCategory().getName());
+//                System.out.println(productResponseDto.getName());
+//                productResponseDto.setCategory(categoryDto);
+//                list.add(productResponseDto);
+//            }
+//            return list;
+//        }
+//
+//        for(Category category1 : category.getSubCategory()){
+//             getLeafCategory(category1,productResponseDtoList);
+//        }
+//
+//        return productResponseDtoList;
+//
+//    }
+//
+////
 //    public List<Product> viewSimilarProducts(Long productId){
 //
 //        // check if ID is valid
@@ -427,4 +428,44 @@ public class ProductService {
 //        return similarProducts;
 //
 //    }
+
+
+
+ public List<ProductResponseDto> retrieveProducts(Long id){
+
+        int noOfCategory = categoryRepository.findById(id).get().getSubCategory().size();
+        Category category = categoryRepository.findById(id).get();
+        if(noOfCategory==0){
+            List<Product> list = category.getProducts();
+            List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+            for(Product product: list){
+                ProductResponseDto dto = new ProductResponseDto();
+                dto.setId(product.getId());
+                dto.setDescription(product.getDescription());
+
+                productResponseDtoList.add(dto);
+            }
+            return productResponseDtoList;
+
+        }
+        else{
+
+            List<ProductResponseDto> allProducts =new ArrayList<>();
+            for(Category category1 : category.getSubCategory()){
+
+                List<ProductResponseDto> currProducts = retrieveProducts(category1.getId());
+
+                for(ProductResponseDto productResponseDto : currProducts){
+
+                    allProducts.add(productResponseDto);
+
+                }
+
+            }
+            return allProducts;
+
+        }
+ }
+
+
 }

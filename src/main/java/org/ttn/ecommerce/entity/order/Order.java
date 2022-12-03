@@ -1,6 +1,6 @@
-package org.ttn.ecommerce.entities.order;
+package org.ttn.ecommerce.entity.order;
 
-import org.ttn.ecommerce.entities.Customer;
+import org.ttn.ecommerce.entity.Customer;
 
 import javax.persistence.*;
 import java.util.Date;

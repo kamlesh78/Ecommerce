@@ -1,14 +1,8 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,12 +16,6 @@ public class UserEntity {
     @SequenceGenerator(name="user_sequence",sequenceName = "user_sequence",initialValue = 1,allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_sequence")
     private Long id;
-
-
-
-//    @Email
-//    @NotEmpty
-//    @NotNull
 
     @Column(name="Email")
     private String email;
@@ -46,7 +34,6 @@ public class UserEntity {
 
     @JsonProperty
     private boolean isActive;
-
 
     private boolean isLocked;
 
@@ -189,14 +176,6 @@ public class UserEntity {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
-//    public Images getImages() {
-//        return image;
-//    }
-
-//    public void setImages(Images images) {
-//        this.image = images;
-//    }
 
     @Override
     public String toString() {

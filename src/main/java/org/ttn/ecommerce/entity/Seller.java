@@ -1,6 +1,5 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

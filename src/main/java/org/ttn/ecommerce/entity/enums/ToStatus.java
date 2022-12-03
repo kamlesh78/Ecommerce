@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.entities.enums;
+package org.ttn.ecommerce.entity.enums;
 
 public enum ToStatus {
     CANCELLED,

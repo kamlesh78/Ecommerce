@@ -1,7 +1,6 @@
-package org.ttn.ecommerce.entities.product;
+package org.ttn.ecommerce.entity.product;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.ttn.ecommerce.entities.Customer;
+import org.ttn.ecommerce.entity.Customer;
 
 import javax.persistence.*;
 

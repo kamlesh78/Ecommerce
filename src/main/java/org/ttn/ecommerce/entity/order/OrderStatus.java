@@ -1,7 +1,7 @@
-package org.ttn.ecommerce.entities.order;
+package org.ttn.ecommerce.entity.order;
 
-import org.ttn.ecommerce.entities.enums.FromStatus;
-import org.ttn.ecommerce.entities.enums.ToStatus;
+import org.ttn.ecommerce.entity.enums.FromStatus;
+import org.ttn.ecommerce.entity.enums.ToStatus;
 
 import javax.persistence.*;
 

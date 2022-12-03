@@ -5,15 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ttn.ecommerce.entities.Token;
-import org.ttn.ecommerce.entities.UserEntity;
-import org.ttn.ecommerce.entities.token.BlackListedToken;
+import org.ttn.ecommerce.entity.Token;
+import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.entity.token.BlackListedToken;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

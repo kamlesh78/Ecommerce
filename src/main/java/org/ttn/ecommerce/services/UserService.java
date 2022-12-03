@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entity.UserEntity;
 
 import javax.servlet.http.HttpServletRequest;
 

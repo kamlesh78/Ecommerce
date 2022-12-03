@@ -4,9 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.ttn.ecommerce.entities.token.ForgetPasswordToken;
+import org.ttn.ecommerce.entity.token.ForgetPasswordToken;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface ForgetPasswordRepository extends JpaRepository<ForgetPasswordToken,Long> {

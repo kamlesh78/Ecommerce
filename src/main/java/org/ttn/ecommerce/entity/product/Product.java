@@ -1,16 +1,12 @@
-package org.ttn.ecommerce.entities.product;
+package org.ttn.ecommerce.entity.product;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-import org.ttn.ecommerce.entities.Seller;
-import org.ttn.ecommerce.entities.category.Category;
+import org.ttn.ecommerce.entity.Seller;
+import org.ttn.ecommerce.entity.category.Category;
 
 import javax.persistence.*;
 import java.util.List;

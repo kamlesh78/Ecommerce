@@ -19,35 +19,6 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionHandleController extends ResponseEntityExceptionHandler {
-
-
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-//
-//        String errorMessage = exception.getBindingResult()
-//                .getFieldErrors()
-//                .stream()
-//                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-//                .collect(Collectors.joining("; "));
-//
-//
-////        String errMessage="";
-////        if(exception.getFieldError()==null){
-////            errMessage = exception.getGlobalError().getDefaultMessage();
-////        }else{
-////            errMessage = exception.getFieldError().getDefaultMessage();
-////        }
-//
-////        BindingResult result = exception.getBindingResult();
-////        List<FieldError> errors = result.getFieldErrors();
-////        List<String> list=new ArrayList<>();
-////        for(FieldError fieldErrors : errors){
-////            list.add(fieldErrors.getDefaultMessage());
-////        }
-//      //  List<FieldError> fieldErrors = result.getFieldErrors().
-//        //ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), "Validation Failed", fieldErrors);
-//        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-//    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,

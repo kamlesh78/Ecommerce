@@ -1,6 +1,6 @@
-package org.ttn.ecommerce.entities.order;
+package org.ttn.ecommerce.entity.order;
 
-import org.ttn.ecommerce.entities.product.ProductVariation;
+import org.ttn.ecommerce.entity.product.ProductVariation;
 
 import javax.persistence.*;
 

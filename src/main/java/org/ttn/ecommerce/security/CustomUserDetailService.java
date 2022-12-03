@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.ttn.ecommerce.entities.Role;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entity.Role;
+import org.ttn.ecommerce.entity.UserEntity;
 import org.ttn.ecommerce.repository.UserRepository;
 
 import java.util.Collection;
@@ -26,6 +26,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

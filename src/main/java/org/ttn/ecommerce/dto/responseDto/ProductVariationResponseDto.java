@@ -2,12 +2,7 @@ package org.ttn.ecommerce.dto.responseDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.ttn.ecommerce.entities.product.Product;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import org.ttn.ecommerce.entity.product.Product;
 
 @Data
 public class ProductVariationResponseDto {

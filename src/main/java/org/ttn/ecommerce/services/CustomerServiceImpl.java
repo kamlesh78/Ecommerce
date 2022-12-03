@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.responseDto.userDto.AddressResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
-import org.ttn.ecommerce.entities.Address;
-import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entity.Address;
+import org.ttn.ecommerce.entity.Customer;
+import org.ttn.ecommerce.entity.UserEntity;
 import org.ttn.ecommerce.exception.AddressNotFoundException;
 import org.ttn.ecommerce.exception.CategoryNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
@@ -25,6 +25,7 @@ import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
 import org.ttn.ecommerce.repository.TokenRepository.RegisterUserRepository;
 import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.services.image.ImageService;
 import org.ttn.ecommerce.services.tokenService.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,8 @@ public class CustomerServiceImpl implements CustomerService{
     @Autowired
     RegisterUserRepository registerUserRepository;
 
+    @Autowired
+    ImageService imageService;
 
     public String emailFromToken(HttpServletRequest request){
         String token = tokenService.getJWTFromRequest(request);
@@ -113,7 +116,7 @@ public class CustomerServiceImpl implements CustomerService{
         customerResponseDto.setLastName(customer.getLastName());
         customerResponseDto.setActive(customer.getIsActive());
         customerResponseDto.setContact(customer.getContact());
-        customerResponseDto.setProfileImageUrl("");
+        customerResponseDto.setProfileImageUrl(imageService.getImagePath(customer));
 
         return customerResponseDto;
     }

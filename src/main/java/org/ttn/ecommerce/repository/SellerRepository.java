@@ -5,11 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.Seller;
+import org.ttn.ecommerce.entity.Seller;
 
-import java.awt.print.Pageable;
-import java.util.List;
 import java.util.Optional;
 
 public interface SellerRepository extends JpaRepository<Seller,Long> {

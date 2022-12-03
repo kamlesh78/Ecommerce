@@ -1,15 +1,10 @@
-package org.ttn.ecommerce.entities.product;
+package org.ttn.ecommerce.entity.product;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.ttn.ecommerce.entities.order.OrderProduct;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
 @Entity
@@ -17,8 +12,8 @@ import java.util.List;
 public class ProductVariation {
 
     @Id
-    @SequenceGenerator(name="product_variation_sequence",sequenceName = "product_variation_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "product_variation_sequence")
+    @SequenceGenerator(name="products_variation_sequence",sequenceName = "products_variation_sequence",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "products_variation_sequence")
     private Long id;
 
     private int quantityAvailable;

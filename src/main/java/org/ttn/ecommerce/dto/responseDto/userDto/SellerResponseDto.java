@@ -1,11 +1,8 @@
 package org.ttn.ecommerce.dto.responseDto.userDto;
 
 import lombok.Data;
-import org.aspectj.apache.bcel.classfile.Module;
-import org.ttn.ecommerce.entities.Address;
+import org.ttn.ecommerce.entity.Address;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 
 @Data

@@ -2,23 +2,19 @@ package org.ttn.ecommerce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.ttn.ecommerce.dto.product.CategoryDto;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
 import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
-import org.ttn.ecommerce.entities.product.Product;
-import org.ttn.ecommerce.exception.ProductNotFoundException;
+import org.ttn.ecommerce.entity.product.Product;
 import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.product.ProductService;
 import org.ttn.ecommerce.services.product.ProductVariationService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -90,7 +86,7 @@ public class ProductController {
      *     @Output  : All non-deleted product with Category details
     */
     @GetMapping("view/all-products")
-    public List<ProductResponseDto> viewAllProductOfSeller(Authentication authentication) {
+    public List<ProductResponseDto> viewAllProductsOfSeller(Authentication authentication) {
 
         String email = authentication.getName();
         return productVariationService.viewAllProductsOfSeller(email);
@@ -151,9 +147,14 @@ public class ProductController {
      *       @Output       : List of all products, along with each product's category details,
      *      *       all variations primary images
      */
-    @GetMapping("/products/{categoryId}")
-    public ResponseEntity<List<List<ProductResponseDto>>> viewCustomerAllProducts(@PathVariable("categoryId") Long categoryId){
-        return productService.viewAllProductOfProduct(categoryId);
+    @GetMapping("customer/product/{categoryId}")
+    public List<ProductResponseDto> viewCustomerAllProducts(@PathVariable("categoryId") Long categoryId){
+        return productService.retrieveProducts(categoryId);
+    }
+
+    @GetMapping("index")
+    public String get(){
+        return "a";
     }
 
     /**      Similar Products    */

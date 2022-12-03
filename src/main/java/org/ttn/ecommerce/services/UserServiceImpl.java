@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,8 @@ import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entities.*;
-import org.ttn.ecommerce.entities.token.RefreshToken;
+import org.ttn.ecommerce.entity.*;
+import org.ttn.ecommerce.entity.token.RefreshToken;
 import org.ttn.ecommerce.repository.CustomerRepository;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.SellerRepository;
@@ -104,13 +105,18 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenService.generateRegisterToken(customer);
 
-        emailService.setSubject("Your Account || "+ customer.getFirstName() + " finish setting up your new  Account " );
+        try{
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setTo(customer.getEmail());
+            simpleMailMessage.setSubject("Your Account || "+ customer.getFirstName() + " finish setting up your new  Account ");
+            simpleMailMessage.setText(  "Click on the link to Activate Your Account \n"
+                    + "127.0.0.1:8080/api/auth/activate_account/"+customer.getEmail() +"/"+token);
 
-        emailService.setToEmail(customer.getEmail());
-        emailService.setMessage("Click on the link to Activate Your Account \n"
-                + "127.0.0.1:8080/api/auth/activate_account/"+customer.getEmail() +"/"+token);
-        emailService.sendEmail();
+            emailServicetry.sendEmail(simpleMailMessage);
+        }catch (MailException ex){
+            new ResponseEntity<>("Can not Send Email ! Mailing Server is Down",HttpStatus.BAD_REQUEST);
 
+        }
 
         return new ResponseEntity<>("Customer Registered Successfully!Activate Your Account within 3 hours",HttpStatus.CREATED);
 
@@ -171,10 +177,9 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> login(LoginDto loginDto, UserEntity user){
 
 
-        String usersPassword= user.getPassword();
-        String testLoginPassword=passwordEncode.encode(loginDto.getPassword());
-        if(!usersPassword.equals(testLoginPassword)){
 
+
+            if(!passwordEncode.matches(loginDto.getPassword(), user.getPassword())){
             int count =user.getInvalidAttemptCount()+1;
             user.setInvalidAttemptCount(count);
             userRepository.saveInvalidCount(user.getInvalidAttemptCount(),user.getId());
@@ -195,7 +200,9 @@ public class UserServiceImpl implements UserService {
                 return new ResponseEntity<>("Your account got locked! Contact Admin to activate it.",HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<>("Password is wrong Your  Have <<" +(SecurityConstants.MAX_LOGIN_ATTEMPT-user.getInvalidAttemptCount())+">> Attempts Remaining",HttpStatus.UNAUTHORIZED);
-        }else{
+        }
+        else{
+
             userRepository.saveInvalidCount(0,user.getId());
 
 

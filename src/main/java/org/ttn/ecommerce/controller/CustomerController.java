@@ -12,8 +12,8 @@ import org.ttn.ecommerce.dto.image.ImageResponse;
 import org.ttn.ecommerce.dto.responseDto.userDto.AddressResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
-import org.ttn.ecommerce.entities.Address;
-import org.ttn.ecommerce.entities.Customer;
+import org.ttn.ecommerce.entity.Address;
+import org.ttn.ecommerce.entity.Customer;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
@@ -64,6 +64,12 @@ public class CustomerController {
     }
 
 
+    /**
+     *
+     * @param image
+     * @param authentication
+     * @throws IOException
+     */
     @PostMapping(value = "upload/image")
     public ImageResponse uploadImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
 
@@ -73,8 +79,9 @@ public class CustomerController {
 
     }
 
-
-
+    /**
+     * @param authentication
+     */
     @GetMapping("/view/image")
     public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
 
@@ -82,6 +89,11 @@ public class CustomerController {
         return imageService.getImage(email);
     }
 
+    /**
+     *
+     *      @param      authentication
+     *      @return
+     */
     @GetMapping("view/profile")
     public CustomerResponseDto viewCustomerProfile(Authentication authentication) {
         String email = authentication.getName();
@@ -89,6 +101,11 @@ public class CustomerController {
     }
 
 
+    /**
+     *      @Usage  Update Customer Profile
+     *      @param  customer
+     *      @param  authentication
+     */
     @PatchMapping("update/profile")
     public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, Authentication authentication) {
         String email = authentication.getName();
@@ -96,6 +113,12 @@ public class CustomerController {
 
     }
 
+
+    /**
+     *      @Constraint     Password Should be a Valid And Meet Constraints
+     *      @param          customerPasswordDto
+     *      @param          authentication
+     */
     @PatchMapping("update/password")
     public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, Authentication authentication) {
         String email = authentication.getName();
@@ -103,12 +126,22 @@ public class CustomerController {
 
     }
 
+    /**
+     *      @Usage   Add Customer Address
+     *      @param   address
+     *      @param   authentication
+     */
     @PostMapping("add/address")
     public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, Authentication authentication) {
         String email = authentication.getName();
         return customerDaoService.insertCustomerAddress(email, address);
     }
 
+    /**
+     * @param   authentication
+     * @return  Users Address
+     * @throws  IOException
+     */
     @GetMapping("view/address")
     public AddressResponseDto viewAddress(Authentication authentication) throws IOException {
         String email = authentication.getName();
@@ -116,6 +149,12 @@ public class CustomerController {
         return customerDaoService.viewCustomerAddresses(email);
     }
 
+
+    /**
+     *      @Usage       Delete Customer Address
+     *      @param       id
+     *      @param       authentication
+     */
     @DeleteMapping("delete/address/{id}")
     public String deleteCustomerAddress(@PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
@@ -124,15 +163,6 @@ public class CustomerController {
     }
 
 
-    /**
-     *      Return List all root level Categories if no ID is passed, else
-     *      list of all immediate child nodes of passed category ID
-     */
-    @GetMapping(value = {"view/categories","view/categories/{id}"})
-    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
-
-        return  categoryService.listCategoriesOfCustomer(id);
-    }
 
 
     @PatchMapping("/update/address/{id}")
@@ -141,13 +171,16 @@ public class CustomerController {
         return customerDaoService.updateCustomerAddressById(email, id, address);
     }
 
-
     /**
      *
-     * API to fetch filtering details for a category
+     * @param id
+     * @return
+     */
+    @GetMapping(value = {"view/categories","view/categories/{id}"})
+    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
 
-            */
-
+        return  categoryService.listCategoriesOfCustomer(id);
+    }
 
 }
 

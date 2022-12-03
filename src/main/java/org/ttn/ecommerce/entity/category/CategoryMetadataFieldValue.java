@@ -1,6 +1,5 @@
-package org.ttn.ecommerce.entities.category;
+package org.ttn.ecommerce.entity.category;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,25 +8,24 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name="category_metadata_field_values")
+@Table(name = "category_metadata_field_values")
 public class CategoryMetadataFieldValue {
 
 
     @EmbeddedId
-    private MetaDataValueId id =new MetaDataValueId();
+    private MetaDataValueId id = new MetaDataValueId();
 
-     @ManyToOne
+    @ManyToOne
     @MapsId("categoryId")
     @JoinColumn(name = "category_id")
     private Category category;
 
-     @ManyToOne
+    @ManyToOne
     @MapsId("categoryMetaDataFieldId")
     @JoinColumn(name = "category_metadata_field_id")
     private CategoryMetaDataField categoryMetaDataField;
 
     private String value;
-
 
 
 }

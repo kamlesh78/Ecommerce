@@ -7,17 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.ttn.ecommerce.dto.AuthResponseDto;
-import org.ttn.ecommerce.entities.Customer;
-import org.ttn.ecommerce.entities.Role;
-import org.ttn.ecommerce.entities.Token;
-import org.ttn.ecommerce.entities.token.RefreshToken;
-import org.ttn.ecommerce.entities.UserEntity;
-import org.ttn.ecommerce.entities.token.ActivateUserToken;
+import org.ttn.ecommerce.entity.Customer;
+import org.ttn.ecommerce.entity.Role;
+import org.ttn.ecommerce.entity.Token;
+import org.ttn.ecommerce.entity.token.RefreshToken;
+import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.entity.token.ActivateUserToken;
 import org.ttn.ecommerce.exception.TokenNotFoundException;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.CustomerRepository;
@@ -32,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

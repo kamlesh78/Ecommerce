@@ -10,8 +10,8 @@ import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.CategoryResponseDto
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
-import org.ttn.ecommerce.entities.category.Category;
-import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
+import org.ttn.ecommerce.entity.category.Category;
+import org.ttn.ecommerce.entity.category.CategoryMetaDataField;
 import org.ttn.ecommerce.services.UserServiceImpl;
 import org.ttn.ecommerce.services.categoryService.CategoryService;
 

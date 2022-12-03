@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.entities.product;
+package org.ttn.ecommerce.entity.product;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

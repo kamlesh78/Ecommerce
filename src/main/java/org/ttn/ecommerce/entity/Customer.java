@@ -1,15 +1,8 @@
-package org.ttn.ecommerce.entities;
+package org.ttn.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Filter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity

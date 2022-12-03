@@ -1,4 +1,4 @@
-package org.ttn.ecommerce.entities.category;
+package org.ttn.ecommerce.entity.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Data
 @EqualsAndHashCode
@@ -16,6 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MetaDataValueId implements Serializable {
+
     private static final long serialVersionUID = 2702030623316532366L;
 
     @Column(name = "category_id")

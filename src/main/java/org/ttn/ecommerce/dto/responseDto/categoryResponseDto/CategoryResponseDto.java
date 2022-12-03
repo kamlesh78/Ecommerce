@@ -1,7 +1,6 @@
 package org.ttn.ecommerce.dto.responseDto.categoryResponseDto;
 
 import lombok.Data;
-import org.ttn.ecommerce.entities.category.Category;
 
 import java.util.List;
 

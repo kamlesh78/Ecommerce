@@ -12,7 +12,7 @@ import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entities.UserEntity;
+import org.ttn.ecommerce.entity.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository;
@@ -60,7 +60,11 @@ public class PublicController {
     }
 
 
-    /*Common Login for Customer and Seller*/
+    /**
+     *      @Consumers      <<Admin>>, <<Customer>>, <<Seller>>
+     *      @param          loginDto
+     *      @return
+     */
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
 
@@ -77,12 +81,10 @@ public class PublicController {
         return userService.login(loginDto, user);
     }
 
-    @GetMapping("hello")
-    public String display() {
-        return "hello";
-    }
 
-
+    /**
+     *      @param   customerRegisterDto
+     */
     @PostMapping("customer/register")
     public ResponseEntity<String> registerCustomer(@Valid @RequestBody CustomerRegisterDto customerRegisterDto) {
 
@@ -90,12 +92,23 @@ public class PublicController {
 
     }
 
+
+    /**
+     *      @param  sellerRegisterDto
+     */
     @PostMapping("seller/register")
     public ResponseEntity<String> registerSeller(@Valid @RequestBody SellerRegisterDto sellerRegisterDto) {
 
         return userService.registerSeller(sellerRegisterDto);
     }
 
+
+
+    /**
+     *      @Usage   Activate Users Account Using Email and Token
+     *      @param   email
+     *      @param   token
+     */
     @GetMapping("activate_account/{email}/{token}")
     public ResponseEntity<String> confirmAccount(@PathVariable("email") String email, @PathVariable("token") String token) {
 
@@ -108,14 +121,18 @@ public class PublicController {
     }
 
 
+    /**
+     *      @param      email
+     *      @return     Resend Account Activation Token To User
+     */
     @PostMapping("resend/activation-link")
     public String resentActivationLink(@Valid @PathVariable("email") String email) {
         return customerDaoService.resendActivationLink(email);
     }
 
-
     /**
-     *          Generate New Access Token From RefreshToken
+     *       @Consumers     :  <<Admin>>, <<Customer>>, <<Seller>>
+     *       @Usage         :  To Generate New AccessToken Using Refresh Token
      */
     @GetMapping("resend/accessToken/{refreshToken}")
     public ResponseEntity<?> accessTokenFromRefreshToken(@PathVariable("refreshToken") String refreshToken){
@@ -123,16 +140,29 @@ public class PublicController {
       return  tokenService.newAccessToken(refreshToken);
 
     }
+
+    /**
+     *      @Consumers  : <<Admin>>, <<Customer>>, <<Seller>>
+     *      @Usage      : Reset Current Password Of User
+     */
     @GetMapping("forget-password/{email}")
     public ResponseEntity<?> forgetUserPassword(@PathVariable("email") String email) {
         return userPasswordService.forgetPassword(email);
     }
 
+    /**
+     *      @Param : Reset Password Token, New Password
+     */
+
     @PatchMapping("reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+
         return userPasswordService.resetUserPassword(resetPasswordDto);
     }
 
+    /**
+     *      @Consumers :  <<Admin>> , <<Customer>> , <<Seller>>
+     */
     @GetMapping("logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {
 
