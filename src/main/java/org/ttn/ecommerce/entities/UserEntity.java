@@ -55,7 +55,7 @@ public class UserEntity {
 
     private boolean isExpired;
 
-    private Integer invalidAttemptCount;
+    private int invalidAttemptCount;
 
     private Date passwordUpdateDate;
 

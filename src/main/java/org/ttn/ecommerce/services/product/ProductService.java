@@ -395,36 +395,36 @@ public class ProductService {
 
     }
 
-
-    public List<Product> viewSimilarProducts(Long productId){
-
-        // check if ID is valid
-        Optional<Product> product = productRepository.findById(productId);
-        if (product == null || product.isEmpty()) {
-            throw new BadRequestException(messageSource.getMessage("api.error.invalidProductId",null,Locale.ENGLISH));
-        }
-
-        // check product status
-        if (product.get().isDeleted() || product.get().isActive() == false ){
-            throw new BadRequestException(messageSource.getMessage("api.error.productInactiveDeleted",null,Locale.ENGLISH));
-        }
-
-        // find similar products
-        Category associatedCategory = product.get().getCategory();
-        List<Product> similarProducts = new ArrayList<>();
-
-        // add other products associated to its category to similar list
-        List<Product> siblingProducts = productRepository.findByCategory(associatedCategory);
-
-        for(Product individualProduct: siblingProducts){
-            similarProducts.add(individualProduct);
-        }
-
-        if(similarProducts.size()==1){
-            throw new BadRequestException(messageSource.getMessage("api.error.similarProducts",null,Locale.ENGLISH));
-        }
-
-        return similarProducts;
-
-    }
+//
+//    public List<Product> viewSimilarProducts(Long productId){
+//
+//        // check if ID is valid
+//        Optional<Product> product = productRepository.findById(productId);
+//        if (product == null || product.isEmpty()) {
+//            throw new BadRequestException(messageSource.getMessage("api.error.invalidProductId",null,Locale.ENGLISH));
+//        }
+//
+//        // check product status
+//        if (product.get().isDeleted() || product.get().isActive() == false ){
+//            throw new BadRequestException(messageSource.getMessage("api.error.productInactiveDeleted",null,Locale.ENGLISH));
+//        }
+//
+//        // find similar products
+//        Category associatedCategory = product.get().getCategory();
+//        List<Product> similarProducts = new ArrayList<>();
+//
+//        // add other products associated to its category to similar list
+//        List<Product> siblingProducts = productRepository.findByCategory(associatedCategory);
+//
+//        for(Product individualProduct: siblingProducts){
+//            similarProducts.add(individualProduct);
+//        }
+//
+//        if(similarProducts.size()==1){
+//            throw new BadRequestException(messageSource.getMessage("api.error.similarProducts",null,Locale.ENGLISH));
+//        }
+//
+//        return similarProducts;
+//
+//    }
 }

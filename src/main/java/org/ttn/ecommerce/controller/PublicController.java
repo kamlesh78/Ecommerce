@@ -30,6 +30,7 @@ import java.util.Optional;
 @RequestMapping(value = "/api/public")
 public class PublicController {
 
+
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -68,6 +69,11 @@ public class PublicController {
         if (!user.isActive()) {
             return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
         }
+
+        if (user.isLocked()) {
+            return new ResponseEntity<>("Account is Locked ! Please contact admin to unlock it", HttpStatus.BAD_REQUEST);
+        }
+
         return userService.login(loginDto, user);
     }
 

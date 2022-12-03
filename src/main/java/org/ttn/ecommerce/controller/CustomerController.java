@@ -74,6 +74,7 @@ public class CustomerController {
     }
 
 
+
     @GetMapping("/view/image")
     public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
 

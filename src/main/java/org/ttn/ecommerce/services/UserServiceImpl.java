@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
     private JWTGenerator jwtGenerator;
     private CustomerRepository customerRepository;
     private EmailService emailService;
+    private EmailServicetry emailServicetry;
     private SellerRepository sellerRepository;
     private TokenService tokenService;
     private AccessTokenRepository accessTokenRepository;
@@ -50,14 +52,14 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailService, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncode = passwordEncode;
         this.jwtGenerator = jwtGenerator;
         this.customerRepository = customerRepository;
-        this.emailService = emailService;
+        this.emailServicetry = emailServicetry;
         this.sellerRepository = sellerRepository;
         this.tokenService = tokenService;
         this.accessTokenRepository = accessTokenRepository;
@@ -169,26 +171,61 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> login(LoginDto loginDto, UserEntity user){
 
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
+        String usersPassword= user.getPassword();
+        String testLoginPassword=passwordEncode.encode(loginDto.getPassword());
+        if(!usersPassword.equals(testLoginPassword)){
+
+            int count =user.getInvalidAttemptCount()+1;
+            user.setInvalidAttemptCount(count);
+            userRepository.saveInvalidCount(user.getInvalidAttemptCount(),user.getId());
 
 
-        /* Access Token */
-        Token accessToken = new Token();
-        accessToken.setUserEntity(user);
-        accessToken.setToken(token);
-        accessToken.setCreatedAt(LocalDateTime.now());
-        accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.JWT_EXPIRATION));
-        accessTokenRepository.save(accessToken);
+            if(user.getInvalidAttemptCount() >= 3){
+                user.setLocked(true);
+                userRepository.lockAccount(user.getId());
+                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+                simpleMailMessage.setSubject("User Account Locked!");
+                simpleMailMessage.setText("User Account Has Been Locked After " +
+                        +SecurityConstants.MAX_LOGIN_ATTEMPT+
+                                " Unsuccessful Login Attempts"+"\n"
+                +"User Id : " + user.getId());
+                simpleMailMessage.setTo("kamlesh.singh@tothenew.com");
+                emailServicetry.sendEmail(simpleMailMessage);
+
+                return new ResponseEntity<>("Your account got locked! Contact Admin to activate it.",HttpStatus.UNAUTHORIZED);
+            }
+            return new ResponseEntity<>("Password is wrong Your  Have <<" +(SecurityConstants.MAX_LOGIN_ATTEMPT-user.getInvalidAttemptCount())+">> Attempts Remaining",HttpStatus.UNAUTHORIZED);
+        }else{
+            userRepository.saveInvalidCount(0,user.getId());
 
 
-        /* Refresh Token */
-        RefreshToken refreshToken = tokenService.generateRefreshToken(user);
-        refreshTokenRepository.save(refreshToken);
 
 
-        return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtGenerator.generateToken(authentication);
+
+
+            /* Access Token */
+            Token accessToken = new Token();
+            accessToken.setUserEntity(user);
+            accessToken.setToken(token);
+            accessToken.setCreatedAt(LocalDateTime.now());
+            accessToken.setExpiredAt(LocalDateTime.now().plusMinutes(SecurityConstants.JWT_EXPIRATION));
+            accessTokenRepository.save(accessToken);
+
+
+            /* Refresh Token */
+            RefreshToken refreshToken = tokenService.generateRefreshToken(user);
+            refreshTokenRepository.save(refreshToken);
+
+
+            return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
+
+        }
+
+
     }
 
     @Override

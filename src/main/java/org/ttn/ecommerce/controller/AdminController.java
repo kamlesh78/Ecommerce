@@ -92,7 +92,7 @@ public class AdminController {
 
 
     /**
-     * Activate Product Created By Seller
+     *      Activate Product Created By Seller
      */
 
     @PutMapping("activate/product/{productId}")
@@ -102,7 +102,7 @@ public class AdminController {
     }
 
     /**
-     * DeActivate Product
+     *      DeActivate Product
      */
     @PutMapping("deactivate/product/{productId}")
     public String deactivateProduct(@Param("productId") Long id) {

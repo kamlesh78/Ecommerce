@@ -56,6 +56,7 @@ public class SecurityConfig {
             .antMatchers("/seller/**").hasRole("SELLER")
             .antMatchers("/category/**").permitAll()
             .antMatchers("/product/**").permitAll()
+            .antMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .httpBasic();

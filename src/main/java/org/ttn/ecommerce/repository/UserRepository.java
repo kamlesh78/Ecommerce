@@ -27,4 +27,12 @@ public interface UserRepository  extends JpaRepository<UserEntity,Long> {
     @Query(value = "UPDATE user SET a.invalid_attempt_count = ?1 WHERE a.email = ?2",nativeQuery = true)
     void updateInvalidAttemptCount(Integer invalidAttemptCount, String email);
     Optional<UserEntity> findById(long id);
+
+    @Modifying
+    @Query(value = "update user set invalid_attempt_count = :invalidAttemptCount where id = :id",nativeQuery = true)
+    void saveInvalidCount(@Param("invalidAttemptCount") int invalidAttemptCount,@Param("id") Long id);
+
+    @Modifying
+    @Query(value = "update user set is_locked = true where id = :id",nativeQuery = true)
+    void lockAccount(@Param("id") Long id);
 }
