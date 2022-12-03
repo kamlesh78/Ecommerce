@@ -2,7 +2,8 @@ package org.ttn.ecommerce.entity.token;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.auditing.Auditable;
+import org.ttn.ecommerce.entity.user.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
-public class ForgetPasswordToken {
+public class ForgetPasswordToken extends Auditable<String> {
     @Id
     @SequenceGenerator(name="forget_pass_sequence",sequenceName = "forget_pass_sequence",initialValue = 1,allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "forget_pass_sequence")

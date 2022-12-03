@@ -12,15 +12,15 @@ import org.ttn.ecommerce.dto.image.ImageResponse;
 import org.ttn.ecommerce.dto.responseDto.userDto.AddressResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
-import org.ttn.ecommerce.entity.Address;
-import org.ttn.ecommerce.entity.Customer;
-import org.ttn.ecommerce.repository.RoleRepository;
-import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.entity.user.Address;
+import org.ttn.ecommerce.entity.user.Customer;
+import org.ttn.ecommerce.repository.UserRepository.RoleRepository;
+import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
-import org.ttn.ecommerce.services.categoryService.CategoryService;
-import org.ttn.ecommerce.services.CustomerServiceImpl;
-import org.ttn.ecommerce.services.tokenService.TokenService;
-import org.ttn.ecommerce.services.image.ImageService;
+import org.ttn.ecommerce.services.impl.CategoryService;
+import org.ttn.ecommerce.services.impl.CustomerService;
+import org.ttn.ecommerce.services.impl.TokenService;
+import org.ttn.ecommerce.services.impl.ImageService;
 
 import java.io.IOException;
 
@@ -29,22 +29,19 @@ import java.io.IOException;
 public class CustomerController {
 
 
-    private final AuthenticationManager authenticationManager;
-
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncode;
-
-    private final JWTGenerator jwtGenerator;
-
-    private final TokenService tokenService;
-    private final CustomerServiceImpl customerDaoService;
-    private final ImageService imageService;
+    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncode;
+    private JWTGenerator jwtGenerator;
+    private TokenService tokenService;
+    private CustomerService customerService;
+    private ImageService imageService;
 
     private CategoryService categoryService;
 
     @Autowired
-    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerServiceImpl customerDaoService, ImageService imageService, CategoryService categoryService) {
+    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerService customerDaoService, ImageService imageService, CategoryService categoryService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -52,7 +49,7 @@ public class CustomerController {
         this.jwtGenerator = jwtGenerator;
 
         this.tokenService = tokenService;
-        this.customerDaoService = customerDaoService;
+        this.customerService = customerDaoService;
         this.imageService = imageService;
         this.categoryService = categoryService;
     }
@@ -97,7 +94,7 @@ public class CustomerController {
     @GetMapping("view/profile")
     public CustomerResponseDto viewCustomerProfile(Authentication authentication) {
         String email = authentication.getName();
-        return customerDaoService.customerProfile(email);
+        return customerService.customerProfile(email);
     }
 
 
@@ -109,7 +106,7 @@ public class CustomerController {
     @PatchMapping("update/profile")
     public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, Authentication authentication) {
         String email = authentication.getName();
-        return customerDaoService.updateProfile(email, customer);
+        return customerService.updateProfile(email, customer);
 
     }
 
@@ -122,7 +119,7 @@ public class CustomerController {
     @PatchMapping("update/password")
     public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, Authentication authentication) {
         String email = authentication.getName();
-        return customerDaoService.updatePassword(customerPasswordDto, email);
+        return customerService.updatePassword(customerPasswordDto, email);
 
     }
 
@@ -134,7 +131,7 @@ public class CustomerController {
     @PostMapping("add/address")
     public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, Authentication authentication) {
         String email = authentication.getName();
-        return customerDaoService.insertCustomerAddress(email, address);
+        return customerService.insertCustomerAddress(email, address);
     }
 
     /**
@@ -146,7 +143,7 @@ public class CustomerController {
     public AddressResponseDto viewAddress(Authentication authentication) throws IOException {
         String email = authentication.getName();
 
-        return customerDaoService.viewCustomerAddresses(email);
+        return customerService.viewCustomerAddresses(email);
     }
 
 
@@ -159,7 +156,7 @@ public class CustomerController {
     public String deleteCustomerAddress(@PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
 
-        return customerDaoService.deleteCustomerAddressById(email, id);
+        return customerService.deleteCustomerAddressById(email, id);
     }
 
 
@@ -168,7 +165,7 @@ public class CustomerController {
     @PatchMapping("/update/address/{id}")
     public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
-        return customerDaoService.updateCustomerAddressById(email, id, address);
+        return customerService.updateCustomerAddressById(email, id, address);
     }
 
     /**

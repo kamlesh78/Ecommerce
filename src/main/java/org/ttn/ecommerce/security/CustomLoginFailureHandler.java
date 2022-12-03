@@ -6,9 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
-import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

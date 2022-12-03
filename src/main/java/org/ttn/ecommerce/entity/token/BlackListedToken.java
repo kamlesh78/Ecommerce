@@ -3,6 +3,7 @@ package org.ttn.ecommerce.entity.token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.ttn.ecommerce.auditing.Auditable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BlackListedToken {
+public class BlackListedToken extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="blacklisted_token_sequence",sequenceName = "blacklisted_token_sequence",initialValue = 1,allocationSize = 1)

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.ttn.ecommerce.entity.Seller;
+import org.ttn.ecommerce.auditing.Auditable;
+import org.ttn.ecommerce.entity.user.Seller;
 import org.ttn.ecommerce.entity.category.Category;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product {
+public class Product extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="product_sequence",sequenceName = "product_sequence",initialValue = 1,allocationSize = 1)

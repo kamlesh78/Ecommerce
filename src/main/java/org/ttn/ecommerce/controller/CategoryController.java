@@ -12,8 +12,8 @@ import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryRespo
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.entity.category.Category;
 import org.ttn.ecommerce.entity.category.CategoryMetaDataField;
-import org.ttn.ecommerce.services.UserServiceImpl;
-import org.ttn.ecommerce.services.categoryService.CategoryService;
+import org.ttn.ecommerce.services.impl.UserService;
+import org.ttn.ecommerce.services.impl.CategoryService;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @Autowired
-    UserServiceImpl userDaoService;
+    UserService userDaoService;
 
 
 

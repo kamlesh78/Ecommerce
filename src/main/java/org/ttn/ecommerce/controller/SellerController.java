@@ -10,11 +10,11 @@ import org.ttn.ecommerce.dto.image.ImageResponse;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
-import org.ttn.ecommerce.entity.Address;
-import org.ttn.ecommerce.entity.Seller;
-import org.ttn.ecommerce.services.categoryService.CategoryService;
-import org.ttn.ecommerce.services.SellerServiceImpl;
-import org.ttn.ecommerce.services.image.ImageService;
+import org.ttn.ecommerce.entity.user.Address;
+import org.ttn.ecommerce.entity.user.Seller;
+import org.ttn.ecommerce.services.impl.CategoryService;
+import org.ttn.ecommerce.services.impl.SellerService;
+import org.ttn.ecommerce.services.impl.ImageService;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 public class SellerController {
 
     @Autowired
-    SellerServiceImpl sellerDaoService;
+    SellerService sellerDaoService;
 
     @Autowired
     ImageService imageService;

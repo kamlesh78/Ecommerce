@@ -2,6 +2,7 @@ package org.ttn.ecommerce.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.ttn.ecommerce.auditing.Auditable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @Table(name="product_variation")
-public class ProductVariation {
+public class ProductVariation extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="products_variation_sequence",sequenceName = "products_variation_sequence",initialValue = 1,allocationSize = 1)

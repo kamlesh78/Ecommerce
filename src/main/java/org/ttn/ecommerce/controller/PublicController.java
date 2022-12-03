@@ -12,14 +12,16 @@ import org.ttn.ecommerce.dto.LoginDto;
 import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
-import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
-import org.ttn.ecommerce.repository.RoleRepository;
-import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.repository.UserRepository.RoleRepository;
+import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
-import org.ttn.ecommerce.services.*;
-import org.ttn.ecommerce.services.tokenService.BlackListTokenService;
-import org.ttn.ecommerce.services.tokenService.TokenService;
+import org.ttn.ecommerce.services.impl.CustomerService;
+import org.ttn.ecommerce.services.impl.UserPasswordService;
+import org.ttn.ecommerce.services.impl.UserService;
+import org.ttn.ecommerce.services.impl.BlackListTokenService;
+import org.ttn.ecommerce.services.impl.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,16 +38,16 @@ public class PublicController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncode;
     private final JWTGenerator jwtGenerator;
-    private final UserService userService;
-    private final UserPasswordServiceImpl userPasswordService;
+    private final org.ttn.ecommerce.services.UserService userService;
+    private final UserPasswordService userPasswordService;
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
-    private final CustomerServiceImpl customerDaoService;
+    private final CustomerService customerDaoService;
     private MessageSource messageSource;
 
 
     @Autowired
-    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserServiceImpl userService, UserPasswordServiceImpl userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerServiceImpl customerDaoService, MessageSource messageSource) {
+    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserService userService, UserPasswordService userPasswordService, TokenService tokenService, BlackListTokenService blackListTokenService, CustomerService customerDaoService, MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

@@ -6,11 +6,11 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.ttn.ecommerce.entity.Address;
-import org.ttn.ecommerce.entity.Role;
-import org.ttn.ecommerce.entity.UserEntity;
-import org.ttn.ecommerce.repository.RoleRepository;
-import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.entity.user.Address;
+import org.ttn.ecommerce.entity.user.Role;
+import org.ttn.ecommerce.entity.user.UserEntity;
+import org.ttn.ecommerce.repository.UserRepository.RoleRepository;
+import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 
 import java.util.Collections;
 import java.util.HashSet;

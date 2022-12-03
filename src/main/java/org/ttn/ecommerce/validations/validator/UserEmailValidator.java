@@ -1,8 +1,8 @@
 package org.ttn.ecommerce.validations.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.ttn.ecommerce.entity.UserEntity;
-import org.ttn.ecommerce.repository.UserRepository;
+import org.ttn.ecommerce.entity.user.UserEntity;
+import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.validations.UniqueEmail;
 
 import javax.validation.ConstraintValidator;

@@ -7,9 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
-import org.ttn.ecommerce.services.CustomerServiceImpl;
-import org.ttn.ecommerce.services.SellerServiceImpl;
-import org.ttn.ecommerce.services.product.ProductService;
+import org.ttn.ecommerce.services.CustomerService;
+import org.ttn.ecommerce.services.impl.SellerService;
+import org.ttn.ecommerce.services.impl.ProductService;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ public class AdminController {
     check custom JsonFilter
      */
     @Autowired
-    private CustomerServiceImpl customerDaoService;
+    private CustomerService customerService;
 
     @Autowired
-    private SellerServiceImpl sellerDaoService;
+    private SellerService sellerService;
 
     @Autowired
     private ProductService productService;
@@ -41,7 +41,7 @@ public class AdminController {
         String customPageSize = pageSize == null ? "10" : pageSize;
         String customPageOffset = pageOffset == null ? "0" : pageOffset;
         String customSortBy = sortBy == null ? "email" : sortBy;
-        return customerDaoService.listAllCustomers(customPageSize, customPageOffset, customSortBy);
+        return customerService.listAllCustomers(customPageSize, customPageOffset, customSortBy);
 
     }
 
@@ -63,31 +63,31 @@ public class AdminController {
         String customPageSize = pageSize == null ? "10" : pageSize;
         String customPageOffset = pageOffset == null ? "0" : pageOffset;
         String customSortBy = sortBy == null ? "email" : sortBy;
-        return sellerDaoService.listAllSellers(customPageSize, customPageOffset, customSortBy);
+        return sellerService.listAllSellers(customPageSize, customPageOffset, customSortBy);
     }
 
     @PatchMapping("deactivate/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id) {
 
-        return customerDaoService.deActiveCustomer(id);
+        return customerService.deActiveCustomer(id);
     }
 
     @PatchMapping("deactivate/seller/{id}")
     public String deActiveSeller(@PathVariable("id") Long id) {
 
-        return sellerDaoService.deActivateSeller(id);
+        return sellerService.deActivateSeller(id);
     }
 
     @PatchMapping("activate/customer/{id}")
     public String activeCustomer(@PathVariable("id") Long id) {
 
-        return customerDaoService.activeCustomer(id);
+        return customerService.activeCustomer(id);
     }
 
     @PatchMapping("activate/seller/{id}")
     public String activeSeller(@PathVariable("id") Long id) {
 
-        return sellerDaoService.activateSeller(id);
+        return sellerService.activateSeller(id);
     }
 
 

@@ -3,6 +3,7 @@ package org.ttn.ecommerce.entity.category;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ttn.ecommerce.auditing.Auditable;
 import org.ttn.ecommerce.entity.product.Product;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name="category")
-public class Category {
+public class Category extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="category_sequence",sequenceName = "category_sequence",initialValue = 1,allocationSize = 1)

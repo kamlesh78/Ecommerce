@@ -2,6 +2,7 @@ package org.ttn.ecommerce.entity.category;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ttn.ecommerce.auditing.Auditable;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "category_metadata_field")
-public class CategoryMetaDataField {
+public class CategoryMetaDataField extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="category_metadata_sequence",sequenceName = "category_metadata_sequence",initialValue = 1,allocationSize = 1)

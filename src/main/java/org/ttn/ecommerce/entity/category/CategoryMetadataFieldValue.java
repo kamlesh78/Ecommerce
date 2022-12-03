@@ -2,6 +2,7 @@ package org.ttn.ecommerce.entity.category;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.ttn.ecommerce.auditing.Auditable;
 
 import javax.persistence.*;
 
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "category_metadata_field_values")
-public class CategoryMetadataFieldValue {
+public class CategoryMetadataFieldValue extends Auditable<String> {
 
 
     @EmbeddedId

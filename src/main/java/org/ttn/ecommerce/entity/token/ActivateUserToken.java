@@ -3,7 +3,8 @@ package org.ttn.ecommerce.entity.token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.ttn.ecommerce.entity.UserEntity;
+import org.ttn.ecommerce.auditing.Auditable;
+import org.ttn.ecommerce.entity.user.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ActivateUserToken {
+public class ActivateUserToken extends Auditable<String> {
 
     @Id
     @SequenceGenerator(name="activate_sequence",sequenceName = "activate_sequence",initialValue = 1,allocationSize = 1)
