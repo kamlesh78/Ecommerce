@@ -22,6 +22,7 @@ import org.ttn.ecommerce.repository.UserRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
 import org.ttn.ecommerce.services.EmailServicetry;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -250,6 +251,178 @@ public class ProductService {
             emailServicetry.sendEmail(mailMessage);
 
             return "Product deactivated successfully";
+
+    }
+
+
+    public List<ProductResponseDTO> adminViewAllProducts(){
+
+        List<Product> products = productRepository.findAll();
+         if(products.isEmpty()){
+            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
+        }
+
+         List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
+        for(Product product: products){
+
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+
+            productResponseDTO.setId(product.getId());
+            productResponseDTO.setName(product.getName());
+            productResponseDTO.setBrand(product.getBrand());
+            productResponseDTO.setDescription(product.getDescription());
+            productResponseDTO.setIsActive(product.isActive());
+            productResponseDTO.setIsCancellable(product.isCancellable());
+            productResponseDTO.setIsReturnable(product.isReturnable());
+            productResponseDTO.setCategory(product.getCategory());
+            productResponseDTOList.add(productResponseDTO);
+        }
+        return productResponseDTOList;
+
+    }
+    public ResponseEntity<?> customerViewProduct(Long productId){
+        //ProductResponseDTO
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()->new ProductNotFoundException("Product Not Found"));
+
+        if (product.isDeleted() || !product.isActive()  ){
+            return new ResponseEntity<>("Either Product is not active or Product is deleted",HttpStatus.BAD_REQUEST);
+
+        }
+
+        ProductResponseDto productResponse = new ProductResponseDto();
+        productResponse.setId(product.getId());
+        productResponse.setName(product.getName());
+        productResponse.setBrand(product.getBrand());
+        productResponse.setDescription(product.getDescription());
+        productResponse.setActive(product.isActive());
+        productResponse.setReturnable(product.isReturnable());
+        productResponse.setCancellable(product.isCancellable());
+
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(product.getCategory().getId());
+        categoryDto.setName(product.getCategory().getName());
+        productResponse.setCategory(categoryDto);
+
+        return new ResponseEntity<>(productResponse,HttpStatus.OK);
+    }
+
+
+
+    public ResponseEntity<List<List<ProductResponseDto>>> viewAllProductOfProduct(Long categoryId){
+
+        List<List<ProductResponseDto>> output= new ArrayList<>();
+        Category category = categoryRepository.findById(categoryId)
+                 .orElseThrow(()->new CategoryNotFoundException("Category Not Found"));
+
+
+      //  if (category.getSubCategory()!=null){
+            //throw new BadRequestException(messageSource.getMessage("api.error.notLeafNode",null,Locale.ENGLISH));
+            List<Category> subCategories = category.getSubCategory();
+            List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+            for(Category category1 : subCategories){
+                output.add(getLeafCategory(category1,productResponseDtoList));
+            }
+
+
+       // }
+
+
+
+        return new ResponseEntity<>(output,HttpStatus.OK);
+//        List<Product> products = productRepository.findByCategory(category);
+//        // check if records are present
+//        if(products.isEmpty()){
+//            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
+//        }
+//
+//        // convert to appropriate DTO
+//        List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
+//        for(Product product: products){
+//
+//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+//
+//            productResponseDTO.setId(product.getId());
+//            productResponseDTO.setName(product.getName());
+//            productResponseDTO.setBrand(product.getBrand());
+//            productResponseDTO.setDescription(product.getDescription());
+//            productResponseDTO.setIsActive(product.isActive());
+//            productResponseDTO.setIsCancellable(product.isCancellable());
+//            productResponseDTO.setIsReturnable(product.isReturnable());
+//            productResponseDTO.setCategory(product.getCategory());
+//            productResponseDTOList.add(productResponseDTO);
+//        }
+//        return productResponseDTOList;
+
+    }
+
+    public static List<ProductResponseDto> getLeafCategory(Category category,List<ProductResponseDto> productResponseDtoList){
+        if(category == null){
+
+            return new ArrayList<ProductResponseDto>();
+        }
+        if(category.getSubCategory() == null) {
+            System.out.println("not null");
+
+            List<Product> productList = category.getProducts();
+            List<ProductResponseDto> list = new ArrayList<>();
+            for(Product product : productList){
+                ProductResponseDto productResponseDto = new ProductResponseDto();
+                productResponseDto.setId(product.getId());
+                productResponseDto.setName(product.getName());
+                productResponseDto.setBrand(product.getBrand());
+                productResponseDto.setDescription(product.getDescription());
+                productResponseDto.setActive(product.isActive());
+                productResponseDto.setCancellable(product.isCancellable());
+                productResponseDto.setReturnable(product.isReturnable());
+                CategoryDto categoryDto =new CategoryDto();
+                categoryDto.setId(product.getCategory().getId());
+                categoryDto.setName(product.getCategory().getName());
+                System.out.println(productResponseDto.getName());
+                productResponseDto.setCategory(categoryDto);
+                list.add(productResponseDto);
+            }
+            return list;
+        }
+
+        for(Category category1 : category.getSubCategory()){
+            productResponseDtoList.addAll(getLeafCategory(category1,productResponseDtoList));
+        }
+
+        return productResponseDtoList;
+
+    }
+
+
+    public List<Product> viewSimilarProducts(Long productId){
+
+        // check if ID is valid
+        Optional<Product> product = productRepository.findById(productId);
+        if (product == null || product.isEmpty()) {
+            throw new BadRequestException(messageSource.getMessage("api.error.invalidProductId",null,Locale.ENGLISH));
+        }
+
+        // check product status
+        if (product.get().isDeleted() || product.get().isActive() == false ){
+            throw new BadRequestException(messageSource.getMessage("api.error.productInactiveDeleted",null,Locale.ENGLISH));
+        }
+
+        // find similar products
+        Category associatedCategory = product.get().getCategory();
+        List<Product> similarProducts = new ArrayList<>();
+
+        // add other products associated to its category to similar list
+        List<Product> siblingProducts = productRepository.findByCategory(associatedCategory);
+
+        for(Product individualProduct: siblingProducts){
+            similarProducts.add(individualProduct);
+        }
+
+        if(similarProducts.size()==1){
+            throw new BadRequestException(messageSource.getMessage("api.error.similarProducts",null,Locale.ENGLISH));
+        }
+
+        return similarProducts;
 
     }
 }

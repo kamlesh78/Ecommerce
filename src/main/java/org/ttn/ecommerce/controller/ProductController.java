@@ -6,15 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.ttn.ecommerce.dto.product.CategoryDto;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
 import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entities.product.Product;
+import org.ttn.ecommerce.exception.ProductNotFoundException;
+import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 import org.ttn.ecommerce.services.SellerServiceImpl;
 import org.ttn.ecommerce.services.product.ProductService;
 import org.ttn.ecommerce.services.product.ProductVariationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -30,9 +34,13 @@ public class ProductController {
     @Autowired
     ProductVariationService productVariationService;
 
+    @Autowired
+    ProductRepository productRepository;
+
 
     /**
-     * Add Product
+     *     @Probem      : Add Product
+     *     @Constraint  : Product Name Should Be Unique WithRespect TO {Category,Brand,Seller}
      */
     @PostMapping("add/product/{categoryId}")
     public ResponseEntity<?> addProduct(@RequestBody Product product, @PathVariable("categoryId") Long categoryId, Authentication authentication) {
@@ -53,7 +61,8 @@ public class ProductController {
     }
 
     /**
-     * Add Product Variation
+     *     @Probem      : Add Product Variation
+     *     @Constraint  : {Quantity,Price} should be Greater then 0
      */
     @PostMapping("add/product-variation")
     public ResponseEntity<?> createProductVariation(@RequestBody ProductVariationDto productVariationDto) {
@@ -63,8 +72,8 @@ public class ProductController {
 
 
     /**
-     * @Probelem    : View Product Variation By Id
-     * @OutPut      : Product Variation with Parent Product Details
+     *      @Probelem    : View Product Variation By Id
+     *      @OutPut      : Product Variation with Parent Product Details
      */
     @GetMapping("view/product-variation/{variationId}")
     public ProductVariationResponseDto viewProductVariation(@PathVariable("variationId") Long productVariationId, Authentication authentication) {
@@ -120,5 +129,21 @@ public class ProductController {
         return productService.updateProduct(email, productId, product);
     }
 
+    /**
+     *       @Consumer     : <<Customer>>
+     *       @Problem      : Product Should be Valid And Non Deleted
+     *       @Output       : List of all products, along with each product's category details,
+     *      *       all variations primary images
+     */
+    @GetMapping("customer/view/product/{id}")
+    public ResponseEntity<?> viewCustomerProduct(@PathVariable Long id){
+
+        return productService.customerViewProduct(id);
+    }
+
+    @GetMapping("/products/{categoryId}")
+    public ResponseEntity<List<List<ProductResponseDto>>> view(@PathVariable("categoryId") Long categoryId){
+        return productService.viewAllProductOfProduct(categoryId);
+    }
 
 }

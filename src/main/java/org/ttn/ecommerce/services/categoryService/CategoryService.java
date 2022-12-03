@@ -91,6 +91,9 @@ public class CategoryService {
         CategoryMetaDataField categoryMetaDataField = categoryMetaDataFieldRepository.findById(metaDataFieldId).
                 orElseThrow(()-> new CategoryNotFoundException("Category MetaData Field Not Found"));
 
+        if(categoryMetaValueDto.getValues().size()<1){
+            return new ResponseEntity<>("Category MetaDataFieldValue Should Have At least One Value ",HttpStatus.BAD_REQUEST);
+        }
         System.out.println(category.getName() + " " + categoryMetaDataField.getName());
         CategoryMetadataFieldValue categoryMetadataFieldValue = new CategoryMetadataFieldValue();
 
