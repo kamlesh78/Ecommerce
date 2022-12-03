@@ -442,6 +442,10 @@ public class ProductService {
                 ProductResponseDto dto = new ProductResponseDto();
                 dto.setId(product.getId());
                 dto.setDescription(product.getDescription());
+                dto.setBrand(product.getBrand());
+                dto.setActive(product.isActive());
+                dto.setName(product.getName());
+                dto.setDeleted(product.isDeleted());
 
                 productResponseDtoList.add(dto);
             }

@@ -141,6 +141,7 @@ public class ProductController {
         return productService.customerViewProduct(id);
     }
 
+
     /**
      *       @Consumer     : <<Customer>>
      *       @Problem      : Category Should be Valid And Leaf Node
@@ -151,6 +152,7 @@ public class ProductController {
     public List<ProductResponseDto> viewCustomerAllProducts(@PathVariable("categoryId") Long categoryId){
         return productService.retrieveProducts(categoryId);
     }
+
 
     @GetMapping("index")
     public String get(){
