@@ -12,12 +12,9 @@ import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryRespo
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.entities.category.Category;
 import org.ttn.ecommerce.entities.category.CategoryMetaDataField;
-import org.ttn.ecommerce.entities.category.CategoryMetadataFieldValue;
-import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
-import org.ttn.ecommerce.services.categoryService.CategoryService;
 import org.ttn.ecommerce.services.UserServiceImpl;
+import org.ttn.ecommerce.services.categoryService.CategoryService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,16 +29,18 @@ public class CategoryController {
 
 
     /**
-            MetaData For Category
+     *     @Problem         :  Create MetaData Field
+     *     @Constriant      :  Field Name Should be Unique
      */
-
     @PostMapping("create/metadata-field")
     public String createMetaField(@RequestBody CategoryMetaDataField categoryMetaDataField) {
 
         return categoryService.createMetaDataField(categoryMetaDataField);
     }
 
-
+    /**
+     *     @OutPut : Return All MetaData Fields
+     */
     @GetMapping("view/metadata-field")
     public List<MetaDataFieldResponse> viewMetaField() {
 
@@ -49,6 +48,11 @@ public class CategoryController {
     }
 
 
+
+    /**
+     *     @Problem         :  Create MetaData Field
+     *     @Constriant      :  Field Name Should be Unique
+     */
     @PostMapping("create/metadata-field-value/{categoryId}/{metaDataFieldId}")
     public ResponseEntity<?> createMetaDataFieldValues(@PathVariable("categoryId") long categoryId,
                                                        @PathVariable("metaDataFieldId") Long metaDataFieldId,
@@ -57,6 +61,10 @@ public class CategoryController {
     }
 
 
+    /**
+     *     @Constriant      :  Value Should be Unique for Category and MetaData Field
+     *                      :  
+     */
     @PutMapping("/update/metadata-field-values/{categoryId}/{metaDataFieldId}")
     public String updateMetaDataFieldValues(
             @PathVariable("categoryId") Long categoryId,
@@ -67,8 +75,10 @@ public class CategoryController {
     }
 
 
-    /*
-                Controller for Category
+
+    /**
+     *     @Problem     : Create New Category
+     *     @Constriant  : Category name should be unique at root level and along breadth/depth in a tree
      */
     @PostMapping("create/category")
     public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto) {
@@ -76,28 +86,39 @@ public class CategoryController {
         return categoryService.createCategory(categoryDto);
     }
 
-    @GetMapping("view/category/{id}")
-    public CategoryResponseDto viewCategory(@PathVariable("id") Long id){
 
+    /**
+     *     @Constraint  : Category Id Should Be Valid
+     *     @Output      : Category Details With Parent Categories UpTo root level and immediate children categories, and associated fields
+     */
+    @GetMapping("view/category/{id}")
+    public CategoryResponseDto viewCategory(@PathVariable("id") Long id) {
 
         return categoryService.viewCategory(id);
     }
 
+
+    /**
+     *     @Output      : List of all categories, with each individual category's detail as stated above
+     */
     @GetMapping("view/all-categories")
-    public List<SubCategoryResponseDto> viewAllCategories(){
+    public List<SubCategoryResponseDto> viewAllCategories() {
 
         return categoryService.viewAllCategory();
     }
 
+    /**
+     *     @Constraint    :  Category name should be unique at root level and along breadth/depth in a tree"
+     *     @Output        :  If Category Name Is Valid It Should be Updated
+     */
     @PutMapping("update/category/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id,@RequestBody Category category){
+    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
 
-        return categoryService.updateCategory(id,category);
+        return categoryService.updateCategory(id, category);
     }
 
-
     @GetMapping("seller")
-    public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory(){
+    public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory() {
         List<SellerCategoryResponseDTO> responseList = categoryService.viewSellerCategory();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }

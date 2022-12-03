@@ -115,7 +115,7 @@ public class CategoryService {
 
 
 
-    /*          Update MetaDataField Values             */
+    /**             Update MetaDataField Values             */
     public String updateMetaDataFieldValues(Long categoryId, Long metaDataFieldId, CategoryMetaValueDto categoryMetaValueDto) {
 
         Category category = categoryRepository.findById(categoryId).
@@ -285,9 +285,6 @@ public class CategoryService {
         }else{
             return new ResponseEntity<>("Category Name Already Used By SubCategories Please Use Unique Name",HttpStatus.BAD_REQUEST);
         }
-
-
-
 
 
     }

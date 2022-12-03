@@ -52,17 +52,9 @@ public class ProductController {
 
 
     /**
-     *              View Product By Product ID
-     */
-    @GetMapping("view/product/{id}")
-    public ResponseEntity<?> viewProductById(@PathVariable("id") Long id,Authentication authentication) throws Exception {
-        String email = authentication.getName();
-        return productService.viewProductById(id, email);
-    }
-
-    /**
-     *     @Probem      : Add Product Variation
+     *     @Problem      : Add Product Variation
      *     @Constraint  : {Quantity,Price} should be Greater then 0
+     *                    Each metadata field value sent should be from within the possible field values defined for that field in the category
      */
     @PostMapping("add/product-variation")
     public ResponseEntity<?> createProductVariation(@RequestBody ProductVariationDto productVariationDto) {
@@ -70,9 +62,20 @@ public class ProductController {
         return productVariationService.createProductVariation(productVariationDto);
     }
 
+    /**
+     *      @Problem        : View A Product By Its <<ID>>
+     *      @Constraints    : Log IN Used Should be Owner Of Product
+     *      @Output         : Product details along with selected category details
+     */
+    @GetMapping("view/product/{id}")
+    public ResponseEntity<?> viewProductById(@PathVariable("id") Long id,Authentication authentication) throws Exception {
+        String email = authentication.getName();
+        return productService.viewProductById(id, email);
+    }
+
 
     /**
-     *      @Probelem    : View Product Variation By Id
+     *      @Probelem    : View Product Variation By Its <<ID>>
      *      @OutPut      : Product Variation with Parent Product Details
      */
     @GetMapping("view/product-variation/{variationId}")
@@ -87,7 +90,7 @@ public class ProductController {
      *     @Output  : All non-deleted product with Category details
     */
     @GetMapping("view/all-products")
-    public List<ProductResponseDto> viewAllProduct(Authentication authentication) {
+    public List<ProductResponseDto> viewAllProductOfSeller(Authentication authentication) {
 
         String email = authentication.getName();
         return productVariationService.viewAllProductsOfSeller(email);
@@ -107,7 +110,8 @@ public class ProductController {
 
 
     /**
-     * Delete Product
+     *     @Problem : Delete Product
+     *     @Output  : User Should Be Owner Of The Product
      */
     @DeleteMapping("delete/product/{id}")
     public String deleteProduct(@Param("id") Long id, Authentication authentication) {
@@ -141,9 +145,50 @@ public class ProductController {
         return productService.customerViewProduct(id);
     }
 
+    /**
+     *       @Consumer     : <<Customer>>
+     *       @Problem      : Category Should be Valid And Leaf Node
+     *       @Output       : List of all products, along with each product's category details,
+     *      *       all variations primary images
+     */
     @GetMapping("/products/{categoryId}")
-    public ResponseEntity<List<List<ProductResponseDto>>> view(@PathVariable("categoryId") Long categoryId){
+    public ResponseEntity<List<List<ProductResponseDto>>> viewCustomerAllProducts(@PathVariable("categoryId") Long categoryId){
         return productService.viewAllProductOfProduct(categoryId);
     }
 
+    /**      Similar Products    */
+
+
+
+    /**
+     *       @Consumer     : <<Admin>>
+     *       @Problem      : View A Product By ITs Supplied <<ID>>
+     *       @Output       : Product details along with product's selected category details,
+     *                      all variations primary images
+     */
+    @GetMapping("admin/view/product/{id}")
+    public ResponseEntity<?> viewProductByIdForAdmin(@PathVariable("id") Long id,Authentication authentication) throws Exception {
+        String email = authentication.getName();
+        return productService.viewProductById(id, email);
+    }
+
+    /**
+     *       @Consumer     : <<Admin>>
+     *       @Problem      : Activate Product By ITs  <<ID>>
+     */
+    @PutMapping("activate/product/{productId}")
+    public String activateProduct(@PathVariable("productId") long productId) {
+
+        return productService.activateProduct(productId);
+    }
+
+    /**
+     *       @Consumer     : <<Admin>>
+     *       @Problem      : DeActivate Product By ITs  <<ID>>
+     */
+    @PutMapping("deactivate/product/{productId}")
+    public String deactivateProduct(@Param("productId") Long id) {
+
+        return productService.deactivateProduct(id);
+    }
 }

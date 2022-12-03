@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.product.CategoryDto;
 import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.entities.Seller;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductService {
 
     @Autowired
@@ -255,31 +257,31 @@ public class ProductService {
     }
 
 
-    public List<ProductResponseDTO> adminViewAllProducts(){
-
-        List<Product> products = productRepository.findAll();
-         if(products.isEmpty()){
-            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
-        }
-
-         List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
-        for(Product product: products){
-
-            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-
-            productResponseDTO.setId(product.getId());
-            productResponseDTO.setName(product.getName());
-            productResponseDTO.setBrand(product.getBrand());
-            productResponseDTO.setDescription(product.getDescription());
-            productResponseDTO.setIsActive(product.isActive());
-            productResponseDTO.setIsCancellable(product.isCancellable());
-            productResponseDTO.setIsReturnable(product.isReturnable());
-            productResponseDTO.setCategory(product.getCategory());
-            productResponseDTOList.add(productResponseDTO);
-        }
-        return productResponseDTOList;
-
-    }
+//    public List<ProductResponseDTO> adminViewAllProducts(){
+//
+//        List<Product> products = productRepository.findAll();
+//         if(products.isEmpty()){
+//            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
+//        }
+//
+//         List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
+//        for(Product product: products){
+//
+//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+//
+//            productResponseDTO.setId(product.getId());
+//            productResponseDTO.setName(product.getName());
+//            productResponseDTO.setBrand(product.getBrand());
+//            productResponseDTO.setDescription(product.getDescription());
+//            productResponseDTO.setIsActive(product.isActive());
+//            productResponseDTO.setIsCancellable(product.isCancellable());
+//            productResponseDTO.setIsReturnable(product.isReturnable());
+//            productResponseDTO.setCategory(product.getCategory());
+//            productResponseDTOList.add(productResponseDTO);
+//        }
+//        return productResponseDTOList;
+//
+//    }
     public ResponseEntity<?> customerViewProduct(Long productId){
         //ProductResponseDTO
         Product product = productRepository.findById(productId)

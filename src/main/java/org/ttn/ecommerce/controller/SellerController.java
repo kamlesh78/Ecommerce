@@ -111,7 +111,6 @@ public class SellerController {
     }
 
 
-
     @GetMapping("view/all-categories")
     public List<SubCategoryResponseDto> viewAllCategories(){
 

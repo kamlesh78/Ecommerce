@@ -39,8 +39,6 @@ public class ProductVariation {
     @ManyToOne
     @JoinColumn(name="product_id")
     private Product product;
-//
-//    @OneToMany(mappedBy = "order")
-//    List<OrderProduct> orderProducts;
+
 
 }
