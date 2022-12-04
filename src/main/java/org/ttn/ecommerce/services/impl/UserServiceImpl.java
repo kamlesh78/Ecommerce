@@ -207,7 +207,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
 
 
             /* Access Token */
-            Token accessToken = new Token();
+            AccessToken accessToken = new AccessToken();
             accessToken.setUserEntity(user);
             accessToken.setToken(token);
             accessToken.setCreatedAt(LocalDateTime.now());

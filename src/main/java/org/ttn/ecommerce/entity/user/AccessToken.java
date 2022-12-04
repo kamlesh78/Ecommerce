@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Table(name = "access_token")
-public class Token extends Auditable<String> {
+public class AccessToken extends Auditable<String> {
     @Id
-    @SequenceGenerator(name="user_sequence",sequenceName = "user_sequence",initialValue = 1,allocationSize = 1)
+    @SequenceGenerator(name="token_sequence",sequenceName = "user_sequence",initialValue = 1,allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_sequence")
     private Long id;
 
@@ -28,7 +28,7 @@ public class Token extends Auditable<String> {
     @JoinColumn(name="user_id",referencedColumnName = "id")
     private UserEntity userEntity;
 
-    public Token(Long id, String token, LocalDateTime createdAt, LocalDateTime expiredAt, UserEntity userEntity) {
+    public AccessToken(Long id, String token, LocalDateTime createdAt, LocalDateTime expiredAt, UserEntity userEntity) {
         this.id = id;
         this.token = token;
         this.createdAt = createdAt;

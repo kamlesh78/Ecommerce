@@ -3,6 +3,7 @@ package org.ttn.ecommerce.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
@@ -35,6 +36,7 @@ public class CategoryController {
      *     @Problem         :  Create MetaData Field
      *     @Constriant      :  Field Name Should be Unique
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/metadata-field")
     public String createMetaField(@RequestBody CategoryMetaDataField categoryMetaDataField) {
 
@@ -45,6 +47,8 @@ public class CategoryController {
     /**
      *     @OutPut : Return All MetaData Fields
      */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view/metadata-field")
     public List<MetaDataFieldResponse> viewMetaField() {
 
@@ -57,6 +61,7 @@ public class CategoryController {
      *     @Problem         :  Create MetaData Field
      *     @Constriant      :  Field Name Should be Unique
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/metadata-field-value/{categoryId}/{metaDataFieldId}")
     public ResponseEntity<?> createMetaDataFieldValues(@PathVariable("categoryId") long categoryId,
                                                        @PathVariable("metaDataFieldId") Long metaDataFieldId,
@@ -69,6 +74,7 @@ public class CategoryController {
      *     @Constriant      :  Value Should be Unique for Category and MetaData Field
      *                      :  
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/metadata-field-values/{categoryId}/{metaDataFieldId}")
     public String updateMetaDataFieldValues(
             @PathVariable("categoryId") Long categoryId,
@@ -84,6 +90,7 @@ public class CategoryController {
      *     @Problem     : Create New Category
      *     @Constriant  : Category name should be unique at root level and along breadth/depth in a tree
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/category")
     public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto) {
 
@@ -95,6 +102,8 @@ public class CategoryController {
      *     @Constraint  : Category Id Should Be Valid
      *     @Output      : Category Details With Parent Categories UpTo root level and immediate children categories, and associated fields
      */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view/category/{id}")
     public CategoryResponseDto viewCategory(@PathVariable("id") Long id) {
 
@@ -103,8 +112,9 @@ public class CategoryController {
 
 
     /**
-     *     @Output      : List of all categories, with each individual category's detail as stated above
+     *     @Output    :  List of all categories, with each individual category's detail
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view/all-categories")
     public List<SubCategoryResponseDto> viewAllCategories() {
 
@@ -115,6 +125,7 @@ public class CategoryController {
      *     @Constraint    :  Category name should be unique at root level and along breadth/depth in a tree"
      *     @Output        :  If Category Name Is Valid It Should be Updated
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("update/category/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody Category category) {
 
@@ -122,6 +133,7 @@ public class CategoryController {
     }
 
 
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/seller-categories")
     public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory() {
         List<SellerCategoryResponseDTO> responseList = categoryService.viewSellerCategory();
@@ -133,6 +145,8 @@ public class CategoryController {
      *      @Consumer    <<Customer>>
      *      @param       id
      */
+
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping(value = {"customer/view/categories","customer/view/categories/{id}"})
     public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
 

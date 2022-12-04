@@ -49,4 +49,6 @@ public interface ProductService {
     ResponseEntity<List<List<ProductResponseDto>>> viewAllProductOfProduct(Long categoryId);
 
     List<ProductResponseDto> retrieveProducts(Long id);
+
+    ResponseEntity<?> adminViewProductById(Long id, String email);
 }

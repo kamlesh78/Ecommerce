@@ -6,14 +6,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.ttn.ecommerce.dto.AuthResponseDto;
 import org.ttn.ecommerce.entity.user.Customer;
 import org.ttn.ecommerce.entity.user.Role;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 import org.ttn.ecommerce.entity.token.RefreshToken;
 import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.entity.token.ActivateUserToken;
@@ -203,7 +202,7 @@ public class TokenServiceImpl implements org.ttn.ecommerce.services.TokenService
 
 
             /* Access Token */
-            Token accessToken = new Token();
+            AccessToken accessToken = new AccessToken();
             accessToken.setUserEntity(userEntity);
             accessToken.setToken(token);
             accessToken.setCreatedAt(LocalDateTime.now());

@@ -95,7 +95,7 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
                 +"\nProduct Id : " + product.getId()
                 +"\nProduct Name : " + product.getName()
                 +"\nSeller Name  : " + seller.getFirstName()
-                +"\nCategory Name : + " +category.getName();
+                +"\nCategory Name :  " +category.getName();
 
         emailServicetry.sendEmail(toMail, subject, message);
 
@@ -142,6 +142,52 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
     }
 
     @Override
+    public ResponseEntity<?> adminViewProductById(Long id, String email)  {
+
+        UserEntity seller = userRepository.findByEmail(email)
+                .orElseThrow(()->new UserNotFoundException("User Not Found"));
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(()->new ProductNotFoundException("Product Not Found For Given ProductID"));
+
+        if(product.isDeleted()){
+
+            return new ResponseEntity<>("Product Is Deleted",HttpStatus.BAD_REQUEST);
+        }
+
+
+
+        /* Set Category Of The Product */
+        Category category = product.getCategory();
+        CategoryDto categoryDto =new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setId(product.getId());
+        productResponseDto.setName(product.getName());
+        productResponseDto.setActive(product.isActive());
+        productResponseDto.setBrand(product.getBrand());
+        productResponseDto.setDeleted(product.isDeleted());
+        productResponseDto.setCancellable(product.isCancellable());
+        productResponseDto.setDescription(product.getDescription());
+        productResponseDto.setCategory(categoryDto);
+
+        return new ResponseEntity<>(productResponseDto,HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
     public String deleteProduct(String email, Long id) {
 
         UserEntity seller = userRepository.findByEmail(email)
@@ -181,7 +227,7 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
             List<Product> productList = product.getCategory().getProducts();
             if(productList.size()!=0){
                 for(Product productCheck : productList){
-                    if(productCheck.getSeller().getId()==seller.getId() && product.getName().equals(productCheck.getName()) && productCheck.getBrand().equals(product.getBrand())){
+                    if(productCheck.getSeller().getId()==seller.getId() && product.getName().equals(productUpdate.getName()) && productCheck.getBrand().equals(productUpdate.getBrand())){
 
                         return "Product Name Can Not Be Added for Seller  Within same Category";
                     }

@@ -89,22 +89,4 @@ public class AdminController {
     }
 
 
-    /**
-     *      Activate Product Created By Seller
-     */
-
-    @PutMapping("activate/product/{productId}")
-    public String activateProduct(@PathVariable("productId") long productId) {
-
-        return productService.activateProduct(productId);
-    }
-
-    /**
-     *      DeActivate Product
-     */
-    @PutMapping("deactivate/product/{productId}")
-    public String deactivateProduct(@Param("productId") Long id) {
-
-        return productService.deactivateProduct(id);
-    }
 }

@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.dto.responseDto.categoryResponseDto;
 
 import lombok.Data;
+import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.entity.category.Category;
 
 import java.util.List;
@@ -9,6 +10,6 @@ import java.util.List;
 public class SellerCategoryResponseDTO {
    private Long id;
    private String name;
-   private Category parent;
+   private CategoryDto parent;
    private List<MetadataResponseDTO> metadata;
 }

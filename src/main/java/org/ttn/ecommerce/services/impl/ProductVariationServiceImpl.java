@@ -43,6 +43,7 @@ public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.P
     public ResponseEntity<?> createProductVariation(ProductVariationDto productVariationDto){
 
         System.out.println(productVariationDto.getPrice());
+        System.out.println(productVariationDto.getMetaData());
         ProductVariation productVariation = new ProductVariation();
         Product product =   productRepository.findById(productVariationDto.getProductId())
                 .orElseThrow(()-> new ProfileDataException("Product Not Found For This Id"));
@@ -54,8 +55,12 @@ public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.P
         Category category = product.getCategory();
         List<CategoryMetadataFieldValue> categoryMetadataFieldValueList=
                 categoryMetaDataFieldValueRepository.findByCategoryId(category.getId());
-        Map<Object,Set<String>> meta = new LinkedHashMap<>();
+      //  Map<Object,Set<String>> meta = new LinkedHashMap<>();
+     Map<Object,Set<String>> meta = new LinkedHashMap<>();
 
+       for( CategoryMetadataFieldValue categoryMetadataFieldValue : categoryMetadataFieldValueList){
+           System.out.println(categoryMetadataFieldValue.getId());
+       }
         for(CategoryMetadataFieldValue categoryMetadataFieldValue : categoryMetadataFieldValueList) {
             String[] values =  categoryMetadataFieldValue.getValue().split(",");
             List<String> list = Arrays.asList(values);
@@ -63,10 +68,13 @@ public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.P
 
             meta.put(categoryMetadataFieldValue.getCategoryMetaDataField().getName(),
                    listSet);
-
         }
 
+
+
+
         String metadata = productVariationDto.getMetaData();
+
 
         JSONObject jsonObj = new JSONObject(metadata);
         Iterator keys = jsonObj.keys();
@@ -75,6 +83,7 @@ public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.P
             String currentKey = (String)keys.next();
 
             System.out.println("current Key" + currentKey);
+
             if (meta.get(currentKey) == null){
                 return new ResponseEntity<>("metadata value mismatch",HttpStatus.BAD_REQUEST);
             }

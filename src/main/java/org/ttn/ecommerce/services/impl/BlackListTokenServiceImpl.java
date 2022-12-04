@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.entity.token.BlackListedToken;
 import org.ttn.ecommerce.exception.UserNotFoundException;
@@ -33,7 +33,7 @@ public class BlackListTokenServiceImpl implements org.ttn.ecommerce.services.Bla
     public ResponseEntity<String> blackListToken(String token) {
 
         /* finding Access token expire time using token value*/
-        Optional<Token> accessToken = accessTokenRepository.findByToken(token);
+        Optional<AccessToken> accessToken = accessTokenRepository.findByToken(token);
 
         /*Exception*/
 
@@ -61,7 +61,7 @@ public class BlackListTokenServiceImpl implements org.ttn.ecommerce.services.Bla
         UserEntity userEntity =userRepository.findByEmail(email)
                 .orElseThrow(()->new UserNotFoundException("User Not Found"));
 
-        List<Token> accessTokens = accessTokenRepository.findTokensByUserId(userEntity.getId());
+        List<AccessToken> accessTokens = accessTokenRepository.findTokensByUserId(userEntity.getId());
         if(accessTokens.size()>0){
             accessTokenRepository.deleteByUserId(userEntity.getId());
             return new ResponseEntity<>("User LogOut Successfully",HttpStatus.OK);
@@ -73,7 +73,7 @@ public class BlackListTokenServiceImpl implements org.ttn.ecommerce.services.Bla
     }
 
     @Override
-    public void addTokenToBlackList(Token accessToken){
+    public void addTokenToBlackList(AccessToken accessToken){
         BlackListedToken blackListedToken = new BlackListedToken();
         blackListedToken.setToken(accessToken.getToken());
         blackListedToken.setAccessTokenExpireAt(accessToken.getExpiredAt());

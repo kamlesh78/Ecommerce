@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 
@@ -39,7 +39,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String token = getJWTFromRequest(request);
         System.out.println(token);
 
-        Optional<Token> accessToken = accessTokenRepository.findByToken(token);
+        Optional<AccessToken> accessToken = accessTokenRepository.findByToken(token);
         if (accessToken.isPresent()){
 
 

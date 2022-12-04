@@ -317,22 +317,28 @@ public class CategoryServiceImpl implements org.ttn.ecommerce.services.CategoryS
      */
 
     @Override
-    public List<SellerCategoryResponseDTO> viewSellerCategory(){
-        List<Category> categoryList = categoryRepository.findAll();
+    public List<SellerCategoryResponseDTO> viewSellerCategory() {
         List<SellerCategoryResponseDTO> resultList = new ArrayList<>();
 
-        for(Category category: categoryList){
-            if(category.getSubCategory().isEmpty()){
+        for (Category category : categoryRepository.findAll()) {
 
+            if (category.getSubCategory() == null) {
+
+                System.out.println("ssssssssssssssssssssssssssssssssssssssssss");
                 List<CategoryMetadataFieldValue> metadataList =
                         categoryMetaDataFieldValueRepository.findByCategoryId(category.getId());
 
                 SellerCategoryResponseDTO sellerResponse = new SellerCategoryResponseDTO();
                 sellerResponse.setId(category.getId());
                 sellerResponse.setName(category.getName());
-                sellerResponse.setParent(category.getParentCategory());
+
+                CategoryDto categoryDto = new CategoryDto();
+                categoryDto.setName(category.getParentCategory().getName());
+                categoryDto.setParentId(category.getParentCategory().getId());
+
+                sellerResponse.setParent(categoryDto);
                 List<MetadataResponseDTO> metaList = new ArrayList<>();
-                for (CategoryMetadataFieldValue metadata: metadataList){
+                for (CategoryMetadataFieldValue metadata : metadataList) {
                     MetadataResponseDTO metadataResponseDTO = new MetadataResponseDTO();
                     metadataResponseDTO.setMetadataId(metadata.getCategoryMetaDataField().getId());
                     metadataResponseDTO.setFieldName(metadata.getCategoryMetaDataField().getName());
@@ -343,6 +349,12 @@ public class CategoryServiceImpl implements org.ttn.ecommerce.services.CategoryS
                 resultList.add(sellerResponse);
             }
         }
+
+
+
+
+
+
         return resultList;
     }
 }

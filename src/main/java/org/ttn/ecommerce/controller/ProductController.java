@@ -113,7 +113,7 @@ public class ProductController {
      *     @Output  : User Should Be Owner Of The Product
      */
     @DeleteMapping("delete/product/{id}")
-    public String deleteProduct(@Param("id") Long id, Authentication authentication) {
+    public String deleteProduct(@PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
         return productService.deleteProduct(email, id);
 
@@ -157,11 +157,6 @@ public class ProductController {
     }
 
 
-    @GetMapping("index")
-    public String get(){
-        return "a";
-    }
-
     /**      Similar Products    */
 
 
@@ -175,14 +170,14 @@ public class ProductController {
     @GetMapping("admin/view/product/{id}")
     public ResponseEntity<?> viewProductByIdForAdmin(@PathVariable("id") Long id,Authentication authentication) throws Exception {
         String email = authentication.getName();
-        return productService.viewProductById(id, email);
+        return productService.adminViewProductById(id, email);
     }
 
     /**
      *       @Consumer     : <<Admin>>
      *       @Problem      : Activate Product By ITs  <<ID>>
      */
-    @PutMapping("activate/product/{productId}")
+    @PutMapping("admin/activate/product/{productId}")
     public String activateProduct(@PathVariable("productId") long productId) {
 
         return productService.activateProduct(productId);
@@ -192,9 +187,11 @@ public class ProductController {
      *       @Consumer     : <<Admin>>
      *       @Problem      : DeActivate Product By ITs  <<ID>>
      */
-    @PutMapping("deactivate/product/{productId}")
-    public String deactivateProduct(@Param("productId") Long id) {
+    @PutMapping("admin/deactivate/product/{productId}")
+    public String deactivateProduct(@PathVariable("productId") Long id) {
 
         return productService.deactivateProduct(id);
     }
+
+
 }

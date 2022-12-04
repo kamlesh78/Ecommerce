@@ -3,13 +3,11 @@ package org.ttn.ecommerce.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.entity.token.ForgetPasswordToken;
 import org.ttn.ecommerce.exception.UserNotFoundException;
@@ -140,7 +138,7 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
                             * User Can not log in from old tokens
                      */
 
-                    List<Token> accessTokenList  = accessTokenRepository.findTokensByUserId(userEntity.getId());
+                    List<AccessToken> accessTokenList  = accessTokenRepository.findTokensByUserId(userEntity.getId());
                     if(accessTokenList !=null){
                         accessTokenRepository.deleteByUserId(userEntity.getId());
                     }

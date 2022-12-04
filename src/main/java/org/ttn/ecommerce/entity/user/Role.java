@@ -15,8 +15,8 @@ import javax.persistence.*;
 public class Role extends Auditable<String> {
 
     @Id
-    @SequenceGenerator(name="token_sequence",sequenceName = "token_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "token_sequence")
+    @SequenceGenerator(name="role_sequence",sequenceName = "role_sequence",initialValue = 1,allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "role_sequence")
     private Long id;
 
     private String authority;

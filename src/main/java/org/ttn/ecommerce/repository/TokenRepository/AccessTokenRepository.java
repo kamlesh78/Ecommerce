@@ -5,18 +5,18 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AccessTokenRepository extends JpaRepository<Token, Long> {
+public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> {
 
-    Optional<Token> findByToken(String token);
+    Optional<AccessToken> findByToken(String token);
 
     @Query(value = "select * from access_token where user_id = :id",nativeQuery = true)
-    List<Token> findTokensByUserId(@Param("id") Long id);
+    List<AccessToken> findTokensByUserId(@Param("id") Long id);
 
 
     @Modifying

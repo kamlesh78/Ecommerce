@@ -7,7 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.ttn.ecommerce.entity.user.Token;
+import org.ttn.ecommerce.entity.user.AccessToken;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -17,7 +17,7 @@ public class JWTGenerator {
 
 
     public String generateToken(Authentication authentication) {
-        Token token1 = new Token();
+        AccessToken token1 = new AccessToken();
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
