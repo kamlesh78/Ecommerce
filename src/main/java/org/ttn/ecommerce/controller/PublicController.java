@@ -21,7 +21,7 @@ import org.ttn.ecommerce.services.*;
 import org.ttn.ecommerce.services.impl.CustomerServiceImpl;
 import org.ttn.ecommerce.services.impl.UserPasswordServiceImpl;
 import org.ttn.ecommerce.services.impl.UserServiceImpl;
-import org.ttn.ecommerce.services.impl.BlackListTokenServiceImpl;
+import org.ttn.ecommerce.services.impl.LogoutServiceImpl;
 import org.ttn.ecommerce.services.impl.TokenServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,13 +42,12 @@ public class PublicController {
     private final UserService userService;
     private final UserPasswordService userPasswordService;
     private final TokenService tokenService;
-    private final BlackListTokenService blackListTokenService;
+    private final LogoutService blackListTokenService;
     private final CustomerService customerDaoService;
     private MessageSource messageSource;
 
-
     @Autowired
-    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserServiceImpl userService, UserPasswordServiceImpl userPasswordService, TokenServiceImpl tokenService, BlackListTokenServiceImpl blackListTokenService, CustomerServiceImpl customerDaoService, MessageSource messageSource) {
+    public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserServiceImpl userService, UserPasswordServiceImpl userPasswordService, TokenServiceImpl tokenService, LogoutServiceImpl blackListTokenService, CustomerServiceImpl customerDaoService, MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -62,6 +61,10 @@ public class PublicController {
         this.messageSource = messageSource;
     }
 
+    @GetMapping("/log")
+    public String check(){
+        return messageSource.getMessage("ecommerce.error.userNotFound",null,Locale.ENGLISH);
+    }
 
     /**
      *      @Consumers      <<Admin>>, <<Customer>>, <<Seller>>

@@ -3,12 +3,9 @@ package org.ttn.ecommerce;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.ttn.ecommerce.entity.category.Category;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
-import org.ttn.ecommerce.services.impl.BlackListTokenServiceImpl;
-
-import java.util.Optional;
+import org.ttn.ecommerce.services.impl.LogoutServiceImpl;
 
 @SpringBootTest
 public class BlackListTokenTest {
@@ -17,7 +14,7 @@ public class BlackListTokenTest {
     BlackListTokenRepository blackListTokenRepository;
 
     @Autowired
-    BlackListTokenServiceImpl blackListTokenService;
+    LogoutServiceImpl blackListTokenService;
 
     @Autowired
     CategoryRepository categoryRepository;

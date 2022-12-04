@@ -15,7 +15,7 @@ import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.ForgetPasswordRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.SecurityConstants;
-import org.ttn.ecommerce.services.BlackListTokenService;
+import org.ttn.ecommerce.services.LogoutService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -43,7 +43,7 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
     AccessTokenRepository accessTokenRepository;
 
     @Autowired
-    BlackListTokenService blackListTokenService;
+    LogoutService blackListTokenService;
 
     @Override
     public ResponseEntity<String> forgetPassword(String email){

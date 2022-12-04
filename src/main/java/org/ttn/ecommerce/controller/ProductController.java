@@ -3,6 +3,7 @@ package org.ttn.ecommerce.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.product.ProductVariationDto;
@@ -41,6 +42,7 @@ public class ProductController {
      *     @Probem      : Add Product
      *     @Constraint  : Product Name Should Be Unique WithRespect TO {Category,Brand,Seller}
      */
+    @PreAuthorize("hasRole('SELLER')")
     @PostMapping("add/product/{categoryId}")
     public ResponseEntity<?> addProduct(@RequestBody Product product, @PathVariable("categoryId") Long categoryId, Authentication authentication) {
 
@@ -55,17 +57,35 @@ public class ProductController {
      *     @Constraint  : {Quantity,Price} should be Greater then 0
      *                    Each metadata field value sent should be from within the possible field values defined for that field in the category
      */
+
+    @PreAuthorize("hasRole('SELLER')")
     @PostMapping("add/product-variation")
     public ResponseEntity<?> createProductVariation(@RequestBody ProductVariationDto productVariationDto) {
 
         return productVariationService.createProductVariation(productVariationDto);
     }
 
+
+
+
+
+
+    @PreAuthorize("hasRole('SELLER')")
+    @PostMapping("update/product-variation")
+    public ResponseEntity<?> updateProductVariation(@RequestBody ProductVariationDto productVariationDto) {
+
+        return productVariationService.updateProductVariation(productVariationDto);
+    }
+
+
+
     /**
      *      @Problem        : View A Product By Its <<ID>>
      *      @Constraints    : Log IN Used Should be Owner Of Product
      *      @Output         : Product details along with selected category details
      */
+
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/product/{id}")
     public ResponseEntity<?> viewProductById(@PathVariable("id") Long id,Authentication authentication) throws Exception {
         String email = authentication.getName();
@@ -77,6 +97,8 @@ public class ProductController {
      *      @Probelem    : View Product Variation By Its <<ID>>
      *      @OutPut      : Product Variation with Parent Product Details
      */
+
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/product-variation/{variationId}")
     public ProductVariationResponseDto viewProductVariation(@PathVariable("variationId") Long productVariationId, Authentication authentication) {
         String email = authentication.getName();
@@ -88,6 +110,8 @@ public class ProductController {
      *     @Problem : View All Products Created By Seller
      *     @Output  : All non-deleted product with Category details
     */
+
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/all-products")
     public List<ProductResponseDto> viewAllProductsOfSeller(Authentication authentication) {
 
@@ -101,6 +125,7 @@ public class ProductController {
      *      @Problem : View All Product Variations For A Product
      *      @Outptut : Product Variations OF The Product
      */
+    @PreAuthorize("hasRole('SELLER')")
     @GetMapping("seller/view/product-variation/{productId}")
     public ResponseEntity<?> viewProductVariationOfProduct(@PathVariable("productId") Long productId){
 
@@ -112,6 +137,7 @@ public class ProductController {
      *     @Problem : Delete Product
      *     @Output  : User Should Be Owner Of The Product
      */
+    @PreAuthorize("hasRole('SELLER')")
     @DeleteMapping("delete/product/{id}")
     public String deleteProduct(@PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
@@ -125,6 +151,8 @@ public class ProductController {
      *                  WITH Respect TO  {BRAND , CATEGORY, SELLER} Combination
      *      @Output  :  Update Product Or Return Error If Any .
      */
+
+    @PreAuthorize("hasRole('SELLER')")
     @PutMapping("/update/product/{productId}")
     public String updateProduct(@PathVariable("productId") Long productId, @RequestBody Product product, Authentication authentication) {
 
@@ -138,6 +166,8 @@ public class ProductController {
      *       @Output       : List of all products, along with each product's category details,
      *      *       all variations primary images
      */
+
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("customer/view/product/{id}")
     public ResponseEntity<?> viewCustomerProduct(@PathVariable Long id){
 
@@ -151,6 +181,8 @@ public class ProductController {
      *       @Output       : List of all products, along with each product's category details,
      *      *       all variations primary images
      */
+
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("customer/product/{categoryId}")
     public List<ProductResponseDto> viewCustomerAllProducts(@PathVariable("categoryId") Long categoryId){
         return productService.retrieveProducts(categoryId);
@@ -167,6 +199,8 @@ public class ProductController {
      *       @Output       : Product details along with product's selected category details,
      *                      all variations primary images
      */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("admin/view/product/{id}")
     public ResponseEntity<?> viewProductByIdForAdmin(@PathVariable("id") Long id,Authentication authentication) throws Exception {
         String email = authentication.getName();
@@ -177,6 +211,8 @@ public class ProductController {
      *       @Consumer     : <<Admin>>
      *       @Problem      : Activate Product By ITs  <<ID>>
      */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("admin/activate/product/{productId}")
     public String activateProduct(@PathVariable("productId") long productId) {
 
@@ -187,6 +223,8 @@ public class ProductController {
      *       @Consumer     : <<Admin>>
      *       @Problem      : DeActivate Product By ITs  <<ID>>
      */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("admin/deactivate/product/{productId}")
     public String deactivateProduct(@PathVariable("productId") Long id) {
 

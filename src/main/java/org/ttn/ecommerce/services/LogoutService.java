@@ -3,7 +3,7 @@ package org.ttn.ecommerce.services;
 import org.springframework.http.ResponseEntity;
 import org.ttn.ecommerce.entity.user.AccessToken;
 
-public interface BlackListTokenService {
+public interface LogoutService {
     ResponseEntity<String> blackListToken(String token);
 
     ResponseEntity<String> logOutUser(String email);

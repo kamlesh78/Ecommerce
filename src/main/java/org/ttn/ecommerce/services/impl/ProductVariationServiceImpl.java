@@ -105,6 +105,83 @@ public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.P
         return new ResponseEntity<>("product variation created successfully",HttpStatus.CREATED);
     }
 
+
+    @Override
+    public ResponseEntity<?> updateProductVariation(ProductVariationDto productVariationDto){
+
+        System.out.println(productVariationDto.getPrice());
+        System.out.println(productVariationDto.getMetaData());
+        ProductVariation productVariation = new ProductVariation();
+        Product product =   productRepository.findById(productVariationDto.getProductId())
+                .orElseThrow(()-> new ProfileDataException("Product Not Found For This Id"));
+
+        if(!product.isActive() || product.isDeleted()){
+            return new ResponseEntity<>("Product is not Active Or Product is deleted", HttpStatus.BAD_REQUEST);
+        }
+
+        Category category = product.getCategory();
+        List<CategoryMetadataFieldValue> categoryMetadataFieldValueList=
+                categoryMetaDataFieldValueRepository.findByCategoryId(category.getId());
+        //  Map<Object,Set<String>> meta = new LinkedHashMap<>();
+        Map<Object,Set<String>> meta = new LinkedHashMap<>();
+
+        for( CategoryMetadataFieldValue categoryMetadataFieldValue : categoryMetadataFieldValueList){
+            System.out.println(categoryMetadataFieldValue.getId());
+        }
+        for(CategoryMetadataFieldValue categoryMetadataFieldValue : categoryMetadataFieldValueList) {
+            String[] values =  categoryMetadataFieldValue.getValue().split(",");
+            List<String> list = Arrays.asList(values);
+            Set<String> listSet = new HashSet<>(list);
+
+            meta.put(categoryMetadataFieldValue.getCategoryMetaDataField().getName(),
+                    listSet);
+        }
+
+
+
+
+        String metadata = productVariationDto.getMetaData();
+
+
+        JSONObject jsonObj = new JSONObject(metadata);
+        Iterator keys = jsonObj.keys();
+
+        while(keys.hasNext()){
+            String currentKey = (String)keys.next();
+
+            System.out.println("current Key" + currentKey);
+
+            if (meta.get(currentKey) == null){
+                return new ResponseEntity<>("metadata value mismatch",HttpStatus.BAD_REQUEST);
+            }
+            if (!meta.get(currentKey).contains(jsonObj.getString(currentKey))){
+
+                return new ResponseEntity<>("invalid value in metadata field",HttpStatus.BAD_REQUEST);
+            }
+
+
+        }
+
+        productVariation.setProduct(product);
+        productVariation.setPrice(productVariationDto.getPrice());
+        productVariation.setMetadata(jsonObj.toString());
+        productVariation.setQuantityAvailable(productVariationDto.getQuantityAvailable());
+        productVariation.setActive(true);
+
+        productVariationRepository.save(productVariation);
+        return new ResponseEntity<>("product variation created successfully",HttpStatus.CREATED);
+    }
+
+
+
+
+
+
+
+
+
+
+
     @Override
     public ProductVariationResponseDto getProductVariation(Long productVariationId, String email) {
 

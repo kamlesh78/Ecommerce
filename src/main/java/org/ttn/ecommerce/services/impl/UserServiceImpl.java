@@ -1,7 +1,9 @@
 package org.ttn.ecommerce.services.impl;
 
 import lombok.NoArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,7 @@ import org.ttn.ecommerce.security.SecurityConstants;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -46,10 +49,10 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
     private TokenServiceImpl tokenService;
     private AccessTokenRepository accessTokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
-
+    private MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenServiceImpl tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenServiceImpl tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository,MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -61,6 +64,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
         this.tokenService = tokenService;
         this.accessTokenRepository = accessTokenRepository;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.messageSource=messageSource;
     }
 
 
@@ -70,6 +74,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
         String email = tokenService.getUsernameFromJWT(token);
         return email;
     }
+
 
     @Override
     public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto) {

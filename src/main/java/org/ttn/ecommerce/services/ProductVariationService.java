@@ -10,6 +10,8 @@ import java.util.List;
 public interface ProductVariationService {
     ResponseEntity<?> createProductVariation(ProductVariationDto productVariationDto);
 
+    ResponseEntity<?> updateProductVariation(ProductVariationDto productVariationDto);
+
     ProductVariationResponseDto getProductVariation(Long productVariationId, String email);
 
     List<ProductResponseDto> viewAllProductsOfSeller(String email);

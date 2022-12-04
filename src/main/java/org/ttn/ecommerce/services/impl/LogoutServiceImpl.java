@@ -12,13 +12,14 @@ import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
+import org.ttn.ecommerce.services.LogoutService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class BlackListTokenServiceImpl implements org.ttn.ecommerce.services.BlackListTokenService {
+public class LogoutServiceImpl implements LogoutService {
 
     @Autowired
     BlackListTokenRepository blackListTokenRepository;
