@@ -17,6 +17,7 @@ import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.ForgetPasswordRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.SecurityConstants;
+import org.ttn.ecommerce.services.BlackListTokenService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
     AccessTokenRepository accessTokenRepository;
 
     @Autowired
-    BlackListTokenServiceImpl blackListTokenService;
+    BlackListTokenService blackListTokenService;
 
     @Override
     public ResponseEntity<String> forgetPassword(String email){
@@ -64,25 +65,16 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
                 forgetPasswordRepository.save(forgetPassword);
 
             /* Send Mail with rest password Link */
-            try {
+            String toMail = userEntity.get().getEmail();
+            String subject = "Reset Password";
+            String message = "To reset your password use the token within 15 minutes \n"
+                    + "URL : http://127.0.0.1:8080/api/public/reset-password/ \n"
+                    + "Token : "
+                    + forgetPassword.getToken();
 
-                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-                simpleMailMessage.setSubject("Reset Password");
-                simpleMailMessage.setText("To reset your password use the token within 15 minutes \n"
-                        + "URL : http://127.0.0.1:8080/api/public/reset-password/ \n"
-                        + "Token : "
-                        + forgetPassword.getToken());
-                simpleMailMessage.setTo(userEntity.get().getEmail());
-                emailService.sendEmail(simpleMailMessage);
-            }catch (MailException ex){
-                return new ResponseEntity<>("\"Cant Send Mail || Mailing server is down || Kindly wait\"",HttpStatus.BAD_REQUEST);
-            }
-//                emailService.setSubject("Reset Password");
-//                emailService.setMessage("To reset you password click the link below within 15 minutes \n"
-//                + "http://127.0.0.1:8080/api/auth/forget-password/"
-//                +forgetPassword.getToken());
-//                emailService.setToEmail(userEntity.get().getEmail());
-//                emailService.sendEmail();
+            emailService.sendEmail(toMail,subject,message);
+
+
 
                 return new ResponseEntity<>("Reset Password Token Generated || Please check your email || Verify within 15 minutes",HttpStatus.OK);
         }else{
@@ -155,19 +147,14 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
 
 
                 /*            Sending Password Reset Alert               */
-                try {
 
-                    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-                    simpleMailMessage.setSubject("Password Changed");
-                    simpleMailMessage.setText(userEntity.getFirstName() + " Password for Your account Changed." +
-                            "recently \n Please contact admin if that was not you");
-                    simpleMailMessage.setTo(userEntity.getEmail());
 
-                    emailService.sendEmail(simpleMailMessage);
-                }catch (MailException ex){
-                    return new ResponseEntity<>("\"Cant Send Mail || Mailing server is down || Kindly wait\"",HttpStatus.BAD_REQUEST);
-                }
+                String toMail = userEntity.getEmail();
+                String subject = "Password Changed";
+                String message = userEntity.getFirstName() + " Password for Your account Changed." +
+                        "recently \n Please contact admin if that was not you";
 
+                emailService.sendEmail(toMail,subject,message);
 
                  return new ResponseEntity<>("Password changed",HttpStatus.OK);
             }

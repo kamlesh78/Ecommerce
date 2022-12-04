@@ -40,7 +40,6 @@ public class CustomerController {
     private TokenService tokenService;
     private CustomerService customerService;
     private ImageService imageService;
-
     private CategoryServiceImpl categoryService;
 
     @Autowired
@@ -50,7 +49,6 @@ public class CustomerController {
         this.roleRepository = roleRepository;
         this.passwordEncode = passwordEncode;
         this.jwtGenerator = jwtGenerator;
-
         this.tokenService = tokenService;
         this.customerService = customerDaoService;
         this.imageService = imageService;

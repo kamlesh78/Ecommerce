@@ -4,8 +4,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +41,6 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
     private PasswordEncoder passwordEncode;
     private JWTGenerator jwtGenerator;
     private CustomerRepository customerRepository;
-    private EmailServiceImpl emailService;
     private EmailServicetry emailServicetry;
     private SellerRepository sellerRepository;
     private TokenServiceImpl tokenService;
@@ -67,19 +64,19 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
     }
 
 
-
     @Override
-    public String emailFromToken(HttpServletRequest request){
+    public String emailFromToken(HttpServletRequest request) {
         String token = tokenService.getJWTFromRequest(request);
         String email = tokenService.getUsernameFromJWT(token);
         return email;
     }
+
     @Override
-    public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto){
-        if(userRepository.existsByEmail(registerDto.getEmail())){
+    public ResponseEntity<String> registerCustomer(CustomerRegisterDto registerDto) {
+        if (userRepository.existsByEmail(registerDto.getEmail())) {
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
         }
-        Customer customer =new Customer();
+        Customer customer = new Customer();
         customer.setFirstName(registerDto.getFirstName());
         customer.setMiddleName(registerDto.getMiddleName());
         customer.setLastName(registerDto.getLastName());
@@ -104,30 +101,24 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
 
         String token = tokenService.generateRegisterToken(customer);
 
-        try{
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setTo(customer.getEmail());
-            simpleMailMessage.setSubject("Your Account || "+ customer.getFirstName() + " finish setting up your new  Account ");
-            simpleMailMessage.setText(  "Click on the link to Activate Your Account \n"
-                    + "127.0.0.1:8080/api/public/activate_account/"+customer.getEmail() +"/"+token);
+        String toMail = customer.getEmail();
+        String subject = "Your Account || " + customer.getFirstName() + " finish setting up your new  Account ";
+        String message = "Click on the link to Activate Your Account \n"
+                + "127.0.0.1:8080/api/public/activate_account/" + customer.getEmail() + "/" + token;
 
-            emailServicetry.sendEmail(simpleMailMessage);
-        }catch (MailException ex){
-            new ResponseEntity<>("Can not Send Email ! Mailing Server is Down",HttpStatus.BAD_REQUEST);
+        emailServicetry.sendEmail(toMail, subject, message);
 
-        }
-
-        return new ResponseEntity<>("Customer Registered Successfully!Activate Your Account within 3 hours",HttpStatus.CREATED);
+        return new ResponseEntity<>("Customer Registered Successfully!Activate Your Account within 3 hours", HttpStatus.CREATED);
 
     }
 
 
     @Override
-    public ResponseEntity<String> registerSeller(SellerRegisterDto sellerRegisterDto){
-        if(userRepository.existsByEmail(sellerRegisterDto.getEmail())){
+    public ResponseEntity<String> registerSeller(SellerRegisterDto sellerRegisterDto) {
+        if (userRepository.existsByEmail(sellerRegisterDto.getEmail())) {
             return new ResponseEntity<>("Email is already taken", HttpStatus.BAD_REQUEST);
         }
-        Seller seller =new Seller();
+        Seller seller = new Seller();
         seller.setFirstName(sellerRegisterDto.getFirstName());
         seller.setMiddleName(sellerRegisterDto.getMiddleName());
         seller.setLastName(sellerRegisterDto.getLastName());
@@ -152,65 +143,65 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
         sellerRepository.save(seller);
 
         /** Send Mail to Seller */
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setSubject(seller.getFirstName()+" Your Account || " + " has been created! ");
-        simpleMailMessage.setTo(seller.getEmail());
-        simpleMailMessage.setText("Please Kindly wait for admin to approve your account");
-        emailServicetry.sendEmail(simpleMailMessage);
+
+        String toMail = seller.getEmail();
+        String subject = seller.getFirstName() + " Your Account || " + " has been created! ";
+        String message = "Please Kindly wait for admin to approve your account";
+
+        emailServicetry.sendEmail(toMail, subject, message);
+
 
         /** Sending mail to Admin user to activate Sellers Account*/
 
-        simpleMailMessage.setSubject("New Seller Registered || Activate Sellers Account");
-        simpleMailMessage.setText("Seller Id : " + seller.getId()+
-                "\nSeller Name : " + seller.getFirstName()+
-                "\nSeller Gst Number : " + seller.getGst()+
-                "\nReview and Activate Seller's Account");
-        simpleMailMessage.setTo(SecurityConstants.ADMIN_EMAIL_ADDRESS);
-        emailServicetry.sendEmail(simpleMailMessage);
+        toMail = SecurityConstants.ADMIN_EMAIL_ADDRESS;
+        subject = "New Seller Registered || Activate Sellers Account";
+        message = "Seller Id : " + seller.getId() +
+                "\nSeller Name : " + seller.getFirstName() +
+                "\nSeller Gst Number : " + seller.getGst() +
+                "\nReview and Activate Seller's Account";
 
-        return new ResponseEntity<>("Seller Registered Successfully !! kindly wait for admin to approve your seller account",HttpStatus.OK);
+        emailServicetry.sendEmail(toMail, subject, message);
+
+
+        return new ResponseEntity<>("Seller Registered Successfully !! kindly wait for admin to approve your seller account", HttpStatus.OK);
 
 
     }
 
 
     @Override
-    public ResponseEntity<?> login(LoginDto loginDto, UserEntity user){
+    public ResponseEntity<?> login(LoginDto loginDto, UserEntity user) {
 
-
-
-
-            if(!passwordEncode.matches(loginDto.getPassword(), user.getPassword())){
-            int count =user.getInvalidAttemptCount()+1;
+        if (!passwordEncode.matches(loginDto.getPassword(), user.getPassword())) {
+            int count = user.getInvalidAttemptCount() + 1;
             user.setInvalidAttemptCount(count);
-            userRepository.saveInvalidCount(user.getInvalidAttemptCount(),user.getId());
+            userRepository.saveInvalidCount(user.getInvalidAttemptCount(), user.getId());
 
 
-            if(user.getInvalidAttemptCount() >= 3){
+            if (user.getInvalidAttemptCount() >= 3) {
                 user.setLocked(true);
                 userRepository.lockAccount(user.getId());
-                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-                simpleMailMessage.setSubject("User Account Locked!");
-                simpleMailMessage.setText("User Account Has Been Locked After " +
-                        +SecurityConstants.MAX_LOGIN_ATTEMPT+
-                                " Unsuccessful Login Attempts"+"\n"
-                +"User Id : " + user.getId());
-                simpleMailMessage.setTo("kamlesh.singh@tothenew.com");
-                emailServicetry.sendEmail(simpleMailMessage);
 
-                return new ResponseEntity<>("Your account got locked! Contact Admin to activate it.",HttpStatus.UNAUTHORIZED);
+
+                String toMail = SecurityConstants.ADMIN_EMAIL_ADDRESS;
+                String subject = "User Account Locked!";
+                String message = "User Account Has Been Locked After " +
+                        +SecurityConstants.MAX_LOGIN_ATTEMPT +
+                        " Unsuccessful Login Attempts" + "\n"
+                        + "User Id : " + user.getId();
+
+                emailServicetry.sendEmail(toMail, subject, message);
+
+
+                return new ResponseEntity<>("Your account got locked! Contact Admin to activate it.", HttpStatus.UNAUTHORIZED);
             }
-            return new ResponseEntity<>("Password is wrong Your  Have <<" +(SecurityConstants.MAX_LOGIN_ATTEMPT-user.getInvalidAttemptCount())+">> Attempts Remaining",HttpStatus.UNAUTHORIZED);
-        }
-        else{
+            return new ResponseEntity<>("Password is wrong Your  Have <<" + (SecurityConstants.MAX_LOGIN_ATTEMPT - user.getInvalidAttemptCount()) + ">> Attempts Remaining", HttpStatus.UNAUTHORIZED);
+        } else {
 
-            userRepository.saveInvalidCount(0,user.getId());
-
+            userRepository.saveInvalidCount(0, user.getId());
 
 
-
-
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(),loginDto.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtGenerator.generateToken(authentication);
 
@@ -229,7 +220,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
             refreshTokenRepository.save(refreshToken);
 
 
-            return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(),refreshToken.getToken()),HttpStatus.OK);
+            return new ResponseEntity<>(new AuthResponseDto(accessToken.getToken(), refreshToken.getToken()), HttpStatus.OK);
 
         }
 
@@ -238,8 +229,8 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
 
     @Override
     public ResponseEntity<String> confirmAccount(UserEntity userEntity, String token) {
-       String out =  tokenService.confirmAccount(userEntity.getId(),token);
-       return new ResponseEntity<>(out,HttpStatus.OK);
+        String out = tokenService.confirmAccount(userEntity.getId(), token);
+        return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
 

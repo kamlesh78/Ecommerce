@@ -9,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.ttn.ecommerce.exception.MailNotSendException;
 
 @Service
 @Getter
@@ -25,18 +26,23 @@ public class EmailServicetry {
     }
 
     @Async
-    public void sendEmail(SimpleMailMessage simpleMailMessage) throws Exception {
+    public void sendEmail(String toMail, String subject, String message) throws MailNotSendException {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(toMail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(message);
 
+        try {
 
-
-        simpleMailMessage.setFrom("kamlesh.singh.ecommerce.project@gmail.com");
-       try {
-
-           javaMailSender.send(simpleMailMessage);
-       }catch(MailException ex){
-           throw new Exception("Can not send mail! Mailing Server is down");
-       }
+            javaMailSender.send(simpleMailMessage);
+        }
+        catch(MailException ex)
+        {
+            throw new MailNotSendException("Can not send mail! Mailing Server is down");
+        }
     }
+
+
 
 
 }

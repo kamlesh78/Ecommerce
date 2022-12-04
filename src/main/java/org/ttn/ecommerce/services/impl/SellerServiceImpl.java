@@ -57,7 +57,7 @@ public class SellerServiceImpl implements SellerService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    EmailServiceImpl emailService;
+    EmailServicetry emailService;
 
     @Autowired
     EmailServicetry emailServicetry;
@@ -82,19 +82,13 @@ public class SellerServiceImpl implements SellerService {
             userRepository.deactivateUserById(id);
 
             /*      Sending DeActivation Mail To Seller       */
-        try {
+            String toMail  =  userEntity.getEmail();
+            String subject = "Account Deactivated";
+            String message =  userEntity.getFirstName() + " your account has been deactivated.\n " +
+                    "Please contact admin to activate your account now";
 
+            emailServicetry.sendEmail(toMail, subject, message);
 
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setSubject("Account Deactivated");
-            simpleMailMessage.setText(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account now");
-            simpleMailMessage.setTo(userEntity.getEmail());
-
-            emailServicetry.sendEmail(simpleMailMessage);
-        }catch (MailException ex){
-            return "Cant Send Mail || Mailing server is down || Kindly wait";
-        }
-            /*Exception handling for mail*/
 
         }
         userRepository.deactivateUserById(id);
@@ -110,13 +104,13 @@ public class SellerServiceImpl implements SellerService {
             userRepository.activateUserById(id);
 
             /* Sending Mail To Seller*/
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setSubject("Account Activated");
-            simpleMailMessage.setText(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
-            simpleMailMessage.setTo(userEntity.getEmail());
 
-            emailServicetry.sendEmail(simpleMailMessage);
-            /*Exception handling for mail*/
+            String toMail  =  userEntity.getEmail();
+            String subject = "Account Activated";
+            String message =  userEntity.getFirstName() +
+                    " your account has been activated.\n You can access your account now";
+
+            emailServicetry.sendEmail(toMail, subject, message);
 
         }
         userRepository.activateUserById(id);
@@ -265,10 +259,13 @@ public class SellerServiceImpl implements SellerService {
         sellerRepository.updatePassword(passwordEncoder.encode(sellerPasswordDto.getPassword()),seller.getId());
 
         /*      Sending Email to USer for password reset Alert      */
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(seller.getEmail());
-        simpleMailMessage.setSubject("Password Updated");
-        simpleMailMessage.setText(seller.getFirstName() + " password for your account has updated at : " + LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you");
+
+        String toMail  =  seller.getEmail();
+        String subject =  "Password Updated";
+        String message =  seller.getFirstName() + " password for your account has updated at : " +
+                LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you";
+
+        emailServicetry.sendEmail(toMail, subject, message);
 
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }

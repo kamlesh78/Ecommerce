@@ -25,6 +25,7 @@ import org.ttn.ecommerce.repository.UserRepository.AddressRepository;
 import org.ttn.ecommerce.repository.UserRepository.CustomerRepository;
 import org.ttn.ecommerce.repository.UserRepository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
+import org.ttn.ecommerce.security.SecurityConstants;
 import org.ttn.ecommerce.services.ImageService;
 import org.ttn.ecommerce.services.TokenService;
 
@@ -199,7 +200,7 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
 
     /*      Update Password         */
     @Override
-    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) throws Exception {
+    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(!customerPasswordDto.getPassword().equals(customerPasswordDto.getConfirmPassword())){
@@ -212,12 +213,14 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
 
         /*          Sending Mail To Alert Password Change Event         */
 
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(customer.getEmail());
-        simpleMailMessage.setSubject("Password Updated");
-        simpleMailMessage.setText(customer.getFirstName() + " password for your account has updated at : " + LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you");
+       String toMail = customer.getEmail();
+       String  subject = "Password Updated";
+       String  message = customer.getFirstName() +
+               " password for your account has updated at : " + LocalDateTime.now()
+               + "\nPlease Contact Admin if it was not done by you";
 
-        emailServicetry.sendEmail(simpleMailMessage);
+        emailServicetry.sendEmail(toMail,subject,message);
+
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 
@@ -230,15 +233,13 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
             userRepository.deactivateUserById(id);
 
             /* Sending Deactivation Mail to Customer*/
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(userEntity.getEmail());
-            mailMessage.setSubject(userEntity.getFirstName()+"Account Deactivated");
-            mailMessage.setText(userEntity.getFirstName() + " your account has been deactivated.\n Please contact admin to activate your account");
 
-            emailServicetry.sendEmail(mailMessage);
+            String toMail = userEntity.getEmail();
+            String  subject = userEntity.getFirstName()+"Account Deactivated";
+            String  message = userEntity.getFirstName() + " your account has been deactivated.\n " +
+                    "Please contact admin to activate your account";
 
-
-            /*Exception handling for mail*/
+            emailServicetry.sendEmail(toMail,subject,message);
 
         }
         userRepository.deactivateUserById(id);
@@ -252,16 +253,13 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
         if(!userEntity.isActive()){
             userRepository.activateUserById(id);
 
-
             /* Sending Mail to Customer*/
 
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(userEntity.getEmail());
-            mailMessage.setSubject(userEntity.getFirstName()+"Account Activated");
-            mailMessage.setText(userEntity.getFirstName() + " your account has been activated.\n You can access your account now");
+            String toMail = userEntity.getEmail();
+            String  subject = userEntity.getFirstName()+"Account Activated";
+            String  message = userEntity.getFirstName() + " your account has been activated.\n You can access your account now";
 
-            emailServicetry.sendEmail(mailMessage);
-            /*Exception handling for mail*/
+            emailServicetry.sendEmail(toMail,subject,message);
 
         }
         return "Customer with id + " + id+" activated Successfully";
@@ -286,13 +284,14 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
 
             }
             String activationToken =  tokenService.generateRegisterToken(customer);
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setTo(customer.getEmail());
-            simpleMailMessage.setSubject("Account Activation Token");
-            simpleMailMessage.setText(customer.getFirstName() +
+
+            String toMail = customer.getEmail();
+            String  subject = "Account Activation Token";
+            String  message = customer.getFirstName() +
                     " Please Use this Activation Code to activate your account within 3 hours"
-                    +"\nNew Token : " + activationToken);
-            emailServicetry.sendEmail(simpleMailMessage);
+                    +"\nNew Token : " + activationToken;
+
+            emailServicetry.sendEmail(toMail,subject,message);
 
             return "New Activation Token sent to your email id .Please activate account within 3 hours";
 

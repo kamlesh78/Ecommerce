@@ -128,12 +128,13 @@ public class TokenServiceImpl implements org.ttn.ecommerce.services.TokenService
              */
             registerUserRepository.deleteActivateToken(activateUserToken.getToken(),id);
             String activationToken =  generateRegisterToken(customer);
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setTo(customer.getEmail());
-            simpleMailMessage.setSubject("Account Activation Token");
-            simpleMailMessage.setText(customer.getFirstName() + " Please Use this Activation Code to activate your account within 3 hours"
-                    +"\nPlease use this Token : " + activationToken);
-            emailServicetry.sendEmail(simpleMailMessage);
+
+            String toMail = customer.getEmail();
+            String  subject = "Account Activation Token";
+            String  message = customer.getFirstName() + " Please Use this Activation Code to activate your account within 3 hours"
+                    +"\nPlease use this Token : " + activationToken;
+
+            emailServicetry.sendEmail(toMail,subject,message);
 
             return "New Activation Token sent to your email id .Please activate account within 3 hours";
 

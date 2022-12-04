@@ -20,6 +20,7 @@ import org.ttn.ecommerce.repository.UserRepository.SellerRepository;
 import org.ttn.ecommerce.repository.productRepository.ProductRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.repository.categoryRepository.CategoryRepository;
+import org.ttn.ecommerce.security.SecurityConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,23 +88,16 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
          *      Email Admin To Activate The Product
          */
 
-        try {
+        String toMail = SecurityConstants.ADMIN_EMAIL_ADDRESS;
+        String subject = "New Product Added";
+        String message =  "Activate New Product "
+                +"\n Product Details"
+                +"\nProduct Id : " + product.getId()
+                +"\nProduct Name : " + product.getName()
+                +"\nSeller Name  : " + seller.getFirstName()
+                +"\nCategory Name : + " +category.getName();
 
-            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setSubject("New Product Added");
-            simpleMailMessage.setText(
-            "Activate New Product "
-            +"\n Product Details"
-            +"\nProduct Id : " + product.getId()
-            +"\nProduct Name : " + product.getName()
-            +"\nSeller Name  : " + seller.getFirstName()
-            +"\nCategory Name : + " +category.getName());
-            simpleMailMessage.setTo("kamlesh.singh@tothenew.com");
-
-            emailServicetry.sendEmail(simpleMailMessage);
-        }catch (MailException ex){
-            return new ResponseEntity<>("\"Cant Send Mail || Mailing server is down || Kindly wait\"",HttpStatus.BAD_REQUEST);
-        }
+        emailServicetry.sendEmail(toMail, subject, message);
 
         return new ResponseEntity<>("New Product Added Successfully", HttpStatus.OK);
     }
@@ -224,13 +218,13 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
 
         product.setActive(true);
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(product.getSeller().getEmail());
-        mailMessage.setSubject("Product  Activated");
-        mailMessage.setFrom("kamlesh.singh@tothenew.com");
-        mailMessage.setText("Product Name :" + product.getName()
-        + "\nStatus : Activated");
-        emailServicetry.sendEmail(mailMessage);
+        String toMail = product.getSeller().getEmail();
+        String subject = "Product  Activated";
+        String message =  "Product Name :" + product.getName()
+                + "\nStatus : Activated";
+
+        emailServicetry.sendEmail(toMail, subject, message);
+
 
         return "Product Activated";
 
@@ -241,22 +235,20 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
         Product product = productRepository.findById(id)
                 .orElseThrow(()->new ProductNotFoundException("No Product Found For Given Id"));
 
-
          if (!product.isActive()) {
              return "Product is Already Deactivated";
          }
 
-            product.setActive(false);
-            productRepository.save(product);
+        product.setActive(false);
+        productRepository.save(product);
 
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setTo(product.getSeller().getEmail());
-            mailMessage.setSubject("Product Successfully Deactivated");
-            mailMessage.setFrom("kamlesh.singh@tothenew.com");
-            mailMessage.setText("Product has been deactivated " + product.getName());
-            emailServicetry.sendEmail(mailMessage);
+        String toMail = product.getSeller().getEmail();
+        String subject = "Product Successfully Deactivated";
+        String message =  "Product has been deactivated " + product.getName();
 
-            return "Product deactivated successfully";
+        emailServicetry.sendEmail(toMail, subject, message);
+
+        return "Product deactivated successfully";
 
     }
 
