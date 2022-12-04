@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class BlackListTokenService implements org.ttn.ecommerce.services.BlackListTokenService {
+public class BlackListTokenServiceImpl implements org.ttn.ecommerce.services.BlackListTokenService {
 
     @Autowired
     BlackListTokenRepository blackListTokenRepository;

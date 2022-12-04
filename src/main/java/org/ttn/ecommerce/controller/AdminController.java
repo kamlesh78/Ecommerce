@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.services.CustomerService;
+import org.ttn.ecommerce.services.ProductService;
+import org.ttn.ecommerce.services.SellerService;
 import org.ttn.ecommerce.services.impl.SellerServiceImpl;
-import org.ttn.ecommerce.services.impl.ProductService;
+import org.ttn.ecommerce.services.impl.ProductServiceImpl;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class AdminController {
     private CustomerService customerService;
 
     @Autowired
-    private SellerServiceImpl sellerService;
+    private SellerService sellerService;
 
     @Autowired
     private ProductService productService;

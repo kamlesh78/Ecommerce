@@ -12,8 +12,10 @@ import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryRespo
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.entity.category.Category;
 import org.ttn.ecommerce.entity.category.CategoryMetaDataField;
-import org.ttn.ecommerce.services.impl.UserService;
-import org.ttn.ecommerce.services.impl.CategoryService;
+import org.ttn.ecommerce.services.CategoryService;
+import org.ttn.ecommerce.services.UserService;
+import org.ttn.ecommerce.services.impl.UserServiceImpl;
+import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
 
 import java.util.List;
 

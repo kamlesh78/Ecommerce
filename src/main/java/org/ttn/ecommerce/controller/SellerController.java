@@ -8,17 +8,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.ttn.ecommerce.dto.SellerUpdateDto;
 import org.ttn.ecommerce.dto.image.ImageResponse;
-import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entity.user.Address;
-import org.ttn.ecommerce.services.impl.CategoryService;
+import org.ttn.ecommerce.services.CategoryService;
+import org.ttn.ecommerce.services.ImageService;
+import org.ttn.ecommerce.services.SellerService;
+import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
 import org.ttn.ecommerce.services.impl.SellerServiceImpl;
-import org.ttn.ecommerce.services.impl.ImageService;
+import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/seller")
@@ -26,7 +27,7 @@ import java.util.List;
 public class SellerController {
 
     @Autowired
-    SellerServiceImpl sellerDaoService;
+    SellerService sellerDaoService;
 
     @Autowired
     ImageService imageService;

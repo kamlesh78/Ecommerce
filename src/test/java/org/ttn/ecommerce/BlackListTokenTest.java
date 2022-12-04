@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ttn.ecommerce.repository.TokenRepository.BlackListTokenRepository;
-import org.ttn.ecommerce.services.impl.BlackListTokenService;
+import org.ttn.ecommerce.services.impl.BlackListTokenServiceImpl;
 
 @SpringBootTest
 public class BlackListTokenTest {
@@ -13,7 +13,7 @@ public class BlackListTokenTest {
     BlackListTokenRepository blackListTokenRepository;
 
     @Autowired
-    BlackListTokenService blackListTokenService;
+    BlackListTokenServiceImpl blackListTokenService;
 
     @Test
     public void testBlackListService(){

@@ -25,14 +25,14 @@ import java.awt.color.ProfileDataException;
 import java.util.*;
 
 @Service
-public class ProductVariationService implements org.ttn.ecommerce.services.ProductVariationService {
+public class ProductVariationServiceImpl implements org.ttn.ecommerce.services.ProductVariationService {
 
     private ProductVariationRepository productVariationRepository;
     private ProductRepository productRepository;
     private CategoryMetaDataFieldValueRepository categoryMetaDataFieldValueRepository;
     private UserRepository userRepository;
     @Autowired
-    public ProductVariationService(ProductVariationRepository productVariationRepository, ProductRepository productRepository, CategoryMetaDataFieldValueRepository categoryMetaDataFieldValueRepository, UserRepository userRepository) {
+    public ProductVariationServiceImpl(ProductVariationRepository productVariationRepository, ProductRepository productRepository, CategoryMetaDataFieldValueRepository categoryMetaDataFieldValueRepository, UserRepository userRepository) {
         this.productVariationRepository = productVariationRepository;
         this.productRepository = productRepository;
         this.categoryMetaDataFieldValueRepository = categoryMetaDataFieldValueRepository;

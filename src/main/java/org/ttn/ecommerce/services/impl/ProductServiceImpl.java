@@ -26,7 +26,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ProductService implements org.ttn.ecommerce.services.ProductService {
+public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductService {
 
     @Autowired
     CategoryRepository categoryRepository;

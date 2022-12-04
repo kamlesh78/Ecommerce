@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class UserPasswordService implements org.ttn.ecommerce.services.UserPasswordService {
+public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserPasswordService {
 
     @Autowired
     UserRepository userRepository;
@@ -44,7 +44,7 @@ public class UserPasswordService implements org.ttn.ecommerce.services.UserPassw
     AccessTokenRepository accessTokenRepository;
 
     @Autowired
-    BlackListTokenService blackListTokenService;
+    BlackListTokenServiceImpl blackListTokenService;
 
     @Override
     public ResponseEntity<String> forgetPassword(String email){

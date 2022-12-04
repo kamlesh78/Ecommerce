@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmailService {
+public class EmailServiceImpl {
 
 
     private JavaMailSender javaMailSender;
@@ -24,7 +24,7 @@ public class EmailService {
 
 
     @Autowired
-    public EmailService(JavaMailSender javaMailSender) {
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 

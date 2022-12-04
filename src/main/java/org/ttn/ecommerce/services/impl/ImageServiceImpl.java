@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class ImageService implements org.ttn.ecommerce.services.ImageService {
+public class ImageServiceImpl implements org.ttn.ecommerce.services.ImageService {
 
     @Autowired
     UserRepository userRepository;

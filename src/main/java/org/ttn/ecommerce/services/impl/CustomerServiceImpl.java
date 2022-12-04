@@ -25,6 +25,8 @@ import org.ttn.ecommerce.repository.UserRepository.AddressRepository;
 import org.ttn.ecommerce.repository.UserRepository.CustomerRepository;
 import org.ttn.ecommerce.repository.UserRepository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
+import org.ttn.ecommerce.services.ImageService;
+import org.ttn.ecommerce.services.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -36,7 +38,7 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class CustomerService implements org.ttn.ecommerce.services.CustomerService {
+public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerService {
 
     @Autowired
     TokenService tokenService;
@@ -56,8 +58,7 @@ public class CustomerService implements org.ttn.ecommerce.services.CustomerServi
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    EmailService emailService;
+
 
     @Autowired
     EmailServicetry emailServicetry;
@@ -198,7 +199,7 @@ public class CustomerService implements org.ttn.ecommerce.services.CustomerServi
 
     /*      Update Password         */
     @Override
-    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) {
+    public ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) throws Exception {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
         if(!customerPasswordDto.getPassword().equals(customerPasswordDto.getConfirmPassword())){
@@ -216,6 +217,7 @@ public class CustomerService implements org.ttn.ecommerce.services.CustomerServi
         simpleMailMessage.setSubject("Password Updated");
         simpleMailMessage.setText(customer.getFirstName() + " password for your account has updated at : " + LocalDateTime.now() + "\nPlease Contact Admin if it was not done by you");
 
+        emailServicetry.sendEmail(simpleMailMessage);
         return new ResponseEntity<>("Password Updated",HttpStatus.OK);
     }
 
@@ -252,6 +254,7 @@ public class CustomerService implements org.ttn.ecommerce.services.CustomerServi
 
 
             /* Sending Mail to Customer*/
+
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setTo(userEntity.getEmail());
             mailMessage.setSubject(userEntity.getFirstName()+"Account Activated");

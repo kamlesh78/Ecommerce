@@ -3,6 +3,7 @@ package org.ttn.ecommerce.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,10 +38,13 @@ import java.util.*;
 public class SellerServiceImpl implements SellerService {
 
     @Autowired
-    TokenService tokenService;
+    TokenServiceImpl tokenService;
 
     @Autowired
     SellerRepository sellerRepository;
+
+    @Autowired
+    MessageSource messageSource;
 
 
     @Autowired
@@ -48,17 +52,18 @@ public class SellerServiceImpl implements SellerService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    EmailService emailService;
+    EmailServiceImpl emailService;
 
     @Autowired
     EmailServicetry emailServicetry;
 
     @Autowired
-    ImageService imageService;
+    ImageServiceImpl imageService;
 
     @Override
     public String emailFromToken(HttpServletRequest request){

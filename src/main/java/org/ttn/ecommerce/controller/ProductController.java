@@ -10,9 +10,12 @@ import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entity.product.Product;
 import org.ttn.ecommerce.repository.productRepository.ProductRepository;
+import org.ttn.ecommerce.services.ProductService;
+import org.ttn.ecommerce.services.ProductVariationService;
+import org.ttn.ecommerce.services.SellerService;
 import org.ttn.ecommerce.services.impl.SellerServiceImpl;
-import org.ttn.ecommerce.services.impl.ProductService;
-import org.ttn.ecommerce.services.impl.ProductVariationService;
+import org.ttn.ecommerce.services.impl.ProductServiceImpl;
+import org.ttn.ecommerce.services.impl.ProductVariationServiceImpl;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class ProductController {
     ProductService productService;
 
     @Autowired
-    SellerServiceImpl sellerService;
+    SellerService sellerService;
 
     @Autowired
     ProductVariationService productVariationService;

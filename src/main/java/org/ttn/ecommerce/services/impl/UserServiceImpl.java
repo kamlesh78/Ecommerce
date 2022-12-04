@@ -35,7 +35,7 @@ import java.util.Collections;
 @Service
 @Transactional
 @NoArgsConstructor
-public class UserService implements org.ttn.ecommerce.services.UserService {
+public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
 
     private AuthenticationManager authenticationManager;
     private UserRepository userRepository;
@@ -43,16 +43,16 @@ public class UserService implements org.ttn.ecommerce.services.UserService {
     private PasswordEncoder passwordEncode;
     private JWTGenerator jwtGenerator;
     private CustomerRepository customerRepository;
-    private EmailService emailService;
+    private EmailServiceImpl emailService;
     private EmailServicetry emailServicetry;
     private SellerRepository sellerRepository;
-    private TokenService tokenService;
+    private TokenServiceImpl tokenService;
     private AccessTokenRepository accessTokenRepository;
     private RefreshTokenRepository refreshTokenRepository;
 
 
     @Autowired
-    public UserService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenService tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenServiceImpl tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

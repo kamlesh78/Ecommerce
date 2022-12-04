@@ -17,10 +17,13 @@ import org.ttn.ecommerce.entity.user.Customer;
 import org.ttn.ecommerce.repository.UserRepository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
-import org.ttn.ecommerce.services.impl.CategoryService;
-import org.ttn.ecommerce.services.impl.CustomerService;
-import org.ttn.ecommerce.services.impl.TokenService;
-import org.ttn.ecommerce.services.impl.ImageService;
+import org.ttn.ecommerce.services.CustomerService;
+import org.ttn.ecommerce.services.ImageService;
+import org.ttn.ecommerce.services.TokenService;
+import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
+import org.ttn.ecommerce.services.impl.CustomerServiceImpl;
+import org.ttn.ecommerce.services.impl.TokenServiceImpl;
+import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 
 import java.io.IOException;
 
@@ -38,10 +41,10 @@ public class CustomerController {
     private CustomerService customerService;
     private ImageService imageService;
 
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     @Autowired
-    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenService tokenService, CustomerService customerDaoService, ImageService imageService, CategoryService categoryService) {
+    public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenServiceImpl tokenService, CustomerServiceImpl customerDaoService, ImageServiceImpl imageService, CategoryServiceImpl categoryService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

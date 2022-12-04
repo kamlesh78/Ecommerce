@@ -34,7 +34,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class TokenService implements org.ttn.ecommerce.services.TokenService {
+public class TokenServiceImpl implements org.ttn.ecommerce.services.TokenService {
 
     @Autowired
     RegisterUserRepository registerUserRepository;

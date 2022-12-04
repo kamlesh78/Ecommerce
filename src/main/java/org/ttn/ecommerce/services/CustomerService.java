@@ -34,7 +34,7 @@ public interface CustomerService {
     ResponseEntity<String> updateProfile(String email, Customer customer);
 
     /*      Update Password         */
-    ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email);
+    ResponseEntity<String> updatePassword(CustomerPasswordDto customerPasswordDto, String email) throws Exception;
 
     /*       Deactivate Customer          */
     String deActiveCustomer(Long id);

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class CategoryService implements org.ttn.ecommerce.services.CategoryService {
+public class CategoryServiceImpl implements org.ttn.ecommerce.services.CategoryService {
 
 
 //    @Autowired

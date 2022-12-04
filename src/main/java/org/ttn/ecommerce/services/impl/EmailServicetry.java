@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -24,12 +25,17 @@ public class EmailServicetry {
     }
 
     @Async
-    public void sendEmail(SimpleMailMessage simpleMailMessage){
+    public void sendEmail(SimpleMailMessage simpleMailMessage) throws Exception {
 
 
 
         simpleMailMessage.setFrom("kamlesh.singh.ecommerce.project@gmail.com");
-        javaMailSender.send(simpleMailMessage);
+       try {
+
+           javaMailSender.send(simpleMailMessage);
+       }catch(MailException ex){
+           throw new Exception("Can not send mail! Mailing Server is down");
+       }
     }
 
 
