@@ -168,16 +168,7 @@ public class CustomerController {
         return customerService.updateCustomerAddressById(email, id, address);
     }
 
-    /**
-     *
-     * @param id
-     * @return
-     */
-    @GetMapping(value = {"view/categories","view/categories/{id}"})
-    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
 
-        return  categoryService.listCategoriesOfCustomer(id);
-    }
 
 }
 

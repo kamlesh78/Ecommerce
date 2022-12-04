@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.services.CustomerService;
-import org.ttn.ecommerce.services.impl.SellerService;
+import org.ttn.ecommerce.services.impl.SellerServiceImpl;
 import org.ttn.ecommerce.services.impl.ProductService;
 
 import java.util.List;
@@ -16,16 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    /*check
-    where we used
-    Customer or Seller as parameter to
-    check custom JsonFilter
-     */
+
     @Autowired
     private CustomerService customerService;
 
     @Autowired
-    private SellerService sellerService;
+    private SellerServiceImpl sellerService;
 
     @Autowired
     private ProductService productService;

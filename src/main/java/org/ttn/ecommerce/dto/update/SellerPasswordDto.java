@@ -7,7 +7,6 @@ import org.ttn.ecommerce.validations.SellerPasswordMatcher;
 import javax.validation.constraints.NotBlank;
 
 @Data
-@SellerPasswordMatcher
 public class SellerPasswordDto {
 
     @NotBlank(message = "Password can not be empty")

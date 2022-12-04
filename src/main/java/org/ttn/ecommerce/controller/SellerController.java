@@ -6,16 +6,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.ttn.ecommerce.dto.SellerUpdateDto;
 import org.ttn.ecommerce.dto.image.ImageResponse;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entity.user.Address;
-import org.ttn.ecommerce.entity.user.Seller;
 import org.ttn.ecommerce.services.impl.CategoryService;
-import org.ttn.ecommerce.services.impl.SellerService;
+import org.ttn.ecommerce.services.impl.SellerServiceImpl;
 import org.ttn.ecommerce.services.impl.ImageService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class SellerController {
 
     @Autowired
-    SellerService sellerDaoService;
+    SellerServiceImpl sellerDaoService;
 
     @Autowired
     ImageService imageService;
@@ -54,9 +55,9 @@ public class SellerController {
      * @param   : Fields To Be Uploaded
      */
     @PatchMapping("update/profile")
-    public ResponseEntity<String> updateSellerAddress(@RequestBody Seller seller, Authentication authentication) {
+    public ResponseEntity<String> updateSellerAddress(@RequestBody SellerUpdateDto sellerUpdateDto, Authentication authentication) {
         String email = authentication.getName();
-        return sellerDaoService.updateProfile(email, seller);
+        return sellerDaoService.updateProfile(email, sellerUpdateDto);
 
     }
 
@@ -65,7 +66,7 @@ public class SellerController {
      *      @param      :   <<Username>>  and <<Password>>
      */
     @PatchMapping("update/password")
-    public ResponseEntity<String> updateSellerPassword(@RequestBody SellerPasswordDto sellerPasswordDto, Authentication authentication) {
+    public ResponseEntity<String> updateSellerPassword(@Valid @RequestBody SellerPasswordDto sellerPasswordDto, Authentication authentication) {
         String email = authentication.getName();
         return sellerDaoService.updatePassword(sellerPasswordDto, email);
 
@@ -140,12 +141,7 @@ public class SellerController {
 
 
 
-    @GetMapping("view/all-categories")
-    public List<SubCategoryResponseDto> viewAllCategories(){
 
-        return categoryService.viewAllCategory();
-
-    }
 
 
 }

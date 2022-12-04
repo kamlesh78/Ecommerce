@@ -94,14 +94,11 @@ public class CustomerService implements org.ttn.ecommerce.services.CustomerServi
             customerResponseDto.setLastName(customer.getLastName());
             customerResponseDto.setContact(customer.getContact());
             customerResponseDto.setActive(customer.isActive());
+            customerResponseDto.setProfileImageUrl(imageService.getImagePath(customer));
 
             responseDtoList.add(customerResponseDto);
         }
-//        FilterProvider filters = new SimpleFilterProvider() .addFilter(
-//                "customerFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","lastName","email","isActive"));
-//
-//        MappingJacksonValue mappingJacksonValue =new MappingJacksonValue(customerList);
-//        mappingJacksonValue.setFilters(filters);
+
         return responseDtoList;
     }
 

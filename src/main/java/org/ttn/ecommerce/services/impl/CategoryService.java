@@ -86,6 +86,9 @@ public class CategoryService implements org.ttn.ecommerce.services.CategoryServi
         CategoryMetaDataField categoryMetaDataField = categoryMetaDataFieldRepository.findById(metaDataFieldId).
                 orElseThrow(()-> new CategoryNotFoundException("Category MetaData Field Not Found"));
 
+        if(categoryMetaValueDto.getValues()==null){
+            return new ResponseEntity<>("Category MetaData Field Value is Invalid "+"\n"+"Please Send Valid Input",HttpStatus.BAD_REQUEST);
+        }
         if(categoryMetaValueDto.getValues().size()<1){
             return new ResponseEntity<>("Category MetaDataFieldValue Should Have At least One Value ",HttpStatus.BAD_REQUEST);
         }
@@ -271,13 +274,13 @@ public class CategoryService implements org.ttn.ecommerce.services.CategoryServi
         }
 
 
-        List<Category> subCategoryList = category1.getParentCategory().getSubCategory();
+        List<Category> subCategoryList = category1.getSubCategory();
 
         /**
          *      Check if category name is unique along breadth/depth
          */
-        Category parentCheck2 = category1.getParentCategory();
-        if(org.ttn.ecommerce.services.CategoryService.check_subcategory(parentCheck2,category.getName())){
+       // Category parentCheck2 = category1.getParentCategory();
+        if(org.ttn.ecommerce.services.CategoryService.check_subcategory(category1,category.getName())){
             category1.setName(category.getName());
             categoryRepository.save(category1);
             return  new ResponseEntity<>("Category Updated Successfully",HttpStatus.OK);

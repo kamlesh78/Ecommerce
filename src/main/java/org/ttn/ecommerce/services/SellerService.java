@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.services;
 
 import org.springframework.http.ResponseEntity;
+import org.ttn.ecommerce.dto.SellerUpdateDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entity.user.Address;
@@ -19,7 +20,7 @@ public interface SellerService {
 
     SellerResponseDto sellerProfile(String email);
 
-    ResponseEntity<String> updateProfile(String email, Seller seller);
+    ResponseEntity<String> updateProfile(String email, SellerUpdateDto seller);
 
     ResponseEntity<?> insertSellerAddress(String email, Address address);
 

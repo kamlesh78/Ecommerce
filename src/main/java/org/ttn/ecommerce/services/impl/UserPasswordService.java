@@ -12,6 +12,7 @@ import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.entity.user.Token;
 import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.entity.token.ForgetPasswordToken;
+import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.TokenRepository.AccessTokenRepository;
 import org.ttn.ecommerce.repository.TokenRepository.ForgetPasswordRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
@@ -68,7 +69,7 @@ public class UserPasswordService implements org.ttn.ecommerce.services.UserPassw
                 SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
                 simpleMailMessage.setSubject("Reset Password");
                 simpleMailMessage.setText("To reset your password use the token within 15 minutes \n"
-                        + "URL : http://127.0.0.1:8080/api/auth/reset-password/ \n"
+                        + "URL : http://127.0.0.1:8080/api/public/reset-password/ \n"
                         + "Token : "
                         + forgetPassword.getToken());
                 simpleMailMessage.setTo(userEntity.get().getEmail());
@@ -117,11 +118,20 @@ public class UserPasswordService implements org.ttn.ecommerce.services.UserPassw
     @Transactional
     public ResponseEntity<String> resetUserPassword(ResetPasswordDto resetPasswordDto) {
 
-       /* Add validation here */
-        UserEntity userEntity = userRepository.findByEmail(resetPasswordDto.getEmail()).get();
+
+        UserEntity userEntity = userRepository.findByEmail(resetPasswordDto.getEmail())
+                .orElseThrow(()->new UserNotFoundException("User Not Found With Given Email"));
         Optional<ForgetPasswordToken> forgetPasswordToken = forgetPasswordRepository.findByToken(resetPasswordDto.getToken());
 
+
         if(forgetPasswordToken.isPresent()){
+
+            /**  Check If Token Belongs to Current User     */
+
+                if(!forgetPasswordToken.get().getUserEntity().getEmail().equals(userEntity.getEmail())){
+                    return new ResponseEntity<>("Provided Token Does Not Belong TO Given Email Address\n Please Provide Correct Token",HttpStatus.BAD_REQUEST);
+                }
+
             if(verifyToken(forgetPasswordToken.get().getExpireAt())){
                 forgetPasswordRepository.deleteByTokenId(forgetPasswordToken.get().getId());
                 return new ResponseEntity<>("Token has been expired" , HttpStatus.BAD_REQUEST);
@@ -134,17 +144,14 @@ public class UserPasswordService implements org.ttn.ecommerce.services.UserPassw
 
 
                     /*
-                            * Blacklist All Activate AccessToken After Password Reset
+                            * Delete All Access Token Of Your After Password Reset
                             * User Can not log in from old tokens
                      */
 
                     List<Token> accessTokenList  = accessTokenRepository.findTokensByUserId(userEntity.getId());
                     if(accessTokenList !=null){
-                        for(Token token : accessTokenList){
-                            blackListTokenService.addTokenToBlackList(token);
-                        }
+                        accessTokenRepository.deleteByUserId(userEntity.getId());
                     }
-
 
 
                 /*            Sending Password Reset Alert               */

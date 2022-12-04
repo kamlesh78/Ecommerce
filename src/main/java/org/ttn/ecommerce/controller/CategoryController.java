@@ -120,10 +120,20 @@ public class CategoryController {
     }
 
 
-    @GetMapping("seller")
+    @GetMapping("view/seller-categories")
     public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory() {
         List<SellerCategoryResponseDTO> responseList = categoryService.viewSellerCategory();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
+
+    /**
+     *      @Consumer    <<Customer>>
+     *      @param       id
+     */
+    @GetMapping(value = {"customer/view/categories","customer/view/categories/{id}"})
+    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
+
+        return  categoryService.listCategoriesOfCustomer(id);
+    }
 }

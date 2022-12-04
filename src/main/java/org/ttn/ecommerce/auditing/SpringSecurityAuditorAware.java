@@ -13,7 +13,13 @@ public class SpringSecurityAuditorAware implements AuditorAware<String>
   public Optional<String> getCurrentAuditor() {
 
     Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-    String username = loggedInUser.getName();
+    String username="";
+    if(loggedInUser == null){
+      username ="Anonymous User";
+    }else{
+      username = loggedInUser.getName();
+    }
+
     return Optional.ofNullable(username);
   }
 }

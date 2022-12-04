@@ -13,13 +13,13 @@ import javax.validation.constraints.NotNull;
 @Table(name="seller")
 public class Seller extends UserEntity {
 
-    @NotNull
+
     private String gst;
 
-    @NotNull
+
     private String companyContact;
 
-    @NotNull
+
     private String companyName;
 
     public String getGst() {

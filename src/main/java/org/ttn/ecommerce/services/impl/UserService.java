@@ -109,7 +109,7 @@ public class UserService implements org.ttn.ecommerce.services.UserService {
             simpleMailMessage.setTo(customer.getEmail());
             simpleMailMessage.setSubject("Your Account || "+ customer.getFirstName() + " finish setting up your new  Account ");
             simpleMailMessage.setText(  "Click on the link to Activate Your Account \n"
-                    + "127.0.0.1:8080/api/auth/activate_account/"+customer.getEmail() +"/"+token);
+                    + "127.0.0.1:8080/api/public/activate_account/"+customer.getEmail() +"/"+token);
 
             emailServicetry.sendEmail(simpleMailMessage);
         }catch (MailException ex){
@@ -151,20 +151,22 @@ public class UserService implements org.ttn.ecommerce.services.UserService {
 
         sellerRepository.save(seller);
 
-     /* Send Mail to Seller */
-        emailService.setSubject( seller.getFirstName()+" Your Account || " + " has been created! " );
-        emailService.setToEmail(seller.getEmail());
-        emailService.setMessage("Please Kindly wait for admin to approve your account");
-        emailService.sendEmail();
+        /** Send Mail to Seller */
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setSubject(seller.getFirstName()+" Your Account || " + " has been created! ");
+        simpleMailMessage.setTo(seller.getEmail());
+        simpleMailMessage.setText("Please Kindly wait for admin to approve your account");
+        emailServicetry.sendEmail(simpleMailMessage);
 
-        /* Sending mail to Admin user to activate Sellers Account*/
-        emailService.setSubject("New Seller Registered || Activate Sellers Account");
-        emailService.setMessage("Seller Id : " + seller.getId()+
+        /** Sending mail to Admin user to activate Sellers Account*/
+
+        simpleMailMessage.setSubject("New Seller Registered || Activate Sellers Account");
+        simpleMailMessage.setText("Seller Id : " + seller.getId()+
                 "\nSeller Name : " + seller.getFirstName()+
                 "\nSeller Gst Number : " + seller.getGst()+
                 "\nReview and Activate Seller's Account");
-        emailService.setToEmail(SecurityConstants.ADMIN_EMAIL_ADDRESS);
-        emailService.sendEmail();
+        simpleMailMessage.setTo(SecurityConstants.ADMIN_EMAIL_ADDRESS);
+        emailServicetry.sendEmail(simpleMailMessage);
 
         return new ResponseEntity<>("Seller Registered Successfully !! kindly wait for admin to approve your seller account",HttpStatus.OK);
 

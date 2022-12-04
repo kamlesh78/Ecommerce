@@ -10,7 +10,7 @@ import org.ttn.ecommerce.dto.product.ProductResponseDto;
 import org.ttn.ecommerce.dto.responseDto.ProductVariationResponseDto;
 import org.ttn.ecommerce.entity.product.Product;
 import org.ttn.ecommerce.repository.productRepository.ProductRepository;
-import org.ttn.ecommerce.services.impl.SellerService;
+import org.ttn.ecommerce.services.impl.SellerServiceImpl;
 import org.ttn.ecommerce.services.impl.ProductService;
 import org.ttn.ecommerce.services.impl.ProductVariationService;
 
@@ -25,7 +25,7 @@ public class ProductController {
     ProductService productService;
 
     @Autowired
-    SellerService sellerService;
+    SellerServiceImpl sellerService;
 
     @Autowired
     ProductVariationService productVariationService;

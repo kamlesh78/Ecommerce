@@ -14,6 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ttn.ecommerce.dto.SellerUpdateDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.dto.update.SellerPasswordDto;
 import org.ttn.ecommerce.entity.user.Address;
@@ -24,6 +25,7 @@ import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.UserRepository.AddressRepository;
 import org.ttn.ecommerce.repository.UserRepository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
+import org.ttn.ecommerce.services.SellerService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -32,7 +34,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class SellerService implements org.ttn.ecommerce.services.SellerService {
+public class SellerServiceImpl implements SellerService {
 
     @Autowired
     TokenService tokenService;
@@ -139,27 +141,30 @@ public class SellerService implements org.ttn.ecommerce.services.SellerService {
     /* Update Profile */
 
     @Override
-    public ResponseEntity<String> updateProfile(String email, Seller seller) {
+    public ResponseEntity<String> updateProfile(String email, SellerUpdateDto seller) {
         Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
-        if(seller.getEmail()!=null) sellerEntity.setEmail(seller.getEmail());
-        if(seller.getCompanyContact()!=null) sellerEntity.setCompanyContact(seller.getCompanyContact());
+
+        if(seller.getCompanyContact()!=null ) sellerEntity.setCompanyContact(seller.getCompanyContact());
         if(seller.getFirstName()!=null) sellerEntity.setFirstName(seller.getFirstName());
-        if(seller.getMiddleName()!=null) sellerEntity.setMiddleName(seller.getMiddleName());
-        if(seller.getLastName()!=null) sellerEntity.setLastName(seller.getLastName());
+        if(seller.getMiddleName()!=null ) sellerEntity.setMiddleName(seller.getMiddleName());
+        if(seller.getLastName()!=null)  sellerEntity.setLastName(seller.getLastName());
         sellerRepository.save(sellerEntity);
         return new ResponseEntity<>("Seller Profile Detail Updated!",HttpStatus.OK);
     }
 
 
-    /* Add Seller Address */
-
+    /** Add Seller Address */
     @Override
     public ResponseEntity<?> insertSellerAddress(String email, Address address) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
-        if(addressRepository.existsByUserId(userEntity.getId())>=1){
-            addressRepository.deleteAddressById(userEntity.getId());
+
+        List<Address> addressList = addressRepository.findByUserId(userEntity.getId());
+
+        if(addressList.size()>=1){
+            addressRepository.deleteByUserId(userEntity.getId());
         }
+
         address.setUserEntity(userEntity);
         addressRepository.save(address);
         return new ResponseEntity<>("Address inserted",HttpStatus.OK);
@@ -238,6 +243,19 @@ public class SellerService implements org.ttn.ecommerce.services.SellerService {
     public ResponseEntity<String> updatePassword(SellerPasswordDto sellerPasswordDto, String email) {
 
         Seller seller = sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        String oldPassword = seller.getPassword();
+
+        if(!sellerPasswordDto.getPassword().equals(sellerPasswordDto.getConfirmPassword())){
+            return new ResponseEntity<>("Password and Confirm Password did not matched!",HttpStatus.BAD_REQUEST);
+        }
+
+        /**          check if old password is same old password           */
+        if(passwordEncoder.matches(sellerPasswordDto.getPassword(),oldPassword)){
+            return new ResponseEntity<>("New Password is same as old password "
+            +"\n"+"Please use different Password",HttpStatus.BAD_REQUEST);
+        }
+
+
 
         sellerRepository.updatePassword(passwordEncoder.encode(sellerPasswordDto.getPassword()),seller.getId());
 
