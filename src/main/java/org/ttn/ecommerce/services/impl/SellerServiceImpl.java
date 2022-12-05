@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -140,8 +142,26 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public ResponseEntity<String> updateProfile(String email, SellerUpdateDto seller) {
         Seller sellerEntity =sellerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Seller Not Found"));
+        if(seller.getEmail()!=null){
+            String regex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(seller.getEmail());
+            if(matcher.matches()){
 
-        if(seller.getCompanyContact()!=null ) sellerEntity.setCompanyContact(seller.getCompanyContact());
+                sellerEntity.setEmail(seller.getEmail());
+            }else {
+                return new
+                        ResponseEntity<>("Invalid Email",HttpStatus.BAD_REQUEST);
+            }
+        }
+        if(seller.getCompanyContact()!=null ) {
+            if(seller.getCompanyContact().matches("^$|[0-9]{10}")){
+                sellerEntity.setCompanyContact(seller.getCompanyContact());
+            }else{
+                return  new ResponseEntity<>("Invalid Contact Number",HttpStatus.BAD_REQUEST);
+            }
+
+        }
         if(seller.getFirstName()!=null) sellerEntity.setFirstName(seller.getFirstName());
         if(seller.getMiddleName()!=null ) sellerEntity.setMiddleName(seller.getMiddleName());
         if(seller.getLastName()!=null)  sellerEntity.setLastName(seller.getLastName());

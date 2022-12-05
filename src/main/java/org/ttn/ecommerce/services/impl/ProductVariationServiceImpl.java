@@ -44,8 +44,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
     @Override
     public ResponseEntity<?> createProductVariation(ProductVariationDto productVariationDto){
 
-        System.out.println(productVariationDto.getPrice());
-        System.out.println(productVariationDto.getMetaData());
+
         ProductVariation productVariation = new ProductVariation();
         Product product =   productRepository.findById(productVariationDto.getProductId())
                 .orElseThrow(()-> new ProfileDataException("Product Not Found For This Id"));
@@ -57,7 +56,7 @@ public class ProductVariationServiceImpl implements ProductVariationService {
         Category category = product.getCategory();
         List<CategoryMetadataFieldValue> categoryMetadataFieldValueList=
                 categoryMetaDataFieldValueRepository.findByCategoryId(category.getId());
-      //  Map<Object,Set<String>> meta = new LinkedHashMap<>();
+
      Map<Object,Set<String>> meta = new LinkedHashMap<>();
 
        for( CategoryMetadataFieldValue categoryMetadataFieldValue : categoryMetadataFieldValueList){

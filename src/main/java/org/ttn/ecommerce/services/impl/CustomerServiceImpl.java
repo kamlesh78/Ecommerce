@@ -205,7 +205,7 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
             if(customer.getContact().matches("^$|[0-9]{10}")){
                 customerEntity.setContact(customer.getContact());
             }else{
-                return  new ResponseEntity<>("Invalid Contact NUmber",HttpStatus.BAD_REQUEST);
+                return  new ResponseEntity<>("Invalid Contact Number",HttpStatus.BAD_REQUEST);
             }
 
         }

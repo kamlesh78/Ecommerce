@@ -11,9 +11,6 @@ import java.util.List;
 public interface ProductVariationService {
     ResponseEntity<?> createProductVariation(ProductVariationDto productVariationDto);
 
-    //ResponseEntity<?> updateProductVariation(ProductVariationDto productVariationDto);
-
-    //ResponseEntity<?> updateProductVariation(ProductVariationUpdateDto productVariationUpdateDto, Long productVariationId);
 
     ProductVariationResponseDto getProductVariation(Long productVariationId, String email);
 

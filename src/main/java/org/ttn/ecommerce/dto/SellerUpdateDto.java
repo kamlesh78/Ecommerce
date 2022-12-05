@@ -7,9 +7,12 @@ import lombok.Setter;
 @Setter
 public class SellerUpdateDto {
 
+
     private String firstName;
 
     private String lastName;
+
+    private String email;
 
     private String middleName;
 

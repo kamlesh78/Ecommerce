@@ -58,7 +58,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping("add/product-variation")
-    public ResponseEntity<?> createProductVariation(@RequestBody ProductVariationDto productVariationDto) {
+    public ResponseEntity<?> createProductVariation(@RequestBody ProductVariationDto productVariationDto,Authentication authentication) {
 
         return productVariationService.createProductVariation(productVariationDto);
     }
