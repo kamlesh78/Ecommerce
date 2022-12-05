@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 import javax.validation.Valid;
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/seller")
 
@@ -47,6 +49,7 @@ public class SellerController {
      */
     @GetMapping("view/profile")
     public SellerResponseDto viewSellerProfile(Authentication authentication) {
+        log.info("Sellers Profile");
         String email = authentication.getName();
         return sellerDaoService.sellerProfile(email);
     }

@@ -296,6 +296,7 @@ public class SellerServiceImpl implements SellerService {
            sellerResponseDto.setGst(seller.getGst());
            sellerResponseDto.setActive(seller.isActive());
            sellerResponseDto.setAddress(seller.getAddresses());
+           sellerResponseDto.setProfileImageUrl(imageService.getImagePath(seller));
            responseDtoList.add(sellerResponseDto);
        }
 

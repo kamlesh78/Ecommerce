@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.ttn.ecommerce.services.impl.ProductVariationServiceImpl;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -45,7 +47,7 @@ public class ProductController {
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping("add/product/{categoryId}")
     public ResponseEntity<?> addProduct(@RequestBody Product product, @PathVariable("categoryId") Long categoryId, Authentication authentication) {
-
+        log.info("{Add Category   Fields}");
         String email = authentication.getName();
         return productService.addProduct(product, categoryId, email);
 

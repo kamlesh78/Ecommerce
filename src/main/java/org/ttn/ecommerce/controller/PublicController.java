@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import javax.validation.Valid;
 import java.util.Locale;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/public")
 public class PublicController {
@@ -61,10 +63,6 @@ public class PublicController {
         this.messageSource = messageSource;
     }
 
-    @GetMapping("/log")
-    public String check(){
-        return messageSource.getMessage("ecommerce.error.userNotFound",null,Locale.ENGLISH);
-    }
 
     /**
      *      @Consumers      <<Admin>>, <<Customer>>, <<Seller>>
@@ -73,7 +71,7 @@ public class PublicController {
      */
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-
+        log.info("Trying user Sign in");
         UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new UserNotFoundException("User with this email not found"));
 
         if (!user.isActive()) {

@@ -42,7 +42,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/metadata-field")
     public String createMetaField(@RequestBody CategoryMetaDataField categoryMetaDataField) {
-
+        log.info("{Create MetaData Fields}");
         return categoryService.createMetaDataField(categoryMetaDataField);
     }
 
@@ -54,7 +54,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view/metadata-field")
     public List<MetaDataFieldResponse> viewMetaField() {
-
+        log.info("{View MetaData Fields}");
         return categoryService.getMetaDataField();
 
     }

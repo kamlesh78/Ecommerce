@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/customer")
 public class CustomerController {
@@ -70,7 +72,7 @@ public class CustomerController {
      */
     @PostMapping(value = "upload/image")
     public ImageResponse uploadImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
-
+        log.info("{Fetch Email From Authentication Object}");
         String email = authentication.getName();
 
         return imageService.uploadImage(email, image);
@@ -94,6 +96,7 @@ public class CustomerController {
      */
     @GetMapping("view/profile")
     public CustomerResponseDto viewCustomerProfile(Authentication authentication) {
+        log.info("{Customer Profile}");
         String email = authentication.getName();
         return customerService.customerProfile(email);
     }
