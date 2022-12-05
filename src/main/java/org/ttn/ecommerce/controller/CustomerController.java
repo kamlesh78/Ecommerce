@@ -23,8 +23,8 @@ import org.ttn.ecommerce.services.ImageService;
 import org.ttn.ecommerce.services.TokenService;
 import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
 import org.ttn.ecommerce.services.impl.CustomerServiceImpl;
-import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 import org.ttn.ecommerce.services.impl.TokenServiceImpl;
+import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 
 import java.io.IOException;
 
@@ -34,15 +34,15 @@ import java.io.IOException;
 public class CustomerController {
 
 
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncode;
-    private final JWTGenerator jwtGenerator;
-    private final TokenService tokenService;
-    private final CustomerService customerService;
-    private final ImageService imageService;
-    private final CategoryServiceImpl categoryService;
+    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
+    private PasswordEncoder passwordEncode;
+    private JWTGenerator jwtGenerator;
+    private TokenService tokenService;
+    private CustomerService customerService;
+    private ImageService imageService;
+    private CategoryServiceImpl categoryService;
 
     @Autowired
     public CustomerController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, TokenServiceImpl tokenService, CustomerServiceImpl customerDaoService, ImageServiceImpl imageService, CategoryServiceImpl categoryService) {
@@ -65,6 +65,7 @@ public class CustomerController {
 
 
     /**
+     *
      * @param image
      * @param authentication
      * @throws IOException
@@ -82,31 +83,32 @@ public class CustomerController {
      * @param authentication
      */
     @GetMapping("/view/image")
-    public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication) {
+    public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
 
         String email = authentication.getName();
         return imageService.getImage(email);
     }
 
     /**
-     * @param authentication
-     * @return
+     *
+     *      @param      authentication
+     *      @return
      */
     @GetMapping("view/profile")
     public CustomerResponseDto viewCustomerProfile(Authentication authentication) {
-        log.info("{Customer Profile}");
+        log.info("{Fetch Email From Authentication Object}");
         String email = authentication.getName();
         return customerService.customerProfile(email);
     }
 
 
     /**
-     * @param customer
-     * @param authentication
-     * @Usage Update Customer Profile
+     *      @Usage  Update Customer Profile
+     *      @param  customer
+     *      @param  authentication
      */
     @PatchMapping("update/profile")
-    public ResponseEntity<String> updateCustomerAddress(@RequestBody Customer customer, Authentication authentication) {
+    public ResponseEntity<String> updateCustomerProfile(@RequestBody Customer customer, Authentication authentication) {
         String email = authentication.getName();
         return customerService.updateProfile(email, customer);
 
@@ -114,9 +116,9 @@ public class CustomerController {
 
 
     /**
-     * @param customerPasswordDto
-     * @param authentication
-     * @Constraint Password Should be a Valid And Meet Constraints
+     *      @Constraint     Password Should be a Valid And Meet Constraints
+     *      @param          customerPasswordDto
+     *      @param          authentication
      */
     @PatchMapping("update/password")
     public ResponseEntity<String> updateCustomerPassword(@RequestBody CustomerPasswordDto customerPasswordDto, Authentication authentication) {
@@ -126,9 +128,9 @@ public class CustomerController {
     }
 
     /**
-     * @param address
-     * @param authentication
-     * @Usage Add Customer Address
+     *      @Usage   Add Customer Address
+     *      @param   address
+     *      @param   authentication
      */
     @PostMapping("add/address")
     public ResponseEntity<?> addCustomerAddress(@RequestBody Address address, Authentication authentication) {
@@ -137,9 +139,9 @@ public class CustomerController {
     }
 
     /**
-     * @param authentication
-     * @return Users Address
-     * @throws IOException
+     * @param   authentication
+     * @return  Users Address
+     * @throws  IOException
      */
     @GetMapping("view/address")
     public AddressResponseDto viewAddress(Authentication authentication) throws IOException {
@@ -150,9 +152,9 @@ public class CustomerController {
 
 
     /**
-     * @param id
-     * @param authentication
-     * @Usage Delete Customer Address
+     *      @Usage       Delete Customer Address
+     *      @param       id
+     *      @param       authentication
      */
     @DeleteMapping("delete/address/{id}")
     public String deleteCustomerAddress(@PathVariable("id") Long id, Authentication authentication) {
@@ -162,11 +164,14 @@ public class CustomerController {
     }
 
 
+
+
     @PatchMapping("/update/address/{id}")
     public String updateCustomerAddress(@RequestBody Address address, @PathVariable("id") Long id, Authentication authentication) {
         String email = authentication.getName();
         return customerService.updateCustomerAddressById(email, id, address);
     }
+
 
 
 }

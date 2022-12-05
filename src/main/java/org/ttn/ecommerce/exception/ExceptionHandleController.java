@@ -85,4 +85,15 @@ public class ExceptionHandleController extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException ex,HttpServletResponse response) throws IOException {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+
+        ExceptionResponse errorDetail = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<Object>(errorDetail, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

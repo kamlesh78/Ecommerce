@@ -20,6 +20,7 @@ public class Category extends Auditable<String> {
     @SequenceGenerator(name = "category_sequence", sequenceName = "category_sequence", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
     private Long id;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;

@@ -150,7 +150,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
 
-    /** Add Seller Address */
+    /* Add Seller Address */
     @Override
     public ResponseEntity<?> insertSellerAddress(String email, Address address) {
 
@@ -276,10 +276,9 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public List<SellerResponseDto> listAllSellers(String pageSize, String pageOffset, String sortBy){
 
-        Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
+       Pageable pageable = PageRequest.of(Integer.parseInt(pageOffset),Integer.parseInt(pageSize), Sort.by(new Sort.Order(
                 Sort.Direction.DESC,sortBy)));
-
-        Page<Seller> pages = sellerRepository.findAll(pageable);
+       Page<Seller> pages = sellerRepository.findAll(pageable);
        List<Seller> sellerList = pages.getContent();
        List<SellerResponseDto> responseDtoList = new ArrayList<>();
 

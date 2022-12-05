@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.AddressResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -186,8 +189,26 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
     @Override
     public ResponseEntity<String> updateProfile(String email, Customer customer) {
         Customer customerEntity =customerRepository.findByEmail(email).orElseThrow(()->new UserNotFoundException("Customer Not Found"));
-        if(customer.getEmail()!=null) customerEntity.setEmail(customer.getEmail());
-        if(customer.getContact()!=null) customerEntity.setContact(customer.getContact());
+        if(customer.getEmail()!=null){
+            String regex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(customer.getEmail());
+            if(matcher.matches()){
+
+                 customerEntity.setEmail(customer.getEmail());
+            }else {
+                return new
+                        ResponseEntity<>("Invalid Email",HttpStatus.BAD_REQUEST);
+            }
+        }
+        if(customer.getContact()!=null ) {
+            if(customer.getContact().matches("^$|[0-9]{10}")){
+                customerEntity.setContact(customer.getContact());
+            }else{
+                return  new ResponseEntity<>("Invalid Contact NUmber",HttpStatus.BAD_REQUEST);
+            }
+
+        }
         if(customer.getFirstName()!=null) customerEntity.setFirstName(customer.getFirstName());
         if(customer.getMiddleName()!=null) customerEntity.setMiddleName(customer.getMiddleName());
         if(customer.getLastName()!=null) customerEntity.setLastName(customer.getLastName());

@@ -23,6 +23,7 @@ import org.ttn.ecommerce.services.impl.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -58,6 +59,10 @@ public class PublicController {
         this.messageSource = messageSource;
     }
 
+    @GetMapping("i18n")
+    public String getMessage(Locale locale){
+        return (messageSource.getMessage("api.error.emailExist",null,locale));
+    }
 
     /**
      * @param loginDto
@@ -65,16 +70,16 @@ public class PublicController {
      * @Consumers <<Admin>>, <<Customer>>, <<Seller>>
      */
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto,Locale locale) {
         log.info("Trying user Sign in");
         UserEntity user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new UserNotFoundException("User with this email not found"));
 
         if (!user.isActive()) {
-            return new ResponseEntity<>("Account is not active ! Please contact admin to activate it", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(messageSource.getMessage("api.error.accountNotActive",null,locale), HttpStatus.BAD_REQUEST);
         }
 
         if (user.isLocked()) {
-            return new ResponseEntity<>("Account is Locked ! Please contact admin to unlock it", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(messageSource.getMessage("api.error.accountLocked",null,locale), HttpStatus.BAD_REQUEST);
         }
 
         return userService.login(loginDto, user);

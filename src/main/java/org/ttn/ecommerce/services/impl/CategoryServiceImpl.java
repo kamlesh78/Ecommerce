@@ -321,7 +321,6 @@ public class CategoryServiceImpl implements CategoryService {
         List<CategoryResponseDTO> requiredCategories = new ArrayList<>();
         for (Category category : categoryPage) {
 
-
             CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
 
             categoryResponseDTO.setId(category.getId());

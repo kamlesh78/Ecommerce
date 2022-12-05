@@ -1,6 +1,7 @@
 package org.ttn.ecommerce.services;
 
 import org.springframework.http.ResponseEntity;
+import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.AddressResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.update.CustomerPasswordDto;
