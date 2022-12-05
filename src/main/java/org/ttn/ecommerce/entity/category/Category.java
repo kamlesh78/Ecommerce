@@ -12,34 +12,27 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name="category")
+@Table(name = "category")
 public class Category extends Auditable<String> {
 
-    @Id
-    @SequenceGenerator(name="category_sequence",sequenceName = "category_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_sequence")
-    private Long id;
-
     String name;
-
+    @Id
+    @SequenceGenerator(name = "category_sequence", sequenceName = "category_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence")
+    private Long id;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name="parent_category_id")
+    @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
-
 
     @JsonBackReference
     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategory;
 
-
-
-     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products;
 
-     @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category")
     private List<CategoryMetadataFieldValue> categoryMetadataFieldValues;
-
-
 
 
 }

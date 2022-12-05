@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import org.ttn.ecommerce.repository.UserRepository.AddressRepository;
 import org.ttn.ecommerce.repository.UserRepository.CustomerRepository;
 import org.ttn.ecommerce.repository.UserRepository.SellerRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
-import org.ttn.ecommerce.security.SecurityConstants;
 import org.ttn.ecommerce.services.ImageService;
 import org.ttn.ecommerce.services.TokenService;
 
@@ -62,7 +60,7 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
 
 
     @Autowired
-    EmailServicetry emailServicetry;
+    EmailService emailServicetry;
 
     @Autowired
     RegisterUserRepository registerUserRepository;

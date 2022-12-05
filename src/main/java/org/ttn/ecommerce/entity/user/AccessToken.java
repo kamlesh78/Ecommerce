@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class AccessToken extends Auditable<String> {
     @Id
     @SequenceGenerator(name="token_sequence",sequenceName = "user_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "user_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "token_sequence")
     private Long id;
 
     @Column(name="token")

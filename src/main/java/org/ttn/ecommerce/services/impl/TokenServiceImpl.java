@@ -48,7 +48,7 @@ public class TokenServiceImpl implements org.ttn.ecommerce.services.TokenService
     CustomerRepository customerRepository;
 
     @Autowired
-    EmailServicetry emailServicetry;
+    EmailService emailServicetry;
 
     @Autowired
     AccessTokenRepository accessTokenRepository;

@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.ttn.ecommerce.auditing.Auditable;
-import org.ttn.ecommerce.entity.user.Seller;
 import org.ttn.ecommerce.entity.category.Category;
+import org.ttn.ecommerce.entity.user.Seller;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,8 +19,8 @@ import java.util.List;
 public class Product extends Auditable<String> {
 
     @Id
-    @SequenceGenerator(name="product_sequence",sequenceName = "product_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "product_sequence")
+    @SequenceGenerator(name = "product_sequence", sequenceName = "product_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
     private Long id;
 
     private String name;
@@ -40,17 +40,14 @@ public class Product extends Auditable<String> {
 
     private String brand;
 
-
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "seller_user_id")
     private Seller seller;
 
-
-
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @JsonIgnore

@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,10 +55,10 @@ public class SellerServiceImpl implements SellerService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    EmailServicetry emailService;
+    EmailService emailService;
 
     @Autowired
-    EmailServicetry emailServicetry;
+    EmailService emailServicetry;
 
     @Autowired
     ImageServiceImpl imageService;

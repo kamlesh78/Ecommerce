@@ -15,9 +15,6 @@ import org.ttn.ecommerce.entity.user.Address;
 import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.ImageService;
 import org.ttn.ecommerce.services.SellerService;
-import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
-import org.ttn.ecommerce.services.impl.SellerServiceImpl;
-import org.ttn.ecommerce.services.impl.ImageServiceImpl;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -45,7 +42,7 @@ public class SellerController {
 
     /**
      * @Problem : View Profile
-     * @Output  : Sellers Basic Detail, Profile Image URl And Address
+     * @Output : Sellers Basic Detail, Profile Image URl And Address
      */
     @GetMapping("view/profile")
     public SellerResponseDto viewSellerProfile(Authentication authentication) {
@@ -55,8 +52,8 @@ public class SellerController {
     }
 
     /**
+     * @param : Fields To Be Uploaded
      * @Problem : Update Seller Profile
-     * @param   : Fields To Be Uploaded
      */
     @PatchMapping("update/profile")
     public ResponseEntity<String> updateSellerAddress(@RequestBody SellerUpdateDto sellerUpdateDto, Authentication authentication) {
@@ -66,8 +63,8 @@ public class SellerController {
     }
 
     /**
-     *      @Problem    :   Update Sellers Password
-     *      @param      :   <<Username>>  and <<Password>>
+     * @param : <<Username>>  and <<Password>>
+     * @Problem :   Update Sellers Password
      */
     @PatchMapping("update/password")
     public ResponseEntity<String> updateSellerPassword(@Valid @RequestBody SellerPasswordDto sellerPasswordDto, Authentication authentication) {
@@ -78,8 +75,8 @@ public class SellerController {
 
 
     /**
-     *      @Problem         : Add Sellers Address
-     *      @Constriants     : Seller Should Have Only One Address
+     * @Problem : Add Sellers Address
+     * @Constriants : Seller Should Have Only One Address
      */
     @PostMapping("add/address")
     public ResponseEntity<?> addSellerAddress(@RequestBody Address address, Authentication authentication) {
@@ -88,7 +85,7 @@ public class SellerController {
     }
 
     /**
-     *      @Problem  : View Sellers Address
+     * @Problem : View Sellers Address
      */
     @GetMapping("view/address")
     public String viewAddress(Authentication authentication) throws IOException {
@@ -99,8 +96,8 @@ public class SellerController {
     }
 
     /**
-     *      @Problem   :   Delete Sellers Address
-     *      @Param     :   Seller's Address ID
+     * @Problem :   Delete Sellers Address
+     * @Param :   Seller's Address ID
      */
     @DeleteMapping("delete/address/{id}")
     public String deleteSellerAddress(@PathVariable("id") Long id, Authentication authentication) {
@@ -111,8 +108,8 @@ public class SellerController {
     }
 
     /**
-     *      @Problem  :  Update Seller's Address
-     *      @Param    :  Seller's Address ID
+     * @Problem :  Update Seller's Address
+     * @Param :  Seller's Address ID
      */
     @PatchMapping("/update/address/{id}")
     public String updateSellerAddress(@RequestBody Address address, @PathVariable("id") Long id, Authentication authentication) {
@@ -121,9 +118,9 @@ public class SellerController {
     }
 
     /**
-     *      @Problem        : Upload Image
-     *      @Param          : Image
-     *      @Constraints    : Only Jpeg, Jpg, Png FileTypes Allowed
+     * @Problem : Upload Image
+     * @Param : Image
+     * @Constraints : Only Jpeg, Jpg, Png FileTypes Allowed
      */
     @PostMapping(value = "upload/image")
     public ImageResponse uploadImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
@@ -134,18 +131,14 @@ public class SellerController {
     }
 
     /**
-     *      @Probelem  :  View Image
+     * @Probelem :  View Image
      */
     @GetMapping("view/image")
-    public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication){
+    public ResponseEntity<?> listFilesUsingJavaIO(Authentication authentication) {
 
         String email = authentication.getName();
         return imageService.getImage(email);
     }
-
-
-
-
 
 
 }

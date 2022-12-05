@@ -15,13 +15,13 @@ import org.ttn.ecommerce.exception.MailNotSendException;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmailServicetry {
+public class EmailService {
 
 
     private JavaMailSender javaMailSender;
 
     @Autowired
-    public EmailServicetry(JavaMailSender javaMailSender) {
+    public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 

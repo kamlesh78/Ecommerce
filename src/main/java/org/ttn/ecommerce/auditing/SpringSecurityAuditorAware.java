@@ -1,25 +1,23 @@
 package org.ttn.ecommerce.auditing;
 
-import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
-public class SpringSecurityAuditorAware implements AuditorAware<String>
-{
+import java.util.Optional;
 
-  @Override
-  public Optional<String> getCurrentAuditor() {
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
+    @Override
+    public Optional<String> getCurrentAuditor() {
 
-    Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-    String username="";
-    if(loggedInUser == null){
-      username ="Anonymous User";
-    }else{
-      username = loggedInUser.getName();
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        String username = "";
+        if (loggedInUser == null) {
+            username = "Anonymous User";
+        } else {
+            username = loggedInUser.getName();
+        }
+
+        return Optional.ofNullable(username);
     }
-
-    return Optional.ofNullable(username);
-  }
 }

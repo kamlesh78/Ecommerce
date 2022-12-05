@@ -15,13 +15,11 @@ import java.util.stream.Collectors;
 @Component
 public class JWTGenerator {
 
-
     public String generateToken(Authentication authentication) {
-        AccessToken token1 = new AccessToken();
+
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
-
 
         final String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -35,9 +33,7 @@ public class JWTGenerator {
                 .compact();
         return token;
 
-
     }
-
 
     public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
@@ -46,7 +42,6 @@ public class JWTGenerator {
                 .getBody();
         return claims.getSubject();
     }
-
 
     public boolean validateToken(String token) throws AccessDeniedException {
         try {

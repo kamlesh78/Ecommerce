@@ -14,12 +14,12 @@ import java.util.List;
 public class CategoryMetaDataField extends Auditable<String> {
 
     @Id
-    @SequenceGenerator(name="category_metadata_sequence",sequenceName = "category_metadata_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "category_metadata_sequence")
+    @SequenceGenerator(name = "category_metadata_sequence", sequenceName = "category_metadata_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_metadata_sequence")
     private Long id;
 
     private String name;
 
-     @OneToMany(mappedBy = "categoryMetaDataField")
+    @OneToMany(mappedBy = "categoryMetaDataField")
     private List<CategoryMetadataFieldValue> categoryMetadataFieldValues;
 }

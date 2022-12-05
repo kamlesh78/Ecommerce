@@ -32,9 +32,6 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
 
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-
     @Autowired
     CategoryRepository categoryRepository;
 
@@ -313,9 +310,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
     }
-
-
-
 
     /**
      *  List of all leaf node categories along with their metadata fields,

@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Table(name = "category_metadata_field_values")
 public class CategoryMetadataFieldValue extends Auditable<String> {
 
-
     @EmbeddedId
     private MetaDataValueId id = new MetaDataValueId();
 

@@ -3,15 +3,12 @@ package org.ttn.ecommerce.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.responseDto.userDto.CustomerResponseDto;
 import org.ttn.ecommerce.dto.responseDto.userDto.SellerResponseDto;
 import org.ttn.ecommerce.services.CustomerService;
 import org.ttn.ecommerce.services.ProductService;
 import org.ttn.ecommerce.services.SellerService;
-import org.ttn.ecommerce.services.impl.SellerServiceImpl;
-import org.ttn.ecommerce.services.impl.ProductServiceImpl;
 
 import java.util.List;
 
@@ -29,14 +26,13 @@ public class AdminController {
     private ProductService productService;
 
 
-
     /**
-     * @Problem List Seller's address, User can provide Custom  pagination and sorting fields
      * @param pageSize
      * @param pageOffset
      * @param sortBy
      * @return
      * @throws JsonProcessingException
+     * @Problem List Seller's address, User can provide Custom  pagination and sorting fields
      */
     @GetMapping("list/customers")
     public List<CustomerResponseDto> listAllCustomer(
@@ -54,7 +50,6 @@ public class AdminController {
 
 
     /**
-     *
      * @param pageSize
      * @param pageOffset
      * @param sortBy
@@ -78,9 +73,8 @@ public class AdminController {
     }
 
     /**
-     *
-     *      @param id
-     *      @return
+     * @param id
+     * @return
      */
     @PatchMapping("deactivate/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id) {
@@ -89,9 +83,8 @@ public class AdminController {
     }
 
     /**
-     *
-     *      @param id
-     *      @return
+     * @param id
+     * @return
      */
     @PatchMapping("deactivate/seller/{id}")
     public String deActiveSeller(@PathVariable("id") Long id) {
@@ -100,9 +93,8 @@ public class AdminController {
     }
 
     /**
-     *
-     *      @param id
-     *      @return
+     * @param id
+     * @return
      */
     @PatchMapping("activate/customer/{id}")
     public String activeCustomer(@PathVariable("id") Long id) {
@@ -111,9 +103,8 @@ public class AdminController {
     }
 
     /**
-     *
-     *      @param id
-     *      @return
+     * @param id
+     * @return
      */
     @PatchMapping("activate/seller/{id}")
     public String activeSeller(@PathVariable("id") Long id) {

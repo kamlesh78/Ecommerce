@@ -34,7 +34,7 @@ public class UserPasswordServiceImpl implements org.ttn.ecommerce.services.UserP
     ForgetPasswordRepository forgetPasswordRepository;
 
     @Autowired
-    EmailServicetry emailService;
+    EmailService emailService;
 
     @Autowired
     PasswordEncoder passwordEncoder;

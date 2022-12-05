@@ -3,8 +3,6 @@ package org.ttn.ecommerce.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ttn.ecommerce.dto.product.CategoryDto;
@@ -42,7 +40,7 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
     ProductRepository productRepository;
 
     @Autowired
-    EmailServicetry emailServicetry;
+    EmailService emailServicetry;
 
     public static List<ProductResponseDto> staticList= new ArrayList<>();
     @Override

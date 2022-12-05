@@ -10,24 +10,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.LoginDto;
-import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.dto.register.CustomerRegisterDto;
 import org.ttn.ecommerce.dto.register.SellerRegisterDto;
+import org.ttn.ecommerce.dto.reset.ResetPasswordDto;
 import org.ttn.ecommerce.entity.user.UserEntity;
 import org.ttn.ecommerce.exception.UserNotFoundException;
 import org.ttn.ecommerce.repository.UserRepository.RoleRepository;
 import org.ttn.ecommerce.repository.UserRepository.UserRepository;
 import org.ttn.ecommerce.security.JWTGenerator;
 import org.ttn.ecommerce.services.*;
-import org.ttn.ecommerce.services.impl.CustomerServiceImpl;
-import org.ttn.ecommerce.services.impl.UserPasswordServiceImpl;
-import org.ttn.ecommerce.services.impl.UserServiceImpl;
-import org.ttn.ecommerce.services.impl.LogoutServiceImpl;
-import org.ttn.ecommerce.services.impl.TokenServiceImpl;
+import org.ttn.ecommerce.services.impl.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -46,7 +41,7 @@ public class PublicController {
     private final TokenService tokenService;
     private final LogoutService blackListTokenService;
     private final CustomerService customerDaoService;
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Autowired
     public PublicController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, UserServiceImpl userService, UserPasswordServiceImpl userPasswordService, TokenServiceImpl tokenService, LogoutServiceImpl blackListTokenService, CustomerServiceImpl customerDaoService, MessageSource messageSource) {
@@ -65,9 +60,9 @@ public class PublicController {
 
 
     /**
-     *      @Consumers      <<Admin>>, <<Customer>>, <<Seller>>
-     *      @param          loginDto
-     *      @return
+     * @param loginDto
+     * @return
+     * @Consumers <<Admin>>, <<Customer>>, <<Seller>>
      */
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
@@ -87,8 +82,8 @@ public class PublicController {
 
 
     /**
-     *      @Usage   Customer Registration
-     *      @param   customerRegisterDto
+     * @param customerRegisterDto
+     * @Usage Customer Registration
      */
     @PostMapping("customer/register")
     public ResponseEntity<String> registerCustomer(@Valid @RequestBody CustomerRegisterDto customerRegisterDto) {
@@ -99,8 +94,8 @@ public class PublicController {
 
 
     /**
-     *      @Usage  Seller Register
-     *      @param  sellerRegisterDto
+     * @param sellerRegisterDto
+     * @Usage Seller Register
      */
     @PostMapping("seller/register")
     public ResponseEntity<String> registerSeller(@Valid @RequestBody SellerRegisterDto sellerRegisterDto) {
@@ -109,11 +104,10 @@ public class PublicController {
     }
 
 
-
     /**
-     *      @Usage   Activate Users Account Using Email and Token
-     *      @param   email
-     *      @param   token
+     * @param email
+     * @param token
+     * @Usage Activate Users Account Using Email and Token
      */
     @GetMapping("activate_account/{email}/{token}")
     public ResponseEntity<String> confirmAccount(@PathVariable("email") String email, @PathVariable("token") String token) {
@@ -128,8 +122,8 @@ public class PublicController {
 
 
     /**
-     *      @param      email
-     *      @return     Resend Account Activation Token To User
+     * @param email
+     * @return Resend Account Activation Token To User
      */
     @PostMapping("resend/activation-link")
     public String resentActivationLink(@Valid @PathVariable("email") String email) {
@@ -137,19 +131,19 @@ public class PublicController {
     }
 
     /**
-     *       @Consumers     :  <<Admin>>, <<Customer>>, <<Seller>>
-     *       @Usage         :  To Generate New AccessToken Using Refresh Token
+     * @Consumers :  <<Admin>>, <<Customer>>, <<Seller>>
+     * @Usage :  To Generate New AccessToken Using Refresh Token
      */
     @GetMapping("resend/accessToken/{refreshToken}")
-    public ResponseEntity<?> accessTokenFromRefreshToken(@PathVariable("refreshToken") String refreshToken){
+    public ResponseEntity<?> accessTokenFromRefreshToken(@PathVariable("refreshToken") String refreshToken) {
 
-      return  tokenService.newAccessToken(refreshToken);
+        return tokenService.newAccessToken(refreshToken);
 
     }
 
     /**
-     *      @Consumers  : <<Admin>>, <<Customer>>, <<Seller>>
-     *      @Usage      : Reset Current Password Of User
+     * @Consumers : <<Admin>>, <<Customer>>, <<Seller>>
+     * @Usage : Reset Current Password Of User
      */
     @GetMapping("forget-password/{email}")
     public ResponseEntity<?> forgetUserPassword(@PathVariable("email") String email) {
@@ -157,7 +151,7 @@ public class PublicController {
     }
 
     /**
-     *      @Param : Reset Password Token, New Password
+     * @Param : Reset Password Token, New Password
      */
 
     @PatchMapping("reset-password")
@@ -167,7 +161,7 @@ public class PublicController {
     }
 
     /**
-     *      @Consumers :  <<Admin>> , <<Customer>> , <<Seller>>
+     * @Consumers :  <<Admin>> , <<Customer>> , <<Seller>>
      */
     @GetMapping("logout")
     public ResponseEntity<String> logoutUser(HttpServletRequest request) {

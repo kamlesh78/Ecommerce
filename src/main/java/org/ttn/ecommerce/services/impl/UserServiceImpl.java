@@ -1,7 +1,6 @@
 package org.ttn.ecommerce.services.impl;
 
 import lombok.NoArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,6 @@ import org.ttn.ecommerce.security.SecurityConstants;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -44,7 +42,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
     private PasswordEncoder passwordEncode;
     private JWTGenerator jwtGenerator;
     private CustomerRepository customerRepository;
-    private EmailServicetry emailServicetry;
+    private EmailService emailServicetry;
     private SellerRepository sellerRepository;
     private TokenServiceImpl tokenService;
     private AccessTokenRepository accessTokenRepository;
@@ -52,7 +50,7 @@ public class UserServiceImpl implements org.ttn.ecommerce.services.UserService {
     private MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailServicetry emailServicetry, SellerRepository sellerRepository, TokenServiceImpl tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository,MessageSource messageSource) {
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncode, JWTGenerator jwtGenerator, CustomerRepository customerRepository, EmailService emailServicetry, SellerRepository sellerRepository, TokenServiceImpl tokenService, AccessTokenRepository accessTokenRepository, RefreshTokenRepository refreshTokenRepository, MessageSource messageSource) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

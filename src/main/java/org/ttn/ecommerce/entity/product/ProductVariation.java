@@ -9,12 +9,12 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name="product_variation")
+@Table(name = "product_variation")
 public class ProductVariation extends Auditable<String> {
 
     @Id
-    @SequenceGenerator(name="products_variation_sequence",sequenceName = "products_variation_sequence",initialValue = 1,allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "products_variation_sequence")
+    @SequenceGenerator(name = "products_variation_sequence", sequenceName = "products_variation_sequence", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_variation_sequence")
     private Long id;
 
     private int quantityAvailable;
@@ -33,7 +33,7 @@ public class ProductVariation extends Auditable<String> {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
 

@@ -11,14 +11,11 @@ import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
 import org.ttn.ecommerce.dto.category.viewallcategory.CategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.CategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
-import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SubCategoryResponseDto;
 import org.ttn.ecommerce.entity.category.Category;
 import org.ttn.ecommerce.entity.category.CategoryMetaDataField;
 import org.ttn.ecommerce.services.CategoryService;
 import org.ttn.ecommerce.services.UserService;
-import org.ttn.ecommerce.services.impl.UserServiceImpl;
-import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
 
 import java.util.List;
 
@@ -34,10 +31,9 @@ public class CategoryController {
     UserService userDaoService;
 
 
-
     /**
-     *     @Problem         :  Create MetaData Field
-     *     @Constriant      :  Field Name Should be Unique
+     * @Problem :  Create MetaData Field
+     * @Constriant :  Field Name Should be Unique
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/metadata-field")
@@ -48,7 +44,7 @@ public class CategoryController {
 
 
     /**
-     *     @OutPut : Return All MetaData Fields
+     * @OutPut : Return All MetaData Fields
      */
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -60,10 +56,9 @@ public class CategoryController {
     }
 
 
-
     /**
-     *     @Problem         :  Create MetaData Field
-     *     @Constriant      :  Field Name Should be Unique
+     * @Problem :  Create MetaData Field
+     * @Constriant :  Field Name Should be Unique
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/metadata-field-value/{categoryId}/{metaDataFieldId}")
@@ -75,8 +70,7 @@ public class CategoryController {
 
 
     /**
-     *     @Constriant      :  Value Should be Unique for Category and MetaData Field
-     *
+     * @Constriant :  Value Should be Unique for Category and MetaData Field
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/metadata-field-values/{categoryId}/{metaDataFieldId}")
@@ -89,10 +83,9 @@ public class CategoryController {
     }
 
 
-
     /**
-     *     @Problem     : Create New Category
-     *     @Constriant  : Category name should be unique at root level and along breadth/depth in a tree
+     * @Problem : Create New Category
+     * @Constriant : Category name should be unique at root level and along breadth/depth in a tree
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("create/category")
@@ -103,8 +96,8 @@ public class CategoryController {
 
 
     /**
-     *     @Constraint  : Category Id Should Be Valid
-     *     @Output      : Category Details With Parent Categories UpTo root level and immediate children categories, and associated fields
+     * @Constraint : Category Id Should Be Valid
+     * @Output : Category Details With Parent Categories UpTo root level and immediate children categories, and associated fields
      */
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -116,7 +109,7 @@ public class CategoryController {
 
 
     /**
-     *     @Output    :  List of all categories, with each individual category's detail
+     * @Output :  List of all categories, with each individual category's detail
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("view/all-categories")
@@ -126,8 +119,8 @@ public class CategoryController {
     }
 
     /**
-     *     @Constraint    :  Category name should be unique at root level and along breadth/depth in a tree"
-     *     @Output        :  If Category Name Is Valid It Should be Updated
+     * @Constraint :  Category name should be unique at root level and along breadth/depth in a tree"
+     * @Output :  If Category Name Is Valid It Should be Updated
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("update/category/{id}")
@@ -146,14 +139,14 @@ public class CategoryController {
 
 
     /**
-     *      @Consumer    <<Customer>>
-     *      @param       id
+     * @param id
+     * @Consumer <<Customer>>
      */
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @GetMapping(value = {"customer/view/categories","customer/view/categories/{id}"})
-    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id",required = false)Long id){
+    @GetMapping(value = {"customer/view/categories", "customer/view/categories/{id}"})
+    public ResponseEntity<?> viewAllCategories(@PathVariable(value = "id", required = false) Long id) {
 
-        return  categoryService.listCategoriesOfCustomer(id);
+        return categoryService.listCategoriesOfCustomer(id);
     }
 }

@@ -27,7 +27,6 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
@@ -39,18 +38,9 @@ public class CustomUserDetailService implements UserDetailsService {
     }
 
 
-    /*  other*/
     private Collection< ? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList());
     }
-
-//    public int enableUser(String email) {
-//        return userRepository.activateUserById(email);
-//    }
-//
-//    public void disableUser(String email) {
-//        userRepository.deactivateUserById(email);
-//    }
 
     public void increaseFailedAttempts(Optional<UserEntity> user) {
         int newFailAttempts = user.get().getInvalidAttemptCount()+1;

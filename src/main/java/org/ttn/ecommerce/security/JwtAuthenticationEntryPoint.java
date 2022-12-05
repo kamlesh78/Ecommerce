@@ -19,13 +19,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-      //  ApiResponse apiResponse = new ApiResponse(403, "UNAUTHORIZED ");
-//        apiResponse.setMessage("UnAuthorised : You are not authorized to access this resource\nPlease Provide valid Access Token");
-//        OutputStream out = response.getOutputStream();
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.writeValue(out, apiResponse);
-//        out.flush();
-
 
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
