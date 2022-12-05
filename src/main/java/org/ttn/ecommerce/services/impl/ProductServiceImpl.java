@@ -177,16 +177,6 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public String deleteProduct(String email, Long id) {
 
@@ -299,31 +289,6 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
     }
 
 
-//    public List<ProductResponseDTO> adminViewAllProducts(){
-//
-//        List<Product> products = productRepository.findAll();
-//         if(products.isEmpty()){
-//            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
-//        }
-//
-//         List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
-//        for(Product product: products){
-//
-//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-//
-//            productResponseDTO.setId(product.getId());
-//            productResponseDTO.setName(product.getName());
-//            productResponseDTO.setBrand(product.getBrand());
-//            productResponseDTO.setDescription(product.getDescription());
-//            productResponseDTO.setIsActive(product.isActive());
-//            productResponseDTO.setIsCancellable(product.isCancellable());
-//            productResponseDTO.setIsReturnable(product.isReturnable());
-//            productResponseDTO.setCategory(product.getCategory());
-//            productResponseDTOList.add(productResponseDTO);
-//        }
-//        return productResponseDTOList;
-//
-//    }
     @Override
     public ResponseEntity<?> customerViewProduct(Long productId){
         //ProductResponseDTO
@@ -373,108 +338,9 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
             }
 
 
-       // }
-
-
-
         return new ResponseEntity<>(output,HttpStatus.OK);
-//        List<Product> products = productRepository.findByCategory(category);
-//        // check if records are present
-//        if(products.isEmpty()){
-//            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
-//        }
-//
-//        // convert to appropriate DTO
-//        List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
-//        for(Product product: products){
-//
-//            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-//
-//            productResponseDTO.setId(product.getId());
-//            productResponseDTO.setName(product.getName());
-//            productResponseDTO.setBrand(product.getBrand());
-//            productResponseDTO.setDescription(product.getDescription());
-//            productResponseDTO.setIsActive(product.isActive());
-//            productResponseDTO.setIsCancellable(product.isCancellable());
-//            productResponseDTO.setIsReturnable(product.isReturnable());
-//            productResponseDTO.setCategory(product.getCategory());
-//            productResponseDTOList.add(productResponseDTO);
-//        }
-//        return productResponseDTOList;
 
     }
-
-//    public static List<ProductResponseDto> getLeafCategory(Category category,List<ProductResponseDto> productResponseDtoList){
-//        if(category == null){
-//
-//            return new ArrayList<ProductResponseDto>();
-//        }
-//        if(category.getSubCategory() == null) {
-//            System.out.println("not null");
-//
-//            List<Product> productList = category.getProducts();
-//            List<ProductResponseDto> list = new ArrayList<>();
-//            for(Product product : productList){
-//                ProductResponseDto productResponseDto = new ProductResponseDto();
-//                productResponseDto.setId(product.getId());
-//                productResponseDto.setName(product.getName());
-//                productResponseDto.setBrand(product.getBrand());
-//                productResponseDto.setDescription(product.getDescription());
-//                productResponseDto.setActive(product.isActive());
-//                productResponseDto.setCancellable(product.isCancellable());
-//                productResponseDto.setReturnable(product.isReturnable());
-//                CategoryDto categoryDto =new CategoryDto();
-//                categoryDto.setId(product.getCategory().getId());
-//                categoryDto.setName(product.getCategory().getName());
-//                System.out.println(productResponseDto.getName());
-//                productResponseDto.setCategory(categoryDto);
-//                list.add(productResponseDto);
-//            }
-//            return list;
-//        }
-//
-//        for(Category category1 : category.getSubCategory()){
-//             getLeafCategory(category1,productResponseDtoList);
-//        }
-//
-//        return productResponseDtoList;
-//
-//    }
-//
-////
-//    public List<Product> viewSimilarProducts(Long productId){
-//
-//        // check if ID is valid
-//        Optional<Product> product = productRepository.findById(productId);
-//        if (product == null || product.isEmpty()) {
-//            throw new BadRequestException(messageSource.getMessage("api.error.invalidProductId",null,Locale.ENGLISH));
-//        }
-//
-//        // check product status
-//        if (product.get().isDeleted() || product.get().isActive() == false ){
-//            throw new BadRequestException(messageSource.getMessage("api.error.productInactiveDeleted",null,Locale.ENGLISH));
-//        }
-//
-//        // find similar products
-//        Category associatedCategory = product.get().getCategory();
-//        List<Product> similarProducts = new ArrayList<>();
-//
-//        // add other products associated to its category to similar list
-//        List<Product> siblingProducts = productRepository.findByCategory(associatedCategory);
-//
-//        for(Product individualProduct: siblingProducts){
-//            similarProducts.add(individualProduct);
-//        }
-//
-//        if(similarProducts.size()==1){
-//            throw new BadRequestException(messageSource.getMessage("api.error.similarProducts",null,Locale.ENGLISH));
-//        }
-//
-//        return similarProducts;
-//
-//    }
-
-
 
  @Override
  public List<ProductResponseDto> retrieveProducts(Long id){
@@ -517,5 +383,36 @@ public class ProductServiceImpl implements org.ttn.ecommerce.services.ProductSer
         }
  }
 
+
+
+        public ResponseEntity<?> adminViewAllProducts(){
+
+            List<Product> products = productRepository.findAll();
+             if(products.isEmpty()){
+                return new ResponseEntity<>("Product Not Found",HttpStatus.NOT_FOUND);
+            }
+
+             List<ProductResponseDto> productResponseDTOList= new ArrayList<>();
+            for(Product product: products){
+
+                ProductResponseDto productResponseDTO = new ProductResponseDto();
+
+                productResponseDTO.setId(product.getId());
+                productResponseDTO.setName(product.getName());
+                productResponseDTO.setBrand(product.getBrand());
+                productResponseDTO.setDescription(product.getDescription());
+                productResponseDTO.setActive(product.isActive());
+                productResponseDTO.setCancellable(product.isCancellable());
+                productResponseDTO.setReturnable(product.isReturnable());
+
+                CategoryDto categoryDto = new CategoryDto();
+                categoryDto.setId(product.getCategory().getId());
+                categoryDto.setName(product.getCategory().getName());
+                productResponseDTO.setCategory(categoryDto);
+                productResponseDTOList.add(productResponseDTO);
+            }
+             return new ResponseEntity<>(productResponseDTOList,HttpStatus.OK);
+
+        }
 
 }

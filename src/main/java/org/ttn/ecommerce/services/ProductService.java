@@ -19,31 +19,7 @@ public interface ProductService {
 
     String deactivateProduct(Long id);
 
-    //    public List<ProductResponseDTO> adminViewAllProducts(){
-    //
-    //        List<Product> products = productRepository.findAll();
-    //         if(products.isEmpty()){
-    //            throw new BadRequestException(messageSource.getMessage("api.error.productNotFound",null,Locale.ENGLISH));
-    //        }
-    //
-    //         List<ProductResponseDTO> productResponseDTOList= new ArrayList<>();
-    //        for(Product product: products){
-    //
-    //            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-    //
-    //            productResponseDTO.setId(product.getId());
-    //            productResponseDTO.setName(product.getName());
-    //            productResponseDTO.setBrand(product.getBrand());
-    //            productResponseDTO.setDescription(product.getDescription());
-    //            productResponseDTO.setIsActive(product.isActive());
-    //            productResponseDTO.setIsCancellable(product.isCancellable());
-    //            productResponseDTO.setIsReturnable(product.isReturnable());
-    //            productResponseDTO.setCategory(product.getCategory());
-    //            productResponseDTOList.add(productResponseDTO);
-    //        }
-    //        return productResponseDTOList;
-    //
-    //    }
+
     ResponseEntity<?> customerViewProduct(Long productId);
 
     ResponseEntity<List<List<ProductResponseDto>>> viewAllProductOfProduct(Long categoryId);
@@ -51,4 +27,6 @@ public interface ProductService {
     List<ProductResponseDto> retrieveProducts(Long id);
 
     ResponseEntity<?> adminViewProductById(Long id, String email);
+
+    public ResponseEntity<?> adminViewAllProducts();
 }

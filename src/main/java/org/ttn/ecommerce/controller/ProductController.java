@@ -66,16 +66,12 @@ public class ProductController {
     }
 
 
-
-
-
-
-    @PreAuthorize("hasRole('SELLER')")
-    @PostMapping("update/product-variation")
-    public ResponseEntity<?> updateProductVariation(@RequestBody ProductVariationDto productVariationDto) {
-
-        return productVariationService.updateProductVariation(productVariationDto);
-    }
+//    @PreAuthorize("hasRole('SELLER')")
+//    @PostMapping("update/product-variation")
+//    public ResponseEntity<?> updateProductVariation(@RequestBody ProductVariationDto productVariationDto) {
+//
+//        return productVariationService.updateProductVariation(productVariationDto);
+//    }
 
 
 
@@ -110,7 +106,6 @@ public class ProductController {
      *     @Problem : View All Products Created By Seller
      *     @Output  : All non-deleted product with Category details
     */
-
     @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/all-products")
     public List<ProductResponseDto> viewAllProductsOfSeller(Authentication authentication) {
@@ -206,6 +201,19 @@ public class ProductController {
         String email = authentication.getName();
         return productService.adminViewProductById(id, email);
     }
+
+
+    /**
+     *       @Consumer     : <<Admin>>
+     *       @Problem      : View All Product
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("admin/view/all-product")
+    public ResponseEntity<?> adminViewAllProducts() throws Exception {
+
+        return productService.adminViewAllProducts();
+    }
+
 
     /**
      *       @Consumer     : <<Admin>>

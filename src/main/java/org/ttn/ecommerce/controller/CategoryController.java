@@ -1,5 +1,6 @@
 package org.ttn.ecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
+import org.ttn.ecommerce.dto.category.viewallcategory.CategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.CategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
@@ -20,6 +22,7 @@ import org.ttn.ecommerce.services.impl.CategoryServiceImpl;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -53,6 +56,7 @@ public class CategoryController {
     public List<MetaDataFieldResponse> viewMetaField() {
 
         return categoryService.getMetaDataField();
+
     }
 
 
@@ -72,7 +76,7 @@ public class CategoryController {
 
     /**
      *     @Constriant      :  Value Should be Unique for Category and MetaData Field
-     *                      :  
+     *
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/metadata-field-values/{categoryId}/{metaDataFieldId}")
@@ -135,8 +139,8 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('SELLER')")
     @GetMapping("view/seller-categories")
-    public ResponseEntity<List<SellerCategoryResponseDTO>> viewSellerCategory() {
-        List<SellerCategoryResponseDTO> responseList = categoryService.viewSellerCategory();
+    public ResponseEntity<List<CategoryResponseDTO>> viewSellerCategory() {
+        List<CategoryResponseDTO> responseList = categoryService.viewAllCategories();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 

@@ -57,10 +57,6 @@ public class Product extends Auditable<String> {
     @OneToMany(mappedBy = "product")
     private List<ProductVariation> productVariations;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product")
-    private List<ProductReview> productReviews;
-
     public boolean isCancellable() {
         return isCancellable;
     }

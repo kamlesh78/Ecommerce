@@ -300,9 +300,5 @@ public class CustomerServiceImpl implements org.ttn.ecommerce.services.CustomerS
             return  "Account is already active";
         }
 
-
-
-
-
     }
 }

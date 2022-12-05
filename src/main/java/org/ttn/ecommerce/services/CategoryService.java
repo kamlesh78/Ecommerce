@@ -3,6 +3,7 @@ package org.ttn.ecommerce.services;
 import org.springframework.http.ResponseEntity;
 import org.ttn.ecommerce.dto.category.CategoryDto;
 import org.ttn.ecommerce.dto.category.CategoryMetaValueDto;
+import org.ttn.ecommerce.dto.category.viewallcategory.CategoryResponseDTO;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.CategoryResponseDto;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.MetaDataFieldResponse;
 import org.ttn.ecommerce.dto.responseDto.categoryResponseDto.SellerCategoryResponseDTO;
@@ -40,10 +41,12 @@ public interface CategoryService {
     /*        View All Category           */
     List<SubCategoryResponseDto> viewAllCategory();
 
+    public List<CategoryResponseDTO> viewAllCategories();
+
     /*                Update Category             */
     ResponseEntity<?> updateCategory(Long id, Category category);
 
     ResponseEntity<?> listCategoriesOfCustomer(Long id);
 
-    List<SellerCategoryResponseDTO> viewSellerCategory();
+
 }

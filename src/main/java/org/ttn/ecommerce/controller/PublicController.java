@@ -89,6 +89,7 @@ public class PublicController {
 
 
     /**
+     *      @Usage   Customer Registration
      *      @param   customerRegisterDto
      */
     @PostMapping("customer/register")
@@ -100,6 +101,7 @@ public class PublicController {
 
 
     /**
+     *      @Usage  Seller Register
      *      @param  sellerRegisterDto
      */
     @PostMapping("seller/register")
@@ -177,10 +179,5 @@ public class PublicController {
         return blackListTokenService.logOutUser(email);
     }
 
-
-    @GetMapping("/check")
-    public String getCheck(){
-        return messageSource.getMessage("ecommerce.error.userNotFound ",null, Locale.ENGLISH);
-    }
 
 }

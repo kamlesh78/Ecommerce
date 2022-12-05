@@ -28,7 +28,16 @@ public class AdminController {
     @Autowired
     private ProductService productService;
 
-    /*  List Seller's address, User can provide Custom  pagination and sorting fields */
+
+
+    /**
+     * @Problem List Seller's address, User can provide Custom  pagination and sorting fields
+     * @param pageSize
+     * @param pageOffset
+     * @param sortBy
+     * @return
+     * @throws JsonProcessingException
+     */
     @GetMapping("list/customers")
     public List<CustomerResponseDto> listAllCustomer(
             @RequestParam(name = "pageSize", required = false) String pageSize,
@@ -44,10 +53,14 @@ public class AdminController {
     }
 
 
-    /* List Seller's address
-     *  User can provide Custom pagination and sorting fields
+    /**
+     *
+     * @param pageSize
+     * @param pageOffset
+     * @param sortBy
+     * @return
+     * @throws JsonProcessingException
      */
-
     @GetMapping("list/sellers")
     public List<SellerResponseDto> listAllSeller(
             @RequestParam(name = "pageSize", required = false) String pageSize,
@@ -64,24 +77,44 @@ public class AdminController {
         return sellerService.listAllSellers(customPageSize, customPageOffset, customSortBy);
     }
 
+    /**
+     *
+     *      @param id
+     *      @return
+     */
     @PatchMapping("deactivate/customer/{id}")
     public String deActiveCustomer(@PathVariable("id") Long id) {
 
         return customerService.deActiveCustomer(id);
     }
 
+    /**
+     *
+     *      @param id
+     *      @return
+     */
     @PatchMapping("deactivate/seller/{id}")
     public String deActiveSeller(@PathVariable("id") Long id) {
 
         return sellerService.deActivateSeller(id);
     }
 
+    /**
+     *
+     *      @param id
+     *      @return
+     */
     @PatchMapping("activate/customer/{id}")
     public String activeCustomer(@PathVariable("id") Long id) {
 
         return customerService.activeCustomer(id);
     }
 
+    /**
+     *
+     *      @param id
+     *      @return
+     */
     @PatchMapping("activate/seller/{id}")
     public String activeSeller(@PathVariable("id") Long id) {
 
