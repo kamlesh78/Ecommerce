@@ -31,13 +31,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     CustomUserDetailService customUserDetailService;
 
 
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private final AuthenticationManager authenticationManager;
 
 
 
-    @Autowired
+
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-    @Query(value = "select count(category_id) from product", nativeQuery = true)
+    @Query(value = "select count(category_id) from product where category_id =:id", nativeQuery = true)
     long existsByCategoryId(@Param("id") Long id);
 
     @Query(value = "select * from product where seller_user_id = :id",nativeQuery = true)

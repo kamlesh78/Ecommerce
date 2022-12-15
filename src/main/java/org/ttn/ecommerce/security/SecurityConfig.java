@@ -31,6 +31,7 @@ public class SecurityConfig {
         this.userDetailService = userDetailService;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 
+
     }
 
     @Bean
@@ -81,6 +82,9 @@ public class SecurityConfig {
         return new CustomAccessDeniedException();
     }
 
-
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationConfiguration authenticationConfiguration) throws  Exception{
+        return  new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration));
+    }
 }
 
