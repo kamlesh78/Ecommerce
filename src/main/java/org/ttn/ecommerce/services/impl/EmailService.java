@@ -18,28 +18,28 @@ import org.ttn.ecommerce.exception.MailNotSendException;
 public class EmailService {
 
 
-  //  private JavaMailSender javaMailSender;
+   private JavaMailSender javaMailSender;
 
     @Autowired
-//     public EmailService(JavaMailSender javaMailSender) {
-//         this.javaMailSender = javaMailSender;
-//     }
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Async
     public void sendEmail(String toMail, String subject, String message) throws MailNotSendException {
-//         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-//         simpleMailMessage.setTo(toMail);
-//         simpleMailMessage.setSubject(subject);
-//         simpleMailMessage.setText(message);
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(toMail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(message);
 
-//         try {
+        try {
 
-//             javaMailSender.send(simpleMailMessage);
-//         }
-//         catch(MailException ex)
-//         {
-//             throw new MailNotSendException("Can not send mail! Mailing Server is down");
-//         }
+            javaMailSender.send(simpleMailMessage);
+        }
+        catch(MailException ex)
+        {
+            throw new MailNotSendException("Can not send mail! Mailing Server is down");
+        }
     }
 
 
