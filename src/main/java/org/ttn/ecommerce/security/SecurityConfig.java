@@ -82,9 +82,9 @@ public class SecurityConfig {
         return new CustomAccessDeniedException();
     }
 
-    @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationConfiguration authenticationConfiguration) throws  Exception{
-        return  new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration));
-    }
+//     @Bean
+//     public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationConfiguration authenticationConfiguration) throws  Exception{
+//         return  new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration));
+//     }
 }
 
